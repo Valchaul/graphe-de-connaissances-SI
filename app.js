@@ -51,6 +51,8 @@ const parId = Object.fromEntries(NOTIONS.map((n) => [n.id, n]));
 const LARGEUR_NOEUD = 170;
 const HAUTEUR_NOEUD = 46;
 const RAYON_COUDES = 12; // arrondi des virages des flèches (px)
+const ZOOM_OUVERTURE_MAX = 1.2; // à l'ouverture, ne pas grossir au-delà (petites cartes)
+const ZOOM_OUVERTURE_MIN = 0.6; // ni réduire en dessous (le texte deviendrait illisible)
 
 // Regrouper les notions d'un même domaine dans un cadre (true) ou non (false).
 const GROUPER_PAR_DOMAINE = true;
@@ -262,6 +264,26 @@ function appliquerTrace(arete, section, centres) {
   });
 }
 
+// Vue d'ouverture : la carte occupe toute la hauteur de l'écran et commence par
+// sa gauche (les bases). Comme elle est bien plus large que haute, on la parcourt
+// ensuite vers la droite. Si elle tient en entier à ce zoom, elle est centrée.
+function cadrerSurLaHauteur() {
+  const marge = 40;
+  const boite = cy.elements().boundingBox();
+  if (boite.w === 0 || boite.h === 0) return;
+  // Sur un petit écran, on garde un zoom lisible quitte à déborder aussi en hauteur.
+  const zoomHauteur = (cy.height() - 2 * marge) / boite.h;
+  const zoom = Math.min(Math.max(zoomHauteur, ZOOM_OUVERTURE_MIN), ZOOM_OUVERTURE_MAX, cy.maxZoom());
+  const tientEnLargeur = boite.w * zoom <= cy.width() - 2 * marge;
+  cy.viewport({
+    zoom,
+    pan: {
+      x: tientEnLargeur ? (cy.width() - boite.w * zoom) / 2 - boite.x1 * zoom : marge - boite.x1 * zoom,
+      y: (cy.height() - boite.h * zoom) / 2 - boite.y1 * zoom,
+    },
+  });
+}
+
 // Calcule le placement des notions visibles (relancé quand on filtre un domaine).
 let dernierPlacement = 0;
 async function placer() {
@@ -372,7 +394,7 @@ async function placer() {
       position: j.position,
     })));
   });
-  cy.fit(undefined, 40);
+  cadrerSurLaHauteur();
 
   // Si une notion était sélectionnée, on réapplique sa mise en évidence.
   const choisie = cy.nodes(".choisi");
