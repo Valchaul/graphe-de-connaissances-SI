@@ -39,7 +39,9 @@ copier un bloc existant et l'adapter :
 Le placement dans la carte est automatique : ELK range les notions en colonnes et trace
 les flèches à angles droits. Un petit point sur une flèche marque un embranchement
 (la flèche se divise) ; deux lignes qui se coupent sans point se croisent simplement.
-Les réglages du placement sont regroupés dans `OPTIONS_ELK` au début de `app.js`. Si une erreur se glisse (prérequis inconnu,
+Les notions sont regroupées dans un cadre par domaine. Pour revenir à une carte sans cadres,
+passer `GROUPER_PAR_DOMAINE` à `false` au début de `app.js`.
+Les réglages du placement sont regroupés dans `OPTIONS_ELK`, au début de `app.js` également. Si une erreur se glisse (prérequis inconnu,
 identifiant en double, boucle de prérequis), un encadré rouge l'indique en bas de la page.
 
 ## Publier sur GitHub Pages

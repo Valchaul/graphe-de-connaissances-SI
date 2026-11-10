@@ -52,6 +52,10 @@ const LARGEUR_NOEUD = 170;
 const HAUTEUR_NOEUD = 46;
 const RAYON_COUDES = 12; // arrondi des virages des flèches (px)
 
+// Regrouper les notions d'un même domaine dans un cadre (true) ou non (false).
+const GROUPER_PAR_DOMAINE = true;
+const MARGES_CADRE = "[top=46,left=22,bottom=22,right=22]"; // la marge du haut accueille le titre
+
 const elements = [];
 for (const n of NOTIONS) {
   elements.push({
@@ -102,11 +106,43 @@ const cy = cytoscape({
         "text-max-width": 150,
         "transition-property": "opacity, border-width",
         "transition-duration": "150ms",
+        // Ordre d'empilement : cadres (0) < flèches (1) < jonctions (2) < chemin (3) < notions (4)
+        "z-index-compare": "manual",
+        "z-index": 4,
+      },
+    },
+    {
+      // Cadre d'un domaine (fond très léger, titre en haut)
+      selector: "node.cadre",
+      style: {
+        shape: "round-rectangle",
+        width: "data(largeur)",
+        height: "data(hauteur)",
+        "corner-radius": 10,
+        "background-color": "data(couleur)",
+        "background-opacity": 0.035,
+        "border-width": 1,
+        "border-color": "data(couleur)",
+        "border-opacity": 0.35,
+        label: "data(label)",
+        "font-family": "system-ui, sans-serif",
+        "font-size": 13,
+        "font-weight": 600,
+        "text-transform": "uppercase",
+        color: "data(couleur)",
+        "text-valign": "top",
+        "text-halign": "center",
+        "text-margin-y": 30, // ramène le titre à l'intérieur du cadre
+        events: "no",
+        "z-index-compare": "manual",
+        "z-index": 0,
       },
     },
     {
       selector: "edge",
       style: {
+        "z-index-compare": "manual",
+        "z-index": 1,
         width: 1.2,
         "line-color": "#c4bfb4",
         "target-arrow-color": "#c4bfb4",
@@ -144,6 +180,8 @@ const cy = cytoscape({
         events: "no",
         "transition-property": "opacity",
         "transition-duration": "150ms",
+        "z-index-compare": "manual",
+        "z-index": 2,
       },
     },
     { selector: "node.jonction.chemin", style: { "background-color": "#5b6168", width: 7, height: 7 } },
@@ -152,7 +190,7 @@ const cy = cytoscape({
     { selector: "node.trouve", style: { "border-width": 3.5 } },
     {
       selector: "edge.chemin",
-      style: { "line-color": "#5b6168", "target-arrow-color": "#5b6168", width: 2, "z-index": 10 },
+      style: { "line-color": "#5b6168", "target-arrow-color": "#5b6168", width: 2, "z-index": 3 },
     },
   ],
 });
@@ -232,27 +270,70 @@ async function placer() {
   const ids = new Set(visibles.map((n) => n.id()));
   const aretes = cy.edges().filter((e) => ids.has(e.data("source")) && ids.has(e.data("target")));
 
-  const resultat = await elk.layout({
-    id: "racine",
-    layoutOptions: OPTIONS_ELK,
-    children: visibles.map((n) => ({ id: n.id(), width: LARGEUR_NOEUD, height: HAUTEUR_NOEUD })),
-    edges: aretes.map((e) => ({ id: e.id(), sources: [e.data("source")], targets: [e.data("target")] })),
-  });
+  const versElk = (n) => ({ id: n.id(), width: LARGEUR_NOEUD, height: HAUTEUR_NOEUD });
+  const aretesElk = aretes.map((e) => ({ id: e.id(), sources: [e.data("source")], targets: [e.data("target")] }));
+
+  let graphe;
+  if (GROUPER_PAR_DOMAINE) {
+    // Chaque domaine devient un groupe ELK contenant ses notions.
+    const options = { ...OPTIONS_ELK };
+    delete options["elk.layered.considerModelOrder.strategy"]; // fait planter ELK 0.9.3 avec des groupes
+    graphe = {
+      id: "racine",
+      layoutOptions: { ...options, "elk.hierarchyHandling": "INCLUDE_CHILDREN" },
+      children: Object.keys(DOMAINES)
+        .map((cle) => ({
+          id: "cadre:" + cle,
+          layoutOptions: { ...options, "elk.padding": MARGES_CADRE },
+          children: visibles.filter((n) => n.data("domaine") === cle).map(versElk),
+        }))
+        .filter((groupe) => groupe.children.length > 0),
+      edges: aretesElk,
+    };
+  } else {
+    graphe = { id: "racine", layoutOptions: OPTIONS_ELK, children: visibles.map(versElk), edges: aretesElk };
+  }
+
+  const resultat = await elk.layout(graphe);
 
   // Si un autre placement a été demandé entre-temps (clics rapides), on abandonne celui-ci.
   if (numero !== dernierPlacement) return;
 
+  // ELK donne les positions relativement au groupe parent : on les ramène à la carte entière.
   const centres = {};
+  const decalageDomaine = {}; // domaine -> position du coin de son cadre
+  const cadres = [];
   for (const c of resultat.children) {
-    centres[c.id] = { x: c.x + c.width / 2, y: c.y + c.height / 2 };
+    if (c.children) {
+      const cle = c.id.slice("cadre:".length);
+      decalageDomaine[cle] = { x: c.x, y: c.y };
+      cadres.push({ cle, x: c.x, y: c.y, largeur: c.width, hauteur: c.height });
+      for (const n of c.children) {
+        centres[n.id] = { x: c.x + n.x + n.width / 2, y: c.y + n.y + n.height / 2 };
+      }
+    } else {
+      centres[c.id] = { x: c.x + c.width / 2, y: c.y + c.height / 2 };
+    }
   }
+
+  // Le tracé d'une flèche interne à un domaine est relatif au cadre de ce domaine ;
+  // celui d'une flèche entre deux domaines est déjà relatif à la carte entière.
+  const domaineDe = (id) => parId[id].domaine;
+  function decalageArete(e) {
+    const ds = domaineDe(e.sources[0]);
+    if (GROUPER_PAR_DOMAINE && ds === domaineDe(e.targets[0])) return decalageDomaine[ds];
+    return { x: 0, y: 0 };
+  }
+  const decaler = (p, d) => ({ x: p.x + d.x, y: p.y + d.y });
 
   // Points de jonction : plusieurs flèches peuvent partager le même point.
   const jonctions = new Map(); // "x,y" -> { position, aretes: [ids] }
   for (const e of resultat.edges) {
-    for (const p of e.junctionPoints || []) {
+    const d = decalageArete(e);
+    for (const brut of e.junctionPoints || []) {
+      const p = decaler(brut, d);
       const cle = Math.round(p.x) + "," + Math.round(p.y);
-      if (!jonctions.has(cle)) jonctions.set(cle, { position: { x: p.x, y: p.y }, aretes: [] });
+      if (!jonctions.has(cle)) jonctions.set(cle, { position: p, aretes: [] });
       jonctions.get(cle).aretes.push(e.id);
     }
   }
@@ -260,8 +341,29 @@ async function placer() {
   cy.batch(() => {
     for (const [id, pos] of Object.entries(centres)) cy.getElementById(id).position(pos);
     for (const e of resultat.edges) {
-      if (e.sections?.length) appliquerTrace(cy.getElementById(e.id), e.sections[0], centres);
+      if (!e.sections?.length) continue;
+      const d = decalageArete(e);
+      const s = e.sections[0];
+      const section = {
+        startPoint: decaler(s.startPoint, d),
+        endPoint: decaler(s.endPoint, d),
+        bendPoints: (s.bendPoints || []).map((p) => decaler(p, d)),
+      };
+      appliquerTrace(cy.getElementById(e.id), section, centres);
     }
+    cy.remove(".cadre");
+    cy.add(cadres.map((c) => ({
+      group: "nodes",
+      classes: "cadre",
+      data: {
+        id: "cadre:" + c.cle,
+        label: DOMAINES[c.cle].nom,
+        couleur: DOMAINES[c.cle].couleur,
+        largeur: c.largeur,
+        hauteur: c.hauteur,
+      },
+      position: { x: c.x + c.largeur / 2, y: c.y + c.hauteur / 2 },
+    })));
     cy.remove(".jonction");
     cy.add([...jonctions].map(([cle, j]) => ({
       group: "nodes",
@@ -336,7 +438,7 @@ function choisir(id, centrer) {
   const amont = noeud.predecessors();
   const aval = noeud.successors();
   cy.elements().removeClass("attenue choisi chemin trouve");
-  cy.elements().not(amont).not(aval).not(noeud).addClass("attenue");
+  cy.elements().not(amont).not(aval).not(noeud).not(".cadre").addClass("attenue");
   amont.edges().addClass("chemin");
   aval.edges().addClass("chemin");
   noeud.addClass("choisi");
@@ -415,7 +517,7 @@ recherche.addEventListener("input", () => {
   cy.elements().removeClass("attenue choisi chemin trouve");
   if (!q) return;
   const trouves = cy.nodes(".notion").filter((nd) => sansAccents(nd.data("label")).includes(q));
-  cy.elements().not(trouves).addClass("attenue");
+  cy.elements().not(trouves).not(".cadre").addClass("attenue");
   trouves.addClass("trouve");
 });
 
