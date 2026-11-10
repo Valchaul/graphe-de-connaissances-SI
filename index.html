@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learn Map — Sciences de l'ingénieur</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="barre">
+    <h1>Learn Map <span>Sciences de l'ingénieur</span></h1>
+    <input id="recherche" type="search" placeholder="Rechercher une notion…" autocomplete="off">
+  </header>
+
+  <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)"></nav>
+
+  <main>
+    <div id="graphe" aria-label="Carte des notions"></div>
+
+    <aside id="panneau" hidden>
+      <button id="fermer" aria-label="Fermer">×</button>
+      <p id="p-domaine" class="badge"></p>
+      <h2 id="p-titre"></h2>
+      <p id="p-description"></p>
+
+      <h3>Ressources</h3>
+      <ul id="p-ressources"></ul>
+
+      <h3>Prérequis</h3>
+      <ul id="p-prerequis" class="liens-notions"></ul>
+
+      <h3>Ouvre vers</h3>
+      <ul id="p-suivants" class="liens-notions"></ul>
+    </aside>
+  </main>
+
+  <div id="erreurs" hidden></div>
+
+  <!-- Bibliothèques (graphe + placement automatique) -->
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/elkjs@0.9.3/lib/elk.bundled.js"></script>
+
+  <!-- Contenu puis application -->
+  <script src="data/notions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
