@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Graphe de connaissances">
+  <!-- Une notion de départ, deux notions qui en dépendent (flèches à angles arrondis, comme sur la carte) ;
+       celle du bas est « acquise » (verte). Couleurs : le bleu du site et le vert des notions acquises. -->
+  <g fill="none" stroke="#186ca8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 16 H14.5 Q16.5 16 16.5 14 V10.5 Q16.5 8 19 8 H20"/>
+    <path d="M12 16 H14.5 Q16.5 16 16.5 18 V21.5 Q16.5 24 19 24 H20"/>
+  </g>
+  <g fill="#186ca8">
+    <path d="M19.2 5.8 L22 8 L19.2 10.2 Z"/>
+    <path d="M19.2 21.8 L22 24 L19.2 26.2 Z"/>
+  </g>
+  <rect x="2" y="11.5" width="10" height="9" rx="2.6" fill="#186ca8"/>
+  <rect x="22.6" y="3.6" width="7.4" height="8.8" rx="2.4" fill="#e3effa" stroke="#186ca8" stroke-width="1.8"/>
+  <rect x="22.6" y="19.6" width="7.4" height="8.8" rx="2.4" fill="#2f7d4f" stroke="#2f7d4f" stroke-width="1.8"/>
+  <path d="M24.4 24 L26 25.6 L28.3 22.4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

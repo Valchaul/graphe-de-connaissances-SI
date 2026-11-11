@@ -85,15 +85,6 @@ Les espacements du placement sont regroupés dans `OPTIONS_ELK`, dans [`js/place
 Si une erreur se glisse dans le contenu (prérequis inconnu, identifiant en double, boucle de
 prérequis), un encadré rouge l'indique en bas de la page.
 
-## Publier sur GitHub Pages
-
-1. Pousser le dépôt sur GitHub.
-2. Sur GitHub : **Settings → Pages → Build and deployment → Source : « Deploy from a branch »**,
-   branche `main`, dossier `/ (root)`.
-3. Après une minute, le site est en ligne à l'adresse `https://<utilisateur>.github.io/learn-map/`.
-
-Chaque push sur `main` met ensuite le site à jour.
-
 ## Structure
 
 | Fichier               | Rôle                                                          |

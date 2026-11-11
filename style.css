@@ -97,6 +97,10 @@ body {
   font-weight: 600;
 }
 
+/* Logo + nom du site */
+.marque { display: inline-flex; align-items: center; gap: var(--e-2); vertical-align: middle; }
+.logo { display: block; flex: none; width: 32px; height: 32px; }
+
 .barre h1 .sous-titre {
   font-weight: 400;
   color: var(--texte-doux);
@@ -236,6 +240,7 @@ main {
   border-radius: var(--rayon-l);
   background: var(--surface);
   position: relative;
+  z-index: 7; /* au-dessus de la légende (5) ; l'en-tête (6) ne la recouvre jamais */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
@@ -316,11 +321,11 @@ main {
   left: 100%;
   background: radial-gradient(circle at 100% 100%, transparent var(--raccord), var(--c, var(--accent)) calc(var(--raccord) + 0.5px));
 }
+/* Niveau : du texte simple, comme à côté des titres dans « Prérequis » et « Ouvre vers » (.niveau-liste) */
 .badge-niveau {
-  color: var(--texte);
-  background: var(--fond);
-  border: 1px solid var(--bordure);
-  padding: 2px var(--e-2); /* 1 px de moins que le badge plein : la bordure compense */
+  padding: 0;
+  background: none;
+  color: var(--texte-doux);
   cursor: help;
 }
 
@@ -718,7 +723,7 @@ main {
   /* Grille : titre, puis sous-titre + progression sur la même ligne, puis recherche */
   .barre { display: grid; grid-template-columns: 1fr auto auto; gap: var(--e-1) var(--e-3); padding: var(--e-3) var(--e-4); }
   .barre h1, .outils { display: contents; }
-  .barre h1 .titre { grid-column: 1 / -1; }
+  .barre h1 .marque { grid-column: 1 / -1; }
   .barre h1 .sous-titre { margin: 0; font-size: var(--t-m); align-self: center; }
   .progression { padding: var(--e-1) 0; }
   .notification { left: auto; right: 0; width: min(280px, calc(100vw - 32px)); }
@@ -755,6 +760,7 @@ main {
   border-radius: var(--rayon-m);
 }
 .icone-filtre { display: block; flex: none; }
+#filtres-compte:empty { display: none; } /* sans filtre actif, pas d'élément vide : il décalerait l'entonnoir */
 #filtres-compte { font-variant-numeric: tabular-nums; } /* nombre de filtres actifs, à droite de l'entonnoir */
 .panneau-filtres { width: 300px; right: 0; }
 .panneau-filtres h3 {
@@ -784,6 +790,15 @@ main {
 .puce-filtre[aria-pressed="false"] { color: var(--texte-doux); text-decoration: line-through; }
 
 @media (max-width: 720px) {
+  /* Statuts : les trois boutons se partagent la largeur de la fiche (ils passent à la ligne s'il le faut) */
+  .statuts { gap: var(--e-1); }
+  .statuts .bouton-acquise {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding-left: var(--e-2);
+    padding-right: var(--e-2);
+    white-space: nowrap;
+  }
   /* Recherche et bouton Filtres sur la même ligne */
   #recherche { grid-column: 1 / 3; grid-row: 3; max-width: none; width: 100%; } /* remplit toute la largeur */
   .filtres-zone { grid-column: 3; grid-row: 3; margin-top: var(--e-1); }
