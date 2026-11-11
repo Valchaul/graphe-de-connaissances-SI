@@ -7,7 +7,7 @@ const elements = [];
 for (const n of NOTIONS) {
   elements.push({
     classes: "notion",
-    // label = titre (sert à la recherche) ; etiquette = ce qui s'affiche (titre, précédé d'un ✓ si acquise)
+    // label = titre (sert à la recherche) ; etiquette = ce qui s'affiche (titre, précédé d'un signe de statut)
     data: { id: n.id, label: n.titre, etiquette: n.titre, couleur: DOMAINES[n.domaine]?.couleur || "#888", domaine: n.domaine },
   });
 }
@@ -68,6 +68,16 @@ const cy = cytoscape({
         "background-opacity": 0.16,
         color: "#1d5a37",
       },
+    },
+    {
+      // Notion en cours de travail : teinte bleue
+      selector: "node.encours",
+      style: { "background-color": "#1d4ed8", "background-opacity": 0.12, "border-color": "#1d4ed8", color: "#1e3a8a" },
+    },
+    {
+      // Notion à réviser : contour orange épais (se combine avec acquise)
+      selector: "node.arevoir",
+      style: { "border-color": "#c2610c", "border-width": 2.5 },
     },
     {
       // Cadre d'un domaine (fond très léger, titre en haut)

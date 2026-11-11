@@ -20,12 +20,13 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
   avec l'étape en cours. À chaque instant, une notion n'apparaît qu'après tous ses prérequis ;
   entre deux notions possibles, la plus basse en niveau passe d'abord. Le même bouton, devenu
   « Masquer le chemin », referme la liste.
-- **Suivi de progression** : le bouton « Marquer comme acquise » de la fiche coche la notion. Elle
-  prend alors une teinte verte et un ✓ sur la carte, et le compteur de l'en-tête (« 12 / 114
-  acquises ») avance. Dans le chemin d'apprentissage, chaque étape a sa case, la prochaine à
+- **Suivi de progression** : la fiche propose trois cases. « Acquise » donne à la notion une teinte
+  verte et un ✓ sur la carte, et fait avancer le compteur de l'en-tête (« 12 / 114 acquises »).
+  « En cours de travail » la teinte en bleu (…) ; elle s'exclut avec « Acquise ». « À réviser » lui
+  met un contour orange (↻) et peut se combiner avec « Acquise ». Dans le chemin d'apprentissage, chaque étape a sa case, la prochaine à
   apprendre est repérée et le résumé indique ce qu'il reste à faire. Quand on coche une notion
-  dont les prérequis ne le sont pas, un lien propose de les cocher aussi. « Effacer » (dans
-  l'en-tête) remet tout à zéro.
+  dont les prérequis ne le sont pas, un lien propose de les cocher aussi. Un clic sur la
+  barre de progression de l'en-tête propose, après confirmation, de tout remettre à zéro.
   La progression est **mémorisée dans le navigateur** (`localStorage`) : pas de compte, rien
   n'est envoyé nulle part. Contrepartie : elle reste propre à ce navigateur et à cet appareil, et
   disparaît si on efface les données du site ou en navigation privée.

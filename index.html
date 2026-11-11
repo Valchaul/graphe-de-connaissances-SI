@@ -51,7 +51,11 @@
       <p id="p-description"></p>
 
       <!-- Suivi de progression : coche la notion comme acquise (js/progression.js) -->
-      <button id="p-acquise" class="bouton-acquise" type="button" aria-pressed="false"></button>
+      <div class="statuts" role="group" aria-label="Suivi de cette notion">
+        <button id="p-acquise" class="bouton-acquise statut-acquise" type="button" aria-pressed="false">Acquise</button>
+        <button id="p-encours" class="bouton-acquise statut-encours" type="button" aria-pressed="false">En cours de travail</button>
+        <button id="p-revoir" class="bouton-acquise statut-revoir" type="button" aria-pressed="false">À réviser</button>
+      </div>
       <p id="p-acquise-aide" class="aide-acquise" hidden>
         <span id="p-acquise-aide-texte"></span>
         <button id="p-acquise-aide-bouton" class="bouton-discret" type="button">Les cocher aussi</button>

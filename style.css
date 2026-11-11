@@ -315,8 +315,11 @@ main {
 }
 .bouton-discret:hover { background: var(--fond); text-decoration: underline; }
 
-/* Bouton « Marquer comme acquise » de la fiche : une case à cocher qui se remplit en vert */
+/* Boutons de statut de la fiche : des cases à cocher qui se remplissent de leur couleur */
+.statuts { display: flex; flex-wrap: wrap; gap: 8px; }
 .bouton-acquise {
+  --s: var(--acquis);
+  --s-fond: var(--acquis-fond);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -329,6 +332,8 @@ main {
   font-size: 0.9rem;
   cursor: pointer;
 }
+.statut-encours { --s: #1d4ed8; --s-fond: #eaf0fe; }
+.statut-revoir { --s: #c2610c; --s-fond: #fdf0e3; }
 .bouton-acquise:hover { background: var(--fond); }
 .bouton-acquise::before {
   content: "";
@@ -341,17 +346,17 @@ main {
   background: var(--surface) center / 12px no-repeat;
 }
 .bouton-acquise[aria-pressed="true"] {
-  border-color: var(--acquis);
-  background: var(--acquis-fond);
-  color: #1d5a37;
+  border-color: var(--s);
+  background: var(--s-fond);
+  color: var(--texte);
   font-weight: 600;
 }
 .bouton-acquise[aria-pressed="true"]::before {
-  border-color: var(--acquis);
-  background: var(--acquis) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5l2.5 2.5 4.5-5'/%3E%3C/svg%3E") center / 12px no-repeat;
+  border-color: var(--s);
+  background: var(--s) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5l2.5 2.5 4.5-5'/%3E%3C/svg%3E") center / 12px no-repeat;
 }
 .aide-acquise {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   font-size: 0.85rem;
   color: var(--texte-doux);
 }

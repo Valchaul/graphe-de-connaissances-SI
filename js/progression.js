@@ -6,14 +6,18 @@
 // =====================================================================
 
 const CLE_PROGRESSION = "learn-map:acquises";
+const CLE_EN_COURS = "learn-map:en-cours";
+const CLE_A_REVISER = "learn-map:a-reviser";
 let stockageDisponible = true; // devient faux si le navigateur refuse d'écrire (navigation privée…)
 let acquises = chargerProgression(); // ensemble des identifiants de notions cochées
+let enCours = chargerEnsemble(CLE_EN_COURS); // notions en cours de travail (jamais en même temps qu'acquises)
+let aReviser = chargerEnsemble(CLE_A_REVISER); // notions à réviser (peut se combiner avec acquise)
 let notionDeLaFiche = null; // notion dont la fiche est ouverte
 
 // ---------- Lecture et écriture ----------
-function chargerProgression() {
+function chargerEnsemble(cle) {
   try {
-    const brut = localStorage.getItem(CLE_PROGRESSION);
+    const brut = localStorage.getItem(cle);
     const ids = brut ? JSON.parse(brut) : [];
     // On ignore les notions qui n'existent plus (le contenu évolue)
     return new Set(Array.isArray(ids) ? ids.filter((id) => parId[id]) : []);
@@ -23,9 +27,15 @@ function chargerProgression() {
   }
 }
 
+function chargerProgression() {
+  return chargerEnsemble(CLE_PROGRESSION);
+}
+
 function sauverProgression() {
   try {
     localStorage.setItem(CLE_PROGRESSION, JSON.stringify([...acquises]));
+    localStorage.setItem(CLE_EN_COURS, JSON.stringify([...enCours]));
+    localStorage.setItem(CLE_A_REVISER, JSON.stringify([...aReviser]));
     stockageDisponible = true;
   } catch {
     stockageDisponible = false;
@@ -35,8 +45,10 @@ function sauverProgression() {
 // ---------- Modifications ----------
 function definirAcquises(ids, valeur) {
   for (const id of ids) {
-    if (valeur) acquises.add(id);
-    else acquises.delete(id);
+    if (valeur) {
+      acquises.add(id);
+      enCours.delete(id); // une notion acquise n'est plus « en cours »
+    } else acquises.delete(id);
   }
   sauverProgression();
   rafraichirProgression();
@@ -46,8 +58,21 @@ function basculerAcquise(id) {
   definirAcquises([id], !acquises.has(id));
 }
 
+// « En cours de travail » et « À réviser » : un statut par notion, qu'on coche ou décoche
+function basculerStatut(id, ensemble) {
+  if (ensemble.has(id)) ensemble.delete(id);
+  else {
+    ensemble.add(id);
+    if (ensemble === enCours) acquises.delete(id); // en cours et acquise s'excluent
+  }
+  sauverProgression();
+  rafraichirProgression();
+}
+
 function viderProgression() {
   acquises.clear();
+  enCours.clear();
+  aReviser.clear();
   sauverProgression();
   rafraichirProgression();
 }
@@ -57,9 +82,13 @@ function viderProgression() {
 function rafraichirProgression() {
   cy.batch(() => {
     cy.nodes(".notion").forEach((noeud) => {
-      const acquise = acquises.has(noeud.id());
-      noeud.toggleClass("acquise", acquise);
-      noeud.data("etiquette", (acquise ? "✓ " : "") + noeud.data("label"));
+      const id = noeud.id();
+      noeud.toggleClass("acquise", acquises.has(id));
+      noeud.toggleClass("encours", enCours.has(id));
+      noeud.toggleClass("arevoir", aReviser.has(id));
+      // Un signe devant le titre : la couleur seule ne suffirait pas à tout le monde
+      const signes = (acquises.has(id) ? "✓ " : "") + (enCours.has(id) ? "… " : "") + (aReviser.has(id) ? "↻ " : "");
+      noeud.data("etiquette", signes + noeud.data("label"));
     });
   });
 
@@ -67,7 +96,7 @@ function rafraichirProgression() {
   const nombre = acquises.size;
   document.getElementById("prog-texte").textContent = `${nombre} / ${total} acquises`;
   document.getElementById("prog-remplissage").style.width = (100 * nombre) / total + "%";
-  if (nombre === 0) fermerConfirmation();
+  if (new Set([...acquises, ...enCours, ...aReviser]).size === 0) fermerConfirmation();
   const alerte = document.getElementById("prog-alerte");
   alerte.hidden = stockageDisponible;
   document.getElementById("progression").setAttribute("aria-label",
@@ -79,13 +108,13 @@ function rafraichirProgression() {
   }
 }
 
-// Bouton « Marquer comme acquise » de la fiche
+// Boutons de statut de la fiche : Acquise, En cours de travail, À réviser
 function majFicheProgression(id) {
   notionDeLaFiche = id;
   const acquise = acquises.has(id);
-  const bouton = document.getElementById("p-acquise");
-  bouton.setAttribute("aria-pressed", String(acquise));
-  bouton.textContent = acquise ? "Acquise" : "Marquer comme acquise";
+  document.getElementById("p-acquise").setAttribute("aria-pressed", String(acquise));
+  document.getElementById("p-encours").setAttribute("aria-pressed", String(enCours.has(id)));
+  document.getElementById("p-revoir").setAttribute("aria-pressed", String(aReviser.has(id)));
 
   // Cocher une notion avancée sans avoir coché ses prérequis : on propose de les cocher aussi
   const manquants = acquise ? cheminVers(id).filter((p) => !acquises.has(p)) : [];
@@ -100,6 +129,13 @@ function majFicheProgression(id) {
 // ---------- Boutons ----------
 document.getElementById("p-acquise").addEventListener("click", () => {
   if (notionDeLaFiche) basculerAcquise(notionDeLaFiche);
+});
+
+document.getElementById("p-encours").addEventListener("click", () => {
+  if (notionDeLaFiche) basculerStatut(notionDeLaFiche, enCours);
+});
+document.getElementById("p-revoir").addEventListener("click", () => {
+  if (notionDeLaFiche) basculerStatut(notionDeLaFiche, aReviser);
 });
 
 document.getElementById("p-acquise-aide-bouton").addEventListener("click", () => {
@@ -118,10 +154,10 @@ function fermerConfirmation() {
 
 boutonProgression.addEventListener("click", () => {
   if (!confirmation.hidden) return fermerConfirmation();
-  const n = acquises.size;
+  const n = new Set([...acquises, ...enCours, ...aReviser]).size;
   if (n === 0) return; // rien à effacer
   document.getElementById("prog-question").textContent =
-    `Effacer toute la progression ? Les ${n} notion${n > 1 ? "s" : ""} cochée${n > 1 ? "s" : ""} seront décochée${n > 1 ? "s" : ""}.`;
+    `Effacer toute la progression ? Les ${n} notion${n > 1 ? "s" : ""} suivie${n > 1 ? "s" : ""} (acquises, en cours ou à réviser) seront remise${n > 1 ? "s" : ""} à zéro.`;
   confirmation.hidden = false;
   boutonProgression.setAttribute("aria-expanded", "true");
   document.getElementById("prog-annuler").focus();
@@ -151,6 +187,8 @@ document.addEventListener("keydown", (e) => {
 window.addEventListener("storage", (e) => {
   if (e.key !== CLE_PROGRESSION && e.key !== null) return;
   acquises = chargerProgression();
+  enCours = chargerEnsemble(CLE_EN_COURS);
+  aReviser = chargerEnsemble(CLE_A_REVISER);
   rafraichirProgression();
 });
 
