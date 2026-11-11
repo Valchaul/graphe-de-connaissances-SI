@@ -29,7 +29,7 @@ basculeIlots.addEventListener("click", () => {
   grouperParDomaine = !grouperParDomaine;
   memoriserPreferenceIlots(grouperParDomaine);
   basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
-  placer().catch(afficherErreurPlacement);
+  placer(false).catch(afficherErreurPlacement);
 });
 
 // La légende est transparente : elle recouvre le haut de la carte au lieu de lui prendre de la place.
