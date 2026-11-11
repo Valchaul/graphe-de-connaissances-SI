@@ -37,14 +37,15 @@ function cadrerSurLaHauteur() {
   const boite = cy.elements().boundingBox();
   if (boite.w === 0 || boite.h === 0) return;
   // Sur un petit écran, on garde un zoom lisible quitte à déborder aussi en hauteur.
-  const zoomHauteur = (cy.height() - 2 * marge) / boite.h;
+  const haut = document.getElementById("legende").offsetHeight; // la légende recouvre le haut de la carte
+  const zoomHauteur = (cy.height() - haut - 2 * marge) / boite.h;
   const zoom = Math.min(Math.max(zoomHauteur, ZOOM_OUVERTURE_MIN), ZOOM_OUVERTURE_MAX, cy.maxZoom());
   const tientEnLargeur = boite.w * zoom <= cy.width() - 2 * marge;
   cy.viewport({
     zoom,
     pan: {
       x: tientEnLargeur ? (cy.width() - boite.w * zoom) / 2 - boite.x1 * zoom : marge - boite.x1 * zoom,
-      y: (cy.height() - boite.h * zoom) / 2 - boite.y1 * zoom,
+      y: haut + (cy.height() - haut - boite.h * zoom) / 2 - boite.y1 * zoom,
     },
   });
 }

@@ -31,3 +31,12 @@ basculeIlots.addEventListener("click", () => {
   basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
   placer().catch(afficherErreurPlacement);
 });
+
+// La légende est transparente : elle recouvre le haut de la carte au lieu de lui prendre de la place.
+function ajusterLegende() {
+  legende.style.marginBottom = -legende.offsetHeight + "px";
+  document.documentElement.style.setProperty("--h-legende", legende.offsetHeight + "px"); // la fiche se place dessous
+  cy.resize();
+}
+ajusterLegende();
+window.addEventListener("resize", ajusterLegende);
