@@ -73,7 +73,10 @@ const NOTIONS = [
     prerequis: ["analyse"],
     ressources: [
       { titre: "Exo7 — cours et exercices corrigés", url: "https://exo7.emath.fr/" },
+      { titre: "Wikiversité — Nombres complexes (cours)", url: WV("Nombre_complexe") },
+      { titre: "Bibm@th — résumé de cours : nombres complexes et trigonométrie", url: "https://www.bibmath.net/ressources/index.php?action=affiche&quoi=mathsup/cours/complexes.html" },
       { titre: "Wikipédia — Nombre complexe", url: WP("Nombre_complexe") },
+      { titre: "Wikipédia — Formule d'Euler", url: WP("Formule_d'Euler") },
     ],
   },
   {
@@ -94,6 +97,10 @@ const NOTIONS = [
     prerequis: ["analyse", "complexes", "algebre-lineaire"],
     ressources: [
       { titre: "MIT 18.03 — Differential Equations (EN)", url: MIT("18-03-differential-equations-spring-2010") },
+      { titre: "Exo7 — cours : équations différentielles (PDF)", url: "https://exo7.emath.fr/cours/ch_equadiff.pdf" },
+      { titre: "Wikiversité — Équation différentielle (cours)", url: WV("Équation_différentielle") },
+      { titre: "3Blue1Brown — Differential equations (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLZHQObOWTQDNPOjrT6KVlfJuKtYTftqH6" },
+      { titre: "Paul's Online Notes — Differential Equations (cours et exercices, EN)", url: "https://tutorial.math.lamar.edu/Classes/DE/DE.aspx" },
       { titre: "Wikipédia — Équation différentielle", url: WP("Équation_différentielle") },
     ],
   },
@@ -127,6 +134,8 @@ const NOTIONS = [
     prerequis: ["equa-diff"],
     ressources: [
       { titre: "MIT 18.03 — Differential Equations, partie Laplace (EN)", url: MIT("18-03-differential-equations-spring-2010") },
+      { titre: "Wikiversité — Transformée de Laplace (cours)", url: WV("Transformée_de_Laplace") },
+      { titre: "Paul's Online Notes — Laplace Transforms (cours et exercices, EN)", url: "https://tutorial.math.lamar.edu/Classes/DE/LaplaceIntro.aspx" },
       { titre: "Wikipédia — Transformation de Laplace", url: WP("Transformation_de_Laplace") },
     ],
   },
@@ -283,7 +292,13 @@ const NOTIONS = [
     prerequis: ["ondes"],
     ressources: [
       { titre: "Dan Russell (Penn State) — animations d'acoustique et de vibrations (EN)", url: "https://www.acs.psu.edu/drussell/demos.html" },
+      { titre: "INRS — Bruit au travail : niveaux sonores et risques", url: "https://www.inrs.fr/risques/bruit/ce-qu-il-faut-retenir.html" },
+      { titre: "UNSW Physclips — Waves and Sound (animations, EN)", url: "https://www.animations.physics.unsw.edu.au/waves-sound/" },
+      { titre: "UNSW — Music Acoustics (EN)", url: "https://newt.phys.unsw.edu.au/music/" },
+      { titre: "OpenStax — University Physics vol. 1, ch. 17 : Sound (EN)", url: "https://openstax.org/books/university-physics-volume-1/pages/17-introduction" },
+      { titre: "HyperPhysics — Sound and Hearing (carte de concepts, EN)", url: HYPERPHYSICS + "Sound/soucon.html" },
       { titre: "Wikipédia — Acoustique", url: WP("Acoustique") },
+      { titre: "Wikipédia — Décibel", url: WP("Décibel") },
     ],
   },
   {
@@ -293,7 +308,12 @@ const NOTIONS = [
     prerequis: ["electromagnetisme", "ondes"],
     ressources: [
       { titre: "MIT 6.013 — Electromagnetics and Applications (EN)", url: MIT("6-013-electromagnetics-and-applications-spring-2009") },
+      { titre: "femto-physique — Les ondes électromagnétiques dans le vide", url: "https://femto-physique.fr/electromagnetisme/ondes-em.php" },
+      { titre: "Ellingson — Electromagnetics I (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electro-Optics/Book%3A_Electromagnetics_I_(Ellingson)" },
+      { titre: "The Antenna Theory Website (EN)", url: "https://www.antenna-theory.com/" },
       { titre: "Wikipédia — Onde électromagnétique", url: WP("Onde_électromagnétique") },
+      { titre: "Wikipédia — Ligne de transmission", url: WP("Ligne_de_transmission") },
+      { titre: "Wikipédia — Antenne radioélectrique", url: WP("Antenne_radioélectrique") },
     ],
   },
   {
@@ -398,7 +418,11 @@ const NOTIONS = [
     prerequis: ["meca-point", "algebre-lineaire"],
     ressources: [
       { titre: "Mechanics Map — statique et dynamique (EN)", url: "https://eng.libretexts.org/Bookshelves/Mechanical_Engineering/Mechanics_Map_(Moore_et_al.)" },
+      { titre: "Wikiversité — Mécanique du solide (cours)", url: WV("Mécanique_du_solide") },
+      { titre: "MIT 2.003SC — Engineering Dynamics (EN)", url: MIT("2-003sc-engineering-dynamics-fall-2011") },
       { titre: "Wikipédia — Cinématique", url: WP("Cinématique") },
+      { titre: "Wikipédia — Torseur cinématique", url: WP("Torseur_cinématique") },
+      { titre: "Wikipédia — Liaison (mécanique)", url: WP("Liaison_(mécanique)") },
     ],
   },
   {
@@ -419,7 +443,12 @@ const NOTIONS = [
     prerequis: ["dynamique"],
     ressources: [
       { titre: "MIT 8.09 — Classical Mechanics III (EN)", url: MIT("8-09-classical-mechanics-iii-fall-2014") },
+      { titre: "Susskind — The Theoretical Minimum : Classical Mechanics (vidéos, EN)", url: "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall" },
+      { titre: "David Tong (Cambridge) — Classical Dynamics (notes de cours, EN)", url: "https://www.damtp.cam.ac.uk/user/tong/dynamics.html" },
+      { titre: "Feynman — Lectures on Physics, vol. II, ch. 19 : le principe de moindre action (EN)", url: FEYNMAN + "II_19.html" },
       { titre: "Wikipédia — Mécanique analytique", url: WP("Mécanique_analytique") },
+      { titre: "Wikipédia — Lagrangien", url: WP("Lagrangien") },
+      { titre: "Wikipédia — Équations de Lagrange", url: WP("Équations_de_Lagrange") },
     ],
   },
   {
@@ -453,7 +482,11 @@ const NOTIONS = [
     prerequis: ["dynamique", "equa-diff"],
     ressources: [
       { titre: "MIT 2.003SC — Engineering Dynamics, partie vibrations (EN)", url: MIT("2-003sc-engineering-dynamics-fall-2011") },
+      { titre: "femto-physique — Oscillateurs mécaniques", url: "https://femto-physique.fr/mecanique/oscillateurs-mecaniques.php" },
+      { titre: "Mechanics Map — Vibrations with One Degree of Freedom (EN)", url: "https://eng.libretexts.org/Bookshelves/Mechanical_Engineering/Mechanics_Map_(Moore_et_al.)/15%3A_Vibrations_with_One_Degree_of_Freedom" },
+      { titre: "Dan Russell (Penn State) — animations d'acoustique et de vibrations (EN)", url: "https://www.acs.psu.edu/drussell/demos.html" },
       { titre: "Wikipédia — Vibration", url: WP("Vibration") },
+      { titre: "Wikipédia — Mode normal", url: WP("Mode_normal") },
     ],
   },
   {
@@ -463,6 +496,10 @@ const NOTIONS = [
     prerequis: ["mmc", "analyse-numerique", "edp"],
     ressources: [
       { titre: "MIT 2.092 — Finite Element Analysis of Solids and Fluids (EN)", url: MIT("2-092-finite-element-analysis-of-solids-and-fluids-i-fall-2009") },
+      { titre: "code_aster — logiciel libre de calcul de structures (EDF)", url: "https://code-aster.org/" },
+      { titre: "MIT RES.2-002 — Finite Element Procedures for Solids and Structures, Bathe (vidéos) (EN)", url: MIT("res-2-002-finite-element-procedures-for-solids-and-structures-spring-2010") },
+      { titre: "Garikipati (Univ. Michigan) — Introduction to Finite Element Methods (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLJhG_d-Sp_JHKVRhfTgDqbic_4MHpltXZ" },
+      { titre: "FEniCS — éléments finis en Python (logiciel libre, EN)", url: "https://fenicsproject.org/" },
       { titre: "Wikipédia — Méthode des éléments finis", url: WP("Méthode_des_éléments_finis") },
     ],
   },
@@ -484,7 +521,9 @@ const NOTIONS = [
     prerequis: ["meca-fluides"],
     ressources: [
       { titre: "Fluid Power World — articles techniques (EN)", url: "https://www.fluidpowerworld.com/" },
+      { titre: "Pytel — Hydraulics (livre gratuit, EN)", url: "https://openoregon.pressbooks.pub/hydraulics/" },
       { titre: "Wikipédia — Vérin", url: WP("Vérin") },
+      { titre: "Wikipédia — Énergie pneumatique", url: WP("Énergie_pneumatique") },
     ],
   },
   {
@@ -553,6 +592,8 @@ const NOTIONS = [
     prerequis: ["transferts-thermiques", "meca-fluides"],
     ressources: [
       { titre: "Lienhard — A Heat Transfer Textbook, ch. 3 (livre gratuit, EN)", url: "https://ahtt.mit.edu/" },
+      { titre: "MIT 2.51 — Intermediate Heat and Mass Transfer (EN)", url: MIT("2-51-intermediate-heat-and-mass-transfer-fall-2008") },
+      { titre: "Engineering ToolBox — Logarithmic Mean Temperature Difference (EN)", url: "https://www.engineeringtoolbox.com/arithmetic-logarithmic-mean-temperature-d_436.html" },
       { titre: "Wikipédia — Échangeur de chaleur", url: WP("Échangeur_de_chaleur") },
     ],
   },
@@ -585,7 +626,13 @@ const NOTIONS = [
     prerequis: ["machines-thermiques"],
     ressources: [
       { titre: "MIT 2.61 — Internal Combustion Engines (EN)", url: MIT("2-61-internal-combustion-engines-spring-2017") },
+      { titre: "NASA Glenn — Four Stroke Internal Combustion Engine (EN)", url: "https://www.grc.nasa.gov/www/k-12/airplane/engopt.html" },
+      { titre: "NASA Glenn — Ideal Otto Cycle (EN)", url: "https://www.grc.nasa.gov/www/k-12/airplane/otto.html" },
+      { titre: "Animated Engines — moteurs animés (EN)", url: "https://animatedengines.com/" },
       { titre: "Wikipédia — Combustion", url: WP("Combustion") },
+      { titre: "Wikipédia — Moteur à combustion interne", url: WP("Moteur_à_combustion_interne") },
+      { titre: "Wikipédia — Cycle de Beau de Rochas", url: WP("Cycle_de_Beau_de_Rochas") },
+      { titre: "Wikipédia — Moteur Diesel", url: WP("Moteur_Diesel") },
     ],
   },
   {
@@ -595,7 +642,11 @@ const NOTIONS = [
     prerequis: ["machines-thermiques"],
     ressources: [
       { titre: "Yan — Introduction to Engineering Thermodynamics, ch. 6 (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Mechanical_Engineering/Introduction_to_Engineering_Thermodynamics_(Yan)" },
+      { titre: "Énergie Plus — Machine frigorifique à compression", url: "https://energieplus-lesite.be/techniques/climatisation8/production-de-froid/machine-frigorifique-a-compression/" },
+      { titre: "Énergie Plus — Pompes à chaleur", url: "https://energieplus-lesite.be/techniques/chauffage10/pompes-a-chaleur/" },
       { titre: "Wikipédia — Pompe à chaleur", url: WP("Pompe_à_chaleur") },
+      { titre: "Wikipédia — Cycle frigorifique", url: WP("Cycle_frigorifique") },
+      { titre: "Wikipédia — Fluide frigorigène", url: WP("Fluide_frigorigène") },
     ],
   },
   {
@@ -605,7 +656,12 @@ const NOTIONS = [
     prerequis: ["thermo", "batteries"],
     ressources: [
       { titre: "MIT 2.60J — Fundamentals of Advanced Energy Conversion (EN)", url: MIT("2-60j-fundamentals-of-advanced-energy-conversion-spring-2020") },
+      { titre: "IFPEN — Tout savoir sur l'hydrogène", url: "https://www.ifpenergiesnouvelles.fr/enjeux-et-prospective/decryptages/energies-renouvelables/tout-savoir-lhydrogene" },
+      { titre: "CEA — L'essentiel sur l'hydrogène", url: "https://www.cea.fr/comprendre/Pages/energies/renouvelables/essentiel-sur-hydrogene.aspx" },
+      { titre: "Connaissance des Énergies — Hydrogène énergie (fiche pédagogique)", url: "https://www.connaissancedesenergies.org/fiche-pedagogique/hydrogene-energie" },
+      { titre: "US Department of Energy — Fuel Cells (EN)", url: "https://www.energy.gov/eere/fuelcells/fuel-cells" },
       { titre: "Wikipédia — Pile à combustible", url: WP("Pile_à_combustible") },
+      { titre: "Wikipédia — Production d'hydrogène", url: WP("Production_d'hydrogène") },
     ],
   },
   {
@@ -701,7 +757,12 @@ const NOTIONS = [
     prerequis: ["transformateur"],
     ressources: [
       { titre: "MIT 6.685 — Electric Machines (EN)", url: MIT("6-685-electric-machines-fall-2013") },
+      { titre: "Wikiversité — Machine à courant continu (cours)", url: WV("Machine_à_courant_continu") },
+      { titre: "Kuphaldt — AC Motors (livre gratuit, EN)", url: KUPHALDT_AC + "13%3A_AC_Motors" },
+      { titre: "MIT 6.061 — Introduction to Electric Power Systems (EN)", url: MIT("6-061-introduction-to-electric-power-systems-spring-2011") },
       { titre: "Wikipédia — Machine électrique", url: WP("Machine_électrique") },
+      { titre: "Wikipédia — Machine asynchrone", url: WP("Machine_asynchrone") },
+      { titre: "Wikipédia — Machine synchrone", url: WP("Machine_synchrone") },
     ],
   },
   {
@@ -711,7 +772,12 @@ const NOTIONS = [
     prerequis: ["electronique-analogique", "machines-electriques", "semi-conducteurs"],
     ressources: [
       { titre: "MIT 6.622 — Power Electronics (EN)", url: MIT("6-622-power-electronics-spring-2023") },
+      { titre: "Wikiversité — Redresseur (cours)", url: WV("Redresseur") },
+      { titre: "Wikiversité — Onduleur (cours)", url: WV("Onduleur") },
+      { titre: "Coursera (Univ. Colorado) — Introduction to Power Electronics (accès libre en auditeur, EN)", url: "https://www.coursera.org/learn/power-electronics" },
+      { titre: "Texas Instruments — Power Topologies Handbook (PDF, EN)", url: "https://www.ti.com/lit/pdf/slyu036" },
       { titre: "Wikipédia — Électronique de puissance", url: WP("Électronique_de_puissance") },
+      { titre: "Wikipédia — Convertisseur Buck", url: WP("Convertisseur_Buck") },
     ],
   },
   {
@@ -732,7 +798,11 @@ const NOTIONS = [
     prerequis: ["electronique-puissance", "moteurs-speciaux", "pid"],
     ressources: [
       { titre: "Motion Control Tips — articles techniques (EN)", url: "https://www.motioncontroltips.com/" },
+      { titre: "SimpleFOC — Theory corner : commande vectorielle expliquée (EN)", url: "https://docs.simplefoc.com/theory_corner" },
+      { titre: "Texas Instruments — Field Orientated Control of 3-Phase AC-Motors (note d'application, EN)", url: "https://www.ti.com/lit/an/bpra073/bpra073.pdf" },
       { titre: "Wikipédia — Variateur électronique de vitesse", url: WP("Variateur_électronique_de_vitesse") },
+      { titre: "Wikipédia — Commande vectorielle", url: WP("Commande_vectorielle") },
+      { titre: "Wikipédia — Modulation de largeur d'impulsion", url: WP("Modulation_de_largeur_d'impulsion") },
     ],
   },
   {
@@ -742,7 +812,12 @@ const NOTIONS = [
     prerequis: ["electronique-analogique", "echantillonnage"],
     ressources: [
       { titre: "The Scientist and Engineer's Guide to DSP, ch. 3 (livre gratuit, EN)", url: DSP_GUIDE },
+      { titre: "SparkFun — Analog to Digital Conversion (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/analog-to-digital-conversion" },
+      { titre: "Analog Devices — Data Conversion Handbook (livre gratuit, EN)", url: "https://www.analog.com/en/resources/technical-books/data-conversion-handbook.html" },
+      { titre: "Analog Devices — tutoriel MT-001 sur les convertisseurs (PDF, EN)", url: "https://www.analog.com/media/en/training-seminars/tutorials/MT-001.pdf" },
       { titre: "Wikipédia — Convertisseur analogique-numérique", url: WP("Convertisseur_analogique-numérique") },
+      { titre: "Wikipédia — Convertisseur numérique-analogique", url: WP("Convertisseur_numérique-analogique") },
+      { titre: "Wikipédia — Quantification (signal)", url: WP("Quantification_(signal)") },
     ],
   },
   {
@@ -752,7 +827,12 @@ const NOTIONS = [
     prerequis: ["circuits"],
     ressources: [
       { titre: "Battery University (EN)", url: "https://batteryuniversity.com/" },
+      { titre: "Adafruit — Li-Ion & LiPoly Batteries (tutoriel, EN)", url: "https://learn.adafruit.com/li-ion-and-lipoly-batteries" },
+      { titre: "DoITPoMS — Batteries (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/batteries/index.php" },
+      { titre: "Plett (Univ. Colorado) — Modeling, Simulation, and Identification of Battery Dynamics (notes de cours, EN)", url: "http://mocha-java.uccs.edu/ECE5710/" },
       { titre: "Wikipédia — Accumulateur électrique", url: WP("Accumulateur_électrique") },
+      { titre: "Wikipédia — Accumulateur lithium-ion", url: WP("Accumulateur_lithium-ion") },
+      { titre: "Wikipédia — Système de contrôle des batteries (BMS)", url: WP("Système_de_contrôle_des_batteries_d'accumulateurs") },
     ],
   },
   {
@@ -762,6 +842,10 @@ const NOTIONS = [
     prerequis: ["electronique-analogique"],
     ressources: [
       { titre: "KiCad — documentation officielle", url: "https://docs.kicad.org/" },
+      { titre: "KiCad — Démarrer avec KiCad (tutoriel)", url: "https://docs.kicad.org/9.0/fr/getting_started_in_kicad/getting_started_in_kicad.html" },
+      { titre: "SparkFun — PCB Basics (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/pcb-basics" },
+      { titre: "Phil's Lab — conception de cartes pas à pas (vidéos, EN)", url: "https://www.youtube.com/@PhilsLab" },
+      { titre: "Texas Instruments — High-Speed Layout Guidelines (note d'application, EN)", url: "https://www.ti.com/lit/an/scaa082a/scaa082a.pdf" },
       { titre: "Wikipédia — Circuit imprimé", url: WP("Circuit_imprimé") },
     ],
   },
@@ -819,7 +903,11 @@ const NOTIONS = [
     prerequis: ["electronique-analogique", "metrologie"],
     ressources: [
       { titre: "NI — Sensor Fundamentals (EN)", url: "https://www.ni.com/en/shop/data-acquisition/sensor-fundamentals.html" },
+      { titre: "Wikiversité — Capteur (cours)", url: WV("Capteur") },
+      { titre: "SparkFun — tutoriels sur les capteurs (EN)", url: "https://learn.sparkfun.com/tutorials/tags/sensors" },
+      { titre: "Electronics Tutorials — Sensors and Transducers (EN)", url: "https://www.electronics-tutorials.ws/io/io_1.html" },
       { titre: "Wikipédia — Capteur", url: WP("Capteur") },
+      { titre: "Wikipédia — Chaîne d'acquisition", url: WP("Chaîne_d'acquisition") },
     ],
   },
   {
@@ -830,6 +918,12 @@ const NOTIONS = [
     ressources: [
       { titre: "O'Haver — A Pragmatic Introduction to Signal Processing (EN)", url: "https://terpconnect.umd.edu/~toh/spectrum/" },
       { titre: "The Scientist and Engineer's Guide to DSP (livre gratuit, EN)", url: DSP_GUIDE },
+      { titre: "Fiore — Operational Amplifiers and Linear Integrated Circuits (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Operational_Amplifiers_and_Linear_Integrated_Circuits_-_Theory_and_Application_(Fiore)" },
+      { titre: "SparkFun — Analog to Digital Conversion (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/analog-to-digital-conversion" },
+      { titre: "Electronics Tutorials — Operational Amplifiers (EN)", url: "https://www.electronics-tutorials.ws/opamp/opamp_1.html" },
+      { titre: "Wikipédia — Pont de Wheatstone", url: WP("Pont_de_Wheatstone") },
+      { titre: "Wikipédia — Amplificateur de mesure", url: WP("Amplificateur_de_mesure") },
+      { titre: "Wikipédia — Chaîne d'acquisition", url: WP("Chaîne_d'acquisition") },
     ],
   },
   {
@@ -885,7 +979,11 @@ const NOTIONS = [
     prerequis: ["metrologie"],
     ressources: [
       { titre: "NIST — Engineering Statistics Handbook, Process Improvement (EN)", url: "https://www.itl.nist.gov/div898/handbook/pri/pri.htm" },
+      { titre: "JMP — What is Design of Experiments? (EN)", url: "https://www.jmp.com/en/statistics-knowledge-portal/what-is-design-of-experiments" },
+      { titre: "pyDOE3 — plans d'expériences en Python (EN)", url: "https://pydoe3.readthedocs.io/en/latest/" },
       { titre: "Wikipédia — Plan d'expériences", url: WP("Plan_d'expériences") },
+      { titre: "Wikipédia — Plan factoriel", url: WP("Plan_factoriel") },
+      { titre: "Wikipédia — Méthode Taguchi", url: WP("Méthode_Taguchi") },
     ],
   },
   {
@@ -895,7 +993,14 @@ const NOTIONS = [
     prerequis: ["capteurs", "dynamique"],
     ressources: [
       { titre: "VectorNav — Inertial Navigation Primer (EN)", url: "https://www.vectornav.com/resources/inertial-navigation-primer" },
+      { titre: "Woodman — An Introduction to Inertial Navigation (rapport, PDF, EN)", url: "https://www.cl.cam.ac.uk/techreports/UCAM-CL-TR-696.pdf" },
+      { titre: "SparkFun — Accelerometer Basics (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/accelerometer-basics" },
+      { titre: "SparkFun — Gyroscope (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/gyroscope" },
+      { titre: "AHRS — algorithmes d'estimation d'orientation en Python (EN)", url: "https://ahrs.readthedocs.io/en/latest/" },
+      { titre: "x-io — algorithmes libres de Madgwick pour IMU (EN)", url: "https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/" },
       { titre: "Wikipédia — Centrale à inertie", url: WP("Centrale_à_inertie") },
+      { titre: "Wikipédia — Accéléromètre", url: WP("Accéléromètre") },
+      { titre: "Wikipédia — Gyromètre", url: WP("Gyromètre") },
     ],
   },
   {
@@ -933,7 +1038,13 @@ const NOTIONS = [
     prerequis: ["modelisation-systemes", "complexes"],
     ressources: [
       { titre: "Brian Douglas — Classical Control Theory (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLUMWjy5jgHK1NC52DXXrriwihVrYZKqjk" },
+      { titre: "MIT 2.004 — Dynamics and Control II (EN)", url: MIT("2-004-dynamics-and-control-ii-spring-2008") },
+      { titre: "Iqbal — Introduction to Control Systems (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Industrial_and_Systems_Engineering/Introduction_to_Control_Systems_(Iqbal)" },
+      { titre: "python-control — tracer Bode et Nyquist en Python (EN)", url: "https://python-control.readthedocs.io/en/latest/" },
+      { titre: "Univ. Michigan — Control Tutorials : Frequency Domain Methods (EN)", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlFrequency" },
       { titre: "Wikipédia — Diagramme de Bode", url: WP("Diagramme_de_Bode") },
+      { titre: "Wikipédia — Diagramme de Nyquist", url: WP("Diagramme_de_Nyquist") },
+      { titre: "Wikipédia — Diagramme de Black", url: WP("Diagramme_de_Black") },
     ],
   },
   {
@@ -976,7 +1087,11 @@ const NOTIONS = [
     prerequis: ["pid", "transformee-z"],
     ressources: [
       { titre: "Iqbal — Introduction to Control Systems, partie systèmes échantillonnés (EN)", url: "https://eng.libretexts.org/Bookshelves/Industrial_and_Systems_Engineering/Introduction_to_Control_Systems_(Iqbal)" },
+      { titre: "Brian Douglas — Discrete Control (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLUMWjy5jgHK0MLv6Ksf-NHi7Ur8NRNU4Z" },
+      { titre: "MIT 2.171 — Analysis and Design of Digital Control Systems (EN)", url: MIT("2-171-analysis-and-design-of-digital-control-systems-fall-2006") },
+      { titre: "Univ. Michigan — Control Tutorials : Digital Controller Design (EN)", url: "https://ctms.engin.umich.edu/CTMS/index.php?example=Introduction&section=ControlDigital" },
       { titre: "Wikipédia — Transformation en Z", url: WP("Transformation_en_Z") },
+      { titre: "Wikipédia — Bloqueur d'ordre zéro", url: WP("Bloqueur_d'ordre_zéro") },
     ],
   },
   {
@@ -986,7 +1101,11 @@ const NOTIONS = [
     prerequis: ["analyse-frequentielle", "probas", "algebre-lineaire-numerique"],
     ressources: [
       { titre: "MIT 2.160 — Identification, Estimation, and Learning (EN)", url: MIT("2-160-identification-estimation-and-learning-spring-2006") },
+      { titre: "Brunton & Kutz — Data-Driven Science and Engineering (livre et vidéos, EN)", url: "https://databookuw.com/" },
+      { titre: "SIPPY — identification de systèmes en Python (EN)", url: "https://github.com/CPCLAB-UNIPI/SIPPY" },
+      { titre: "MathWorks — About System Identification (EN)", url: "https://www.mathworks.com/help/ident/gs/about-system-identification.html" },
       { titre: "Wikipédia — Identification de système", url: WP("Identification_de_système") },
+      { titre: "Wikipédia — Méthode des moindres carrés", url: WP("Méthode_des_moindres_carrés") },
     ],
   },
   {
@@ -1095,7 +1214,12 @@ const NOTIONS = [
     prerequis: ["signaux"],
     ressources: [
       { titre: "The Scientist and Engineer's Guide to DSP (livre gratuit, EN)", url: DSP_GUIDE },
+      { titre: "The Scientist and Engineer's Guide to DSP, ch. 3 : ADC and DAC (livre gratuit, EN)", url: DSP_GUIDE + "ch3.htm" },
+      { titre: "Baraniuk — Signals and Systems, ch. 10 : Sampling and Reconstruction (livre gratuit, EN)", url: BARANIUK + "/10%3A_Sampling_and_Reconstruction" },
+      { titre: "Xiph — Digital Show & Tell : l'échantillonnage démontré à l'oscilloscope (vidéo, EN)", url: "https://xiph.org/video/vid2.shtml" },
       { titre: "Wikipédia — Échantillonnage (signal)", url: WP("Échantillonnage_(signal)") },
+      { titre: "Wikipédia — Théorème d'échantillonnage", url: WP("Théorème_d'échantillonnage") },
+      { titre: "Wikipédia — Repliement de spectre", url: WP("Repliement_de_spectre") },
     ],
   },
   {
@@ -1129,7 +1253,13 @@ const NOTIONS = [
     prerequis: ["tns", "python-scientifique"],
     ressources: [
       { titre: "scikit-image — galerie d'exemples (Python, EN)", url: "https://scikit-image.org/docs/stable/auto_examples/" },
+      { titre: "OpenCV — tutoriels Python (EN)", url: "https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html" },
+      { titre: "HIPR2 — encyclopédie illustrée des opérations sur les images (EN)", url: "https://homepages.inf.ed.ac.uk/rbf/HIPR2/" },
+      { titre: "Nayar (Columbia) — First Principles of Computer Vision (vidéos, EN)", url: "https://fpcv.cs.columbia.edu/" },
+      { titre: "Szeliski — Computer Vision: Algorithms and Applications (livre gratuit, EN)", url: "https://szeliski.org/Book/" },
       { titre: "Wikipédia — Traitement d'images", url: WP("Traitement_d'images") },
+      { titre: "Wikipédia — Détection de contours", url: WP("Détection_de_contours") },
+      { titre: "Wikipédia — Morphologie mathématique", url: WP("Morphologie_mathématique") },
     ],
   },
   {
@@ -1269,7 +1399,12 @@ const NOTIONS = [
     prerequis: ["embarque", "linux"],
     ressources: [
       { titre: "FreeRTOS — documentation et livre gratuit (EN)", url: "https://www.freertos.org/" },
+      { titre: "Shawn Hymel (Digi-Key) — Introduction to RTOS (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLEBQazB0HUyQ4hAPU1cJED6t3DU0h34bz" },
+      { titre: "Miro Samek — Modern Embedded Systems Programming (cours vidéo, EN)", url: "https://www.state-machine.com/video-course" },
+      { titre: "Zephyr — documentation d'un RTOS libre (EN)", url: "https://docs.zephyrproject.org/latest/" },
       { titre: "Wikipédia — Système temps réel", url: WP("Système_temps_réel") },
+      { titre: "Wikipédia — Ordonnancement (informatique)", url: WP("Ordonnancement_(informatique)") },
+      { titre: "Wikipédia — Inversion de priorité", url: WP("Inversion_de_priorité") },
     ],
   },
   {
@@ -1376,7 +1511,12 @@ const NOTIONS = [
     prerequis: [],
     ressources: [
       { titre: "MIT 3.091 — Introduction to Solid-State Chemistry (EN)", url: MIT("3-091-introduction-to-solid-state-chemistry-fall-2018") },
+      { titre: "DoITPoMS — Atomic Scale Structure of Materials (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/atomic-scale-structure/index.php" },
+      { titre: "DoITPoMS — Crystallography (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/crystallography3/index.php" },
+      { titre: "LibreTexts — bibliothèque de science des matériaux (livres gratuits, EN)", url: "https://eng.libretexts.org/Bookshelves/Materials_Science" },
       { titre: "Wikipédia — Science des matériaux", url: WP("Science_des_matériaux") },
+      { titre: "Wikipédia — Structure cristalline", url: WP("Structure_cristalline") },
+      { titre: "Wikipédia — Liaison chimique", url: WP("Liaison_chimique") },
     ],
   },
   {
@@ -1386,7 +1526,12 @@ const NOTIONS = [
     prerequis: ["science-materiaux"],
     ressources: [
       { titre: "MechaniCalc — Mechanical Properties of Materials (EN)", url: "https://www.mechanicalc.com/reference/material-properties" },
+      { titre: "DoITPoMS — Introduction to Mechanical Properties of Materials (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/mechanical_properties/index.php" },
+      { titre: "DoITPoMS — Mechanical Testing of Metals (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/mechanical_testing_metals/index.php" },
+      { titre: "MIT 3.11 — Mechanics of Materials (EN)", url: MIT("3-11-mechanics-of-materials-fall-1999") },
       { titre: "Wikipédia — Essai de traction", url: WP("Essai_de_traction") },
+      { titre: "Wikipédia — Module d'Young", url: WP("Module_d'Young") },
+      { titre: "Wikipédia — Déformation plastique", url: WP("Déformation_plastique") },
     ],
   },
   {
@@ -1430,7 +1575,13 @@ const NOTIONS = [
     prerequis: ["metaux"],
     ressources: [
       { titre: "DoITPoMS (Cambridge) — Kinetics of Aqueous Corrosion (EN)", url: "https://www.doitpoms.ac.uk/tlplib/aqueous_corrosion/index.php" },
+      { titre: "DoITPoMS — The Nernst Equation and Pourbaix Diagrams (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/pourbaix/index.php" },
+      { titre: "NASA Kennedy — Corrosion Technology Laboratory (EN)", url: "https://public.ksc.nasa.gov/corrosion/" },
+      { titre: "AMPP — What is Corrosion? (EN)", url: "https://www.ampp.org/resources/what-is-corrosion" },
       { titre: "Wikipédia — Corrosion", url: WP("Corrosion") },
+      { titre: "Wikipédia — Corrosion aqueuse", url: WP("Corrosion_aqueuse") },
+      { titre: "Wikipédia — Protection cathodique", url: WP("Protection_cathodique") },
+      { titre: "Wikipédia — Passivation", url: WP("Passivation") },
     ],
   },
   {
@@ -1481,6 +1632,9 @@ const NOTIONS = [
     ressources: [
       { titre: "GD&T Basics — guide des symboles de tolérancement (EN)", url: "https://www.gdandtbasics.com/gdt-symbols/" },
       { titre: "Wikipédia — Spécification géométrique des produits", url: WP("Spécification_géométrique_des_produits") },
+      { titre: "Wikipédia — Cotation fonctionnelle", url: WP("Cotation_fonctionnelle") },
+      { titre: "Wikipédia — Tolérance géométrique", url: WP("Tolérance_géométrique") },
+      { titre: "Wikipédia — Ajustement (mécanique)", url: WP("Ajustement_(mécanique)") },
     ],
   },
   {
@@ -1529,6 +1683,10 @@ const NOTIONS = [
     ressources: [
       { titre: "MIT 2.75 — Precision Machine Design (EN)", url: MIT("2-75-precision-machine-design-fall-2001") },
       { titre: "Motion Control Tips — articles techniques (EN)", url: "https://www.motioncontroltips.com/" },
+      { titre: "Oriental Motor — Motor Sizing Calculations (EN)", url: "https://www.orientalmotor.com/technology/motor-sizing-calculations.html" },
+      { titre: "Faulhaber — tutoriels de choix d'un entraînement (EN)", url: "https://www.faulhaber.com/en/know-how/tutorials/" },
+      { titre: "maxon academy — choix et dimensionnement d'un entraînement (EN)", url: "https://www.maxongroup.com/en/knowledge-and-support/maxon-academy" },
+      { titre: "Wikipédia — Réducteur mécanique", url: WP("Réducteur_mécanique") },
     ],
   },
   {
@@ -1574,6 +1732,10 @@ const NOTIONS = [
     ressources: [
       { titre: "MIT 2.017J — Design of Electromechanical Robotic Systems (projets, EN)", url: MIT("2-017j-design-of-electromechanical-robotic-systems-fall-2009") },
       { titre: "Académie de Grenoble — annuaire de ressources SII", url: "https://sii.web.ac-grenoble.fr/ressources-ingenierie-systeme/page-de-ressources-en-sii-sur-le-web" },
+      { titre: "MIT 2.737 — Mechatronics (EN)", url: MIT("2-737-mechatronics-fall-2014") },
+      { titre: "Fab Academy — How to make almost anything (cours de fabrication numérique, EN)", url: "https://fabacademy.org/" },
+      { titre: "Arduino — documentation", url: "https://docs.arduino.cc/" },
+      { titre: "Adafruit Learning System — tutoriels de montage (EN)", url: "https://learn.adafruit.com/" },
     ],
   },
   {
@@ -1639,6 +1801,9 @@ const NOTIONS = [
     ressources: [
       { titre: "Lynch & Park — Modern Robotics, ch. 8 (EN)", url: ROBOTIQUE_MODERNE },
       { titre: "MIT 2.12 — Introduction to Robotics (EN)", url: MIT("2-12-introduction-to-robotics-fall-2005") },
+      { titre: "Stanford CS223A — Introduction to Robotics, Khatib (vidéos, EN)", url: "https://see.stanford.edu/Course/CS223A" },
+      { titre: "ETH Zurich — Robot Dynamics (notes de cours, EN)", url: "https://rsl.ethz.ch/education-students/lectures/robotdynamics.html" },
+      { titre: "Pinocchio — bibliothèque libre de dynamique des robots (EN)", url: "https://stack-of-tasks.github.io/pinocchio/" },
     ],
   },
   {
@@ -1649,6 +1814,9 @@ const NOTIONS = [
     ressources: [
       { titre: "Lynch & Park — Modern Robotics, ch. 9 (EN)", url: ROBOTIQUE_MODERNE },
       { titre: "PythonRobotics — algorithmes illustrés (EN)", url: PYTHON_ROBOTICS },
+      { titre: "Robot Academy — Paths and Trajectories (cours vidéo, EN)", url: "https://robotacademy.net.au/masterclass/paths-and-trajectories/" },
+      { titre: "Stanford CS223A — Introduction to Robotics, Khatib (vidéos, EN)", url: "https://see.stanford.edu/Course/CS223A" },
+      { titre: "Ruckig — génération de trajectoires à jerk limité (bibliothèque libre, EN)", url: "https://github.com/pantor/ruckig" },
     ],
   },
   {
@@ -1670,6 +1838,9 @@ const NOTIONS = [
     ressources: [
       { titre: "Lynch & Park — Modern Robotics, ch. 11 (EN)", url: ROBOTIQUE_MODERNE },
       { titre: "Tedrake — Underactuated Robotics (cours en ligne, EN)", url: "https://underactuated.mit.edu/" },
+      { titre: "Stanford CS223A — Introduction to Robotics, Khatib (vidéos, EN)", url: "https://see.stanford.edu/Course/CS223A" },
+      { titre: "MIT 2.12 — Introduction to Robotics (EN)", url: MIT("2-12-introduction-to-robotics-fall-2005") },
+      { titre: "Robotics Toolbox for Python — Peter Corke (EN)", url: "https://petercorke.github.io/robotics-toolbox-python/" },
     ],
   },
   {
