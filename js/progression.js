@@ -161,7 +161,7 @@ function majFicheProgression(id) {
   aide.hidden = manquants.length === 0;
   if (manquants.length) {
     document.getElementById("p-acquise-aide-texte").textContent =
-      `${manquants.length} prérequis ne ${manquants.length > 1 ? "sont" : "est"} pas coché${manquants.length > 1 ? "s" : ""}.`;
+      manquants.length > 1 ? `${manquants.length} prérequis ne sont pas cochés.` : "1 prérequis n'est pas coché.";
     // Noms des prérequis manquants, dans l'ordre d'apprentissage
     const liste = document.getElementById("p-acquise-aide-liste");
     liste.innerHTML = "";
