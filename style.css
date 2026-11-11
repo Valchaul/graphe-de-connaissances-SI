@@ -34,6 +34,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* la fiche qui glisse ne fait pas apparaître de barre de défilement */
 }
 
 /* ---------- En-tête ---------- */
@@ -186,6 +187,18 @@ main {
 }
 
 #panneau[hidden] { display: none; }
+
+/* Entrée : la fiche glisse vers le haut ; sortie : elle repart vers le bas */
+@keyframes panneau-entree {
+  from { transform: translateY(calc(100% + 24px)); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes panneau-sortie {
+  from { transform: none; opacity: 1; }
+  to   { transform: translateY(calc(100% + 24px)); opacity: 0; }
+}
+#panneau.entre { animation: panneau-entree 0.28s ease-out; }
+#panneau.sort { animation: panneau-sortie 0.22s ease-in forwards; }
 
 #fermer {
   position: absolute;

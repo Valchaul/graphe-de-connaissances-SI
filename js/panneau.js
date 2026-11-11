@@ -44,6 +44,40 @@ function remplirListeNotions(ul, ids) {
   }
 }
 
+// ---------- Ouverture et fermeture animées de la fiche ----------
+// La fiche glisse depuis le bas pour entrer et repart vers le bas pour sortir (voir style.css).
+const sansAnimation = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function ouvrirPanneau() {
+  const etaitFermee = panneau.hidden || panneau.classList.contains("sort");
+  panneau.classList.remove("sort", "entre");
+  panneau.hidden = false;
+  if (etaitFermee && !sansAnimation.matches) {
+    void panneau.offsetWidth; // relance l'animation même si on rouvre en pleine sortie
+    panneau.classList.add("entre");
+  }
+}
+
+function fermerPanneau() {
+  if (panneau.hidden || panneau.classList.contains("sort")) return;
+  if (sansAnimation.matches) return terminerFermeture(true);
+  panneau.classList.remove("entre");
+  panneau.classList.add("sort");
+}
+
+function terminerFermeture(force) {
+  if (!force && !panneau.classList.contains("sort")) return;
+  panneau.classList.remove("sort", "entre");
+  panneau.hidden = true;
+  cy.resize(); // la carte récupère la place de la fiche
+}
+
+panneau.addEventListener("animationend", (e) => {
+  if (e.target !== panneau) return;
+  if (panneau.classList.contains("sort")) terminerFermeture(false);
+  else panneau.classList.remove("entre");
+});
+
 function choisir(id, centrer) {
   const n = parId[id];
   const noeud = cy.getElementById(id);
@@ -93,7 +127,7 @@ function choisir(id, centrer) {
   majFicheProgression(id); // bouton « Marquer comme acquise » (js/progression.js)
   majChemin(id); // bouton « Voir le chemin » et liste d'apprentissage (js/chemin.js)
 
-  panneau.hidden = false;
+  ouvrirPanneau();
   cy.resize();
   if (centrer) {
     // Cadre toute la chaîne (prérequis + suites). Le zoom est plafonné
@@ -116,8 +150,7 @@ function deselectionner() {
   reinitialiserChemin();
   fermerFicheProgression();
   cy.elements().removeClass("attenue choisi chemin trouve");
-  panneau.hidden = true;
-  cy.resize();
+  fermerPanneau();
   history.replaceState(null, "", location.pathname);
 }
 
