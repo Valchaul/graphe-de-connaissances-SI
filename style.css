@@ -5,8 +5,8 @@
   --texte-doux: #5b6168;
   --bordure: #dcd8cf;
   --accent: #3f5a8a;
-  --lien: #1d4ed8;         /* bleu des liens de ressources, plus vif que l'accent */
-  --lien-survol: #1e3a8a;
+  --lien: #186ca8;         /* bleu des liens de ressources, plus vif que l'accent */
+  --lien-survol: rgb(22, 70, 99);
   --acquis: #2f7d4f;       /* vert des notions acquises */
   --acquis-fond: #e7f3ec;
   --police: "Source Serif 4", Georgia, "Times New Roman", serif;
@@ -130,30 +130,24 @@ body {
 }
 #legende > * { pointer-events: auto; }
 
+/* Même style que le titre des îlots sur la carte : nom en majuscules et en couleur */
 .domaine {
   display: inline-flex;
   align-items: center;
   flex: none;
-  gap: 5px;
-  padding: 4px 8px;
-  border: 1px solid var(--bordure);
+  padding: 4px 9px;
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
   border-radius: var(--rayon-m);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--c) 4%, var(--surface));
   font: inherit;
-  font-size: 0.78rem;
-  color: var(--texte);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--c);
   cursor: pointer;
 }
 
-.domaine:hover { background: var(--fond); }
-
-.domaine::before {
-  content: "";
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--c);
-}
+.domaine:hover { background: color-mix(in srgb, var(--c) 12%, var(--surface)); }
 
 .domaine.off {
   opacity: 0.4;
@@ -628,6 +622,6 @@ main {
     margin: 0;
     border: none;
     border-radius: 0;
-    padding: 18px 20px 26px;
+    padding: 16px 20px 26px;
   }
 }
