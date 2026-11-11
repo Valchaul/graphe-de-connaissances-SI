@@ -9,7 +9,7 @@
   --police-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Échelle des coins arrondis, utilisée partout (les mêmes valeurs sont reprises
-     pour les notions et les cadres du graphe, en tête de app.js). */
+     pour les notions et les cadres du graphe, dans js/config.js). */
   --rayon-s: 6px;   /* petits éléments : badge, boutons de la fiche */
   --rayon-m: 8px;   /* contrôles : recherche, filtres de domaine, notions du graphe */
   --rayon-l: 12px;  /* conteneurs : fiche latérale, cadres de domaine, encadré d'erreur */

@@ -40,12 +40,14 @@ Le placement dans la carte est automatique : ELK range les notions en colonnes e
 les flèches à angles droits. Quand une flèche se divise, les branches partent d'un tronc
 commun (embranchement en T). Quand deux flèches indépendantes se croisent, l'une est
 interrompue par une petite coupure : deux lignes qui se traversent sans se toucher ne sont
-pas reliées. L'arrondi des virages et la longueur des coupures se règlent en tête de `app.js`
-(`RAYON_COUDES`, `COUPURE_DEMI_LONGUEUR`).
+pas reliées. L'arrondi des virages et la longueur des coupures se règlent dans
+[`js/config.js`](js/config.js) (`RAYON_COUDES`, `COUPURE_DEMI_LONGUEUR`).
 Les notions sont regroupées dans un cadre par domaine. Pour revenir à une carte sans cadres,
 cliquer sur le bouton « Îlots par domaine » de l'en-tête (le choix est mémorisé dans le navigateur).
-Les réglages du placement sont regroupés dans `OPTIONS_ELK`, au début de `app.js` également. Si une erreur se glisse (prérequis inconnu,
-identifiant en double, boucle de prérequis), un encadré rouge l'indique en bas de la page.
+Les espacements du placement sont regroupés dans `OPTIONS_ELK`, dans [`js/placement.js`](js/placement.js).
+
+Si une erreur se glisse dans le contenu (prérequis inconnu, identifiant en double, boucle de
+prérequis), un encadré rouge l'indique en bas de la page.
 
 ## Publier sur GitHub Pages
 
@@ -58,12 +60,24 @@ Chaque push sur `main` met ensuite le site à jour.
 
 ## Structure
 
-| Fichier            | Rôle                                           |
-|--------------------|------------------------------------------------|
-| `index.html`       | Structure de la page                           |
-| `style.css`        | Apparence                                      |
-| `app.js`           | Construction du graphe, interactions           |
-| `data/notions.js`  | **Le contenu** : domaines et notions           |
+| Fichier               | Rôle                                                          |
+|-----------------------|---------------------------------------------------------------|
+| `index.html`          | Structure de la page et ordre de chargement des scripts       |
+| `style.css`           | Apparence de l'interface                                      |
+| `data/notions.js`     | **Le contenu** : domaines et notions                          |
+| `js/verification.js`  | Détection des erreurs dans le contenu                         |
+| `js/config.js`        | Réglages du rendu : tailles, arrondis, zoom, îlots            |
+| `js/graphe.js`        | Création du graphe et styles des notions, cadres et flèches   |
+| `js/trace.js`         | Tracé des flèches : arrondis et coupures aux croisements      |
+| `js/placement.js`     | Placement par ELK et cadrage de la vue                        |
+| `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
+| `js/filtres.js`       | Filtres par domaine et bouton « Îlots par domaine »           |
+| `js/recherche.js`     | Recherche par titre                                           |
+| `js/main.js`          | Démarrage (lance le placement, ouvre `#id-de-notion`)         |
+
+Les scripts sont de simples fichiers chargés l'un après l'autre par `index.html` : ils
+partagent les mêmes variables, et l'ordre de la liste compte (chaque fichier utilise ceux
+qui le précèdent). Le site s'ouvre donc toujours par double-clic, sans serveur ni installation.
 
 Bibliothèques utilisées : [Cytoscape.js](https://js.cytoscape.org/) (graphe) et
 [ELK / elkjs](https://github.com/kieler/elkjs) (placement automatique).
