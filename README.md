@@ -1,7 +1,9 @@
-# Learn Map — Sciences de l'ingénieur
+# Graphe de connaissances des Sciences de l'ingénieur
 
 Carte interactive des notions des sciences de l'ingénieur (niveau école d'ingénieur).
 Chaque notion indique ses prérequis et renvoie vers des ressources existantes.
+
+['https://valchaul.github.io/graphe-de-connaissance-SI/'](Découvrez la carte ici)
 
 ## Voir le site en local
 
