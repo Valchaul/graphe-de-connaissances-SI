@@ -202,6 +202,29 @@ main {
   background: var(--c, var(--accent));
 }
 
+/* Domaine et niveau côte à côte ; le niveau est discret (contour) pour ne pas concurrencer le domaine */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-right: 40px; /* laisse la place au bouton de fermeture */
+}
+.badge-niveau {
+  color: var(--texte);
+  background: var(--fond);
+  border: 1px solid var(--bordure);
+  padding: 2px 9px; /* 1 px de moins que le badge plein : la bordure compense */
+  cursor: help;
+}
+
+/* Niveau rappelé après le nom dans les listes « Prérequis » et « Ouvre vers » */
+.niveau-liste {
+  margin-left: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  color: var(--texte-doux);
+}
+
 #p-titre {
   font-family: var(--police);
   font-size: 1.65rem;

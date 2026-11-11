@@ -32,6 +32,10 @@ function remplirListeNotions(ul, ids) {
     const li = document.createElement("li");
     const b = document.createElement("button");
     b.textContent = n.titre;
+    const niveau = document.createElement("span"); // rappel du niveau, pour se repérer dans le parcours
+    niveau.className = "niveau-liste";
+    niveau.textContent = n.niveau;
+    b.appendChild(niveau);
     b.style.setProperty("--c", DOMAINES[n.domaine]?.couleur);
     b.addEventListener("click", () => choisir(id, true));
     li.appendChild(b);
@@ -58,6 +62,9 @@ function choisir(id, centrer) {
   const badge = document.getElementById("p-domaine");
   badge.textContent = d?.nom || n.domaine;
   badge.style.setProperty("--c", d?.couleur);
+  const badgeNiveau = document.getElementById("p-niveau");
+  badgeNiveau.textContent = n.niveau;
+  badgeNiveau.title = NIVEAUX[n.niveau] ? `${NIVEAUX[n.niveau].nom} — ${NIVEAUX[n.niveau].detail}` : "";
   document.getElementById("p-titre").textContent = n.titre;
   document.getElementById("p-description").textContent = n.description || "";
 

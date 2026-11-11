@@ -29,6 +29,7 @@ copier un bloc existant et l'adapter :
   id: "transferts-masse",              // unique, sans espace ni accent
   titre: "Transferts de masse",        // nom affiché
   domaine: "energetique",              // une clé de DOMAINES
+  niveau: "M1",                        // une clé de NIVEAUX : L1, L2, L3, M1 ou M2
   description: "Diffusion, loi de Fick.",
   prerequis: ["transferts-thermiques"], // ids des notions à connaître avant
   ressources: [
@@ -37,6 +38,11 @@ copier un bloc existant et l'adapter :
   ],
 },
 ```
+
+**Niveau.** Chaque notion porte le niveau d'études auquel on la rencontre, de L1 à M2 (pour une
+école d'ingénieur : L1-L2 ≈ cycle préparatoire, L3 à M2 ≈ cycle ingénieur). Il s'affiche sur la
+fiche, à côté du domaine, et dans les listes de prérequis. Une notion ne peut pas être à un niveau
+inférieur à celui de ses prérequis : si cela arrive, l'encadré rouge le signale.
 
 **Logos des ressources.** Chaque lien de la fiche s'affiche avec le logo de son site. Ces logos
 sont rangés dans `img/favicons/` et listés dans `data/favicons.js`. Quand tu ajoutes une

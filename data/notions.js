@@ -6,6 +6,9 @@
 //    id         identifiant unique, sans espace ni accent (ex. "rdm")
 //    titre      nom affiché dans le graphe
 //    domaine    clé d'un domaine défini dans DOMAINES ci-dessous
+//    niveau     clé d'un niveau défini dans NIVEAUX ci-dessous (L1 à M2) : l'année
+//               d'études à laquelle on rencontre la notion. Une notion ne peut pas
+//               être à un niveau inférieur à celui de ses prérequis.
 //    description  une ou deux phrases
 //    prerequis  liste d'ids de notions à connaître avant ([] si aucune)
 //    ressources liste de liens { titre: "...", url: "https://..." }
@@ -27,6 +30,16 @@ const DOMAINES = {
   robotique:       { nom: "Robotique",                  couleur: "#b3402f" },
 };
 
+// Niveaux d'études, du plus bas au plus haut (l'ordre des clés sert de comparaison).
+// Repères pour une école d'ingénieur : L1-L2 ≈ cycle préparatoire, L3 à M2 ≈ cycle ingénieur.
+const NIVEAUX = {
+  L1: { nom: "Licence 1", detail: "1re année après le bac" },
+  L2: { nom: "Licence 2", detail: "2e année après le bac" },
+  L3: { nom: "Licence 3", detail: "3e année après le bac" },
+  M1: { nom: "Master 1",  detail: "4e année après le bac" },
+  M2: { nom: "Master 2",  detail: "5e année après le bac" },
+};
+
 // Raccourcis pour les sources les plus utilisées
 const WP = (page) => "https://fr.wikipedia.org/wiki/" + page;
 const MIT = (cours) => "https://ocw.mit.edu/courses/" + cours + "/";
@@ -38,6 +51,7 @@ const NOTIONS = [
   // ---------------------------------------------------------------- Maths
   {
     id: "analyse", titre: "Analyse réelle", domaine: "maths",
+    niveau: "L1",
     description: "Fonctions, limites, dérivées, intégrales, développements limités.",
     prerequis: [],
     ressources: [
@@ -48,6 +62,7 @@ const NOTIONS = [
   },
   {
     id: "complexes", titre: "Nombres complexes", domaine: "maths",
+    niveau: "L1",
     description: "Forme algébrique et exponentielle, module, argument, calcul dans ℂ.",
     prerequis: ["analyse"],
     ressources: [
@@ -57,6 +72,7 @@ const NOTIONS = [
   },
   {
     id: "algebre-lineaire", titre: "Algèbre linéaire", domaine: "maths",
+    niveau: "L1",
     description: "Espaces vectoriels, matrices, systèmes linéaires, valeurs propres.",
     prerequis: [],
     ressources: [
@@ -67,6 +83,7 @@ const NOTIONS = [
   },
   {
     id: "equa-diff", titre: "Équations différentielles", domaine: "maths",
+    niveau: "L2",
     description: "Équations linéaires du 1er et 2e ordre, systèmes différentiels.",
     prerequis: ["analyse", "complexes", "algebre-lineaire"],
     ressources: [
@@ -76,6 +93,7 @@ const NOTIONS = [
   },
   {
     id: "probas", titre: "Probabilités & statistiques", domaine: "maths",
+    niveau: "L2",
     description: "Variables aléatoires, lois usuelles, estimation, tests statistiques.",
     prerequis: ["analyse"],
     ressources: [
@@ -86,6 +104,7 @@ const NOTIONS = [
   },
   {
     id: "fourier", titre: "Séries & transformée de Fourier", domaine: "maths",
+    niveau: "L2",
     description: "Décomposition d'un signal en fréquences, spectre.",
     prerequis: ["analyse", "complexes"],
     ressources: [
@@ -97,6 +116,7 @@ const NOTIONS = [
   },
   {
     id: "laplace", titre: "Transformée de Laplace", domaine: "maths",
+    niveau: "L2",
     description: "Outil de résolution des équations différentielles linéaires, base de l'automatique.",
     prerequis: ["equa-diff"],
     ressources: [
@@ -106,6 +126,7 @@ const NOTIONS = [
   },
   {
     id: "analyse-numerique", titre: "Analyse numérique", domaine: "maths",
+    niveau: "L3",
     description: "Résolution approchée : interpolation, intégration, schémas d'Euler / Runge-Kutta.",
     prerequis: ["equa-diff", "algorithmique"],
     ressources: [
@@ -116,6 +137,7 @@ const NOTIONS = [
   },
   {
     id: "plusieurs-variables", titre: "Fonctions de plusieurs variables", domaine: "maths",
+    niveau: "L2",
     description: "Dérivées partielles, gradient, intégrales multiples, changements de variables.",
     prerequis: ["analyse", "algebre-lineaire"],
     ressources: [
@@ -126,6 +148,7 @@ const NOTIONS = [
   },
   {
     id: "analyse-vectorielle", titre: "Analyse vectorielle", domaine: "maths",
+    niveau: "L2",
     description: "Gradient, divergence, rotationnel ; théorèmes de Stokes et d'Ostrogradski.",
     prerequis: ["plusieurs-variables"],
     ressources: [
@@ -136,6 +159,7 @@ const NOTIONS = [
   },
   {
     id: "edp", titre: "Équations aux dérivées partielles", domaine: "maths",
+    niveau: "L3",
     description: "Équations de la chaleur, des ondes et de Laplace ; séparation des variables.",
     prerequis: ["equa-diff", "analyse-vectorielle", "fourier"],
     ressources: [
@@ -146,6 +170,7 @@ const NOTIONS = [
   },
   {
     id: "optimisation", titre: "Optimisation", domaine: "maths",
+    niveau: "M1",
     description: "Minimisation d'un critère, gradient, contraintes, optimisation convexe.",
     prerequis: ["plusieurs-variables"],
     ressources: [
@@ -158,6 +183,7 @@ const NOTIONS = [
   // ------------------------------------------------------------- Physique
   {
     id: "meca-point", titre: "Mécanique du point", domaine: "physique",
+    niveau: "L1",
     description: "Lois de Newton, travail, énergie, quantité de mouvement.",
     prerequis: ["analyse"],
     ressources: [
@@ -168,6 +194,7 @@ const NOTIONS = [
   },
   {
     id: "electromagnetisme", titre: "Électromagnétisme", domaine: "physique",
+    niveau: "L2",
     description: "Champs électrique et magnétique, induction, équations de Maxwell.",
     prerequis: ["analyse-vectorielle"],
     ressources: [
@@ -178,6 +205,7 @@ const NOTIONS = [
   },
   {
     id: "ondes", titre: "Ondes & propagation", domaine: "physique",
+    niveau: "L2",
     description: "Équation d'onde, ondes progressives et stationnaires, interférences, effet Doppler.",
     prerequis: ["meca-point", "equa-diff"],
     ressources: [
@@ -188,6 +216,7 @@ const NOTIONS = [
   },
   {
     id: "acoustique", titre: "Acoustique", domaine: "physique",
+    niveau: "L3",
     description: "Ondes sonores, niveaux en décibels, rayonnement et isolation acoustiques.",
     prerequis: ["ondes"],
     ressources: [
@@ -197,6 +226,7 @@ const NOTIONS = [
   },
   {
     id: "ondes-em", titre: "Ondes électromagnétiques", domaine: "physique",
+    niveau: "L3",
     description: "Propagation dans le vide et les milieux, polarisation, lignes de transmission, antennes.",
     prerequis: ["electromagnetisme", "ondes"],
     ressources: [
@@ -206,6 +236,7 @@ const NOTIONS = [
   },
   {
     id: "optique", titre: "Optique", domaine: "physique",
+    niveau: "L2",
     description: "Optique géométrique (lentilles, miroirs) et ondulatoire (diffraction, interférences).",
     prerequis: ["ondes"],
     ressources: [
@@ -217,6 +248,7 @@ const NOTIONS = [
   },
   {
     id: "semi-conducteurs", titre: "Physique des semi-conducteurs", domaine: "physique",
+    niveau: "L3",
     description: "Bandes d'énergie, dopage, jonction PN : le fonctionnement des diodes et des transistors.",
     prerequis: ["electromagnetisme", "science-materiaux"],
     ressources: [
@@ -229,6 +261,7 @@ const NOTIONS = [
   // ------------------------------------------------------------ Mécanique
   {
     id: "statique", titre: "Statique du solide", domaine: "mecanique",
+    niveau: "L1",
     description: "Actions mécaniques, torseurs, principe fondamental de la statique.",
     prerequis: ["meca-point", "algebre-lineaire"],
     ressources: [
@@ -239,6 +272,7 @@ const NOTIONS = [
   },
   {
     id: "cinematique", titre: "Cinématique du solide", domaine: "mecanique",
+    niveau: "L1",
     description: "Torseur cinématique, composition des mouvements, liaisons.",
     prerequis: ["meca-point", "algebre-lineaire"],
     ressources: [
@@ -248,6 +282,7 @@ const NOTIONS = [
   },
   {
     id: "dynamique", titre: "Dynamique du solide", domaine: "mecanique",
+    niveau: "L2",
     description: "Matrice d'inertie, principe fondamental de la dynamique, théorème de l'énergie cinétique.",
     prerequis: ["statique", "cinematique"],
     ressources: [
@@ -258,6 +293,7 @@ const NOTIONS = [
   },
   {
     id: "mecanique-analytique", titre: "Mécanique analytique (Lagrange)", domaine: "mecanique",
+    niveau: "L3",
     description: "Coordonnées généralisées, équations de Lagrange : la base de la dynamique des robots.",
     prerequis: ["dynamique"],
     ressources: [
@@ -267,6 +303,7 @@ const NOTIONS = [
   },
   {
     id: "rdm", titre: "Résistance des matériaux", domaine: "mecanique",
+    niveau: "L2",
     description: "Poutres : traction, flexion, torsion, contraintes et déformations.",
     prerequis: ["statique", "comportement-materiaux", "equa-diff"],
     ressources: [
@@ -278,6 +315,7 @@ const NOTIONS = [
   },
   {
     id: "mmc", titre: "Mécanique des milieux continus", domaine: "mecanique",
+    niveau: "L3",
     description: "Tenseurs des contraintes et des déformations, élasticité linéaire.",
     prerequis: ["rdm"],
     ressources: [
@@ -289,6 +327,7 @@ const NOTIONS = [
   },
   {
     id: "vibrations", titre: "Vibrations", domaine: "mecanique",
+    niveau: "L3",
     description: "Oscillateurs, modes propres, résonance, amortissement.",
     prerequis: ["dynamique", "equa-diff"],
     ressources: [
@@ -298,6 +337,7 @@ const NOTIONS = [
   },
   {
     id: "elements-finis", titre: "Méthode des éléments finis", domaine: "mecanique",
+    niveau: "M1",
     description: "Discrétisation et simulation numérique des structures.",
     prerequis: ["mmc", "analyse-numerique", "edp"],
     ressources: [
@@ -307,6 +347,7 @@ const NOTIONS = [
   },
   {
     id: "meca-fluides", titre: "Mécanique des fluides", domaine: "mecanique",
+    niveau: "L3",
     description: "Statique des fluides, Bernoulli, pertes de charge, écoulements visqueux.",
     prerequis: ["meca-point", "equa-diff", "analyse-vectorielle"],
     ressources: [
@@ -317,6 +358,7 @@ const NOTIONS = [
   },
   {
     id: "hydraulique-pneumatique", titre: "Actionneurs hydrauliques & pneumatiques", domaine: "mecanique",
+    niveau: "L3",
     description: "Vérins, distributeurs, pompes et compresseurs ; circuits de puissance fluide.",
     prerequis: ["meca-fluides"],
     ressources: [
@@ -326,6 +368,7 @@ const NOTIONS = [
   },
   {
     id: "tribologie", titre: "Tribologie", domaine: "mecanique",
+    niveau: "M1",
     description: "Frottement, usure et lubrification des contacts entre pièces en mouvement.",
     prerequis: ["statique", "comportement-materiaux"],
     ressources: [
@@ -336,6 +379,7 @@ const NOTIONS = [
   },
   {
     id: "tenue-fatigue", titre: "Dimensionnement en fatigue", domaine: "mecanique",
+    niveau: "M1",
     description: "Dimensionner une pièce soumise à des charges répétées : concentrations de contraintes, coefficients de sécurité.",
     prerequis: ["rdm", "fatigue"],
     ressources: [
@@ -348,6 +392,7 @@ const NOTIONS = [
   // ---------------------------------------------------------- Énergétique
   {
     id: "thermo", titre: "Thermodynamique", domaine: "energetique",
+    niveau: "L2",
     description: "Premier et second principes, gaz parfaits, entropie.",
     prerequis: ["analyse", "meca-point"],
     ressources: [
@@ -359,6 +404,7 @@ const NOTIONS = [
   },
   {
     id: "transferts-thermiques", titre: "Transferts thermiques", domaine: "energetique",
+    niveau: "L3",
     description: "Conduction, convection, rayonnement.",
     prerequis: ["thermo", "edp"],
     ressources: [
@@ -369,6 +415,7 @@ const NOTIONS = [
   },
   {
     id: "machines-thermiques", titre: "Machines thermiques", domaine: "energetique",
+    niveau: "L3",
     description: "Cycles moteurs et récepteurs : Carnot, Rankine, Brayton, Otto, Diesel.",
     prerequis: ["thermo", "meca-fluides"],
     ressources: [
@@ -380,6 +427,7 @@ const NOTIONS = [
   },
   {
     id: "echangeurs", titre: "Échangeurs de chaleur", domaine: "energetique",
+    niveau: "M1",
     description: "Échangeurs à plaques et tubulaires, méthodes DTLM et NUT, dimensionnement.",
     prerequis: ["transferts-thermiques", "meca-fluides"],
     ressources: [
@@ -389,6 +437,7 @@ const NOTIONS = [
   },
   {
     id: "gestion-thermique", titre: "Gestion thermique des systèmes", domaine: "energetique",
+    niveau: "M1",
     description: "Refroidir l'électronique et les moteurs : résistances thermiques, dissipateurs, ventilation.",
     prerequis: ["transferts-thermiques", "electronique-puissance"],
     ressources: [
@@ -399,6 +448,7 @@ const NOTIONS = [
   },
   {
     id: "turbomachines", titre: "Turbomachines", domaine: "energetique",
+    niveau: "M1",
     description: "Pompes, ventilateurs, compresseurs et turbines : triangles des vitesses, courbes caractéristiques.",
     prerequis: ["thermo", "meca-fluides"],
     ressources: [
@@ -409,6 +459,7 @@ const NOTIONS = [
   },
   {
     id: "combustion", titre: "Combustion & moteurs thermiques", domaine: "energetique",
+    niveau: "M1",
     description: "Réactions de combustion, pouvoir calorifique, moteurs à allumage commandé et Diesel, émissions.",
     prerequis: ["machines-thermiques"],
     ressources: [
@@ -418,6 +469,7 @@ const NOTIONS = [
   },
   {
     id: "froid-pac", titre: "Machines frigorifiques & pompes à chaleur", domaine: "energetique",
+    niveau: "M1",
     description: "Cycle à compression de vapeur, fluides frigorigènes, coefficient de performance.",
     prerequis: ["machines-thermiques"],
     ressources: [
@@ -427,6 +479,7 @@ const NOTIONS = [
   },
   {
     id: "hydrogene", titre: "Piles à combustible & hydrogène", domaine: "energetique",
+    niveau: "M2",
     description: "Conversion électrochimique de l'énergie, production et stockage de l'hydrogène.",
     prerequis: ["thermo", "batteries"],
     ressources: [
@@ -436,6 +489,7 @@ const NOTIONS = [
   },
   {
     id: "energies-renouvelables", titre: "Énergies renouvelables", domaine: "energetique",
+    niveau: "M1",
     description: "Solaire photovoltaïque et thermique, éolien, hydraulique ; ordres de grandeur et intégration au réseau.",
     prerequis: ["turbomachines", "electronique-puissance", "semi-conducteurs"],
     ressources: [
@@ -450,6 +504,7 @@ const NOTIONS = [
   // ------------------------------------------- Électricité & électronique
   {
     id: "circuits", titre: "Circuits électriques", domaine: "electricite",
+    niveau: "L1",
     description: "Lois de Kirchhoff, dipôles, régime continu et transitoire.",
     prerequis: ["analyse"],
     ressources: [
@@ -460,6 +515,7 @@ const NOTIONS = [
   },
   {
     id: "regime-sinusoidal", titre: "Régime sinusoïdal", domaine: "electricite",
+    niveau: "L2",
     description: "Impédances complexes, puissances, diagrammes de Fresnel.",
     prerequis: ["circuits", "complexes"],
     ressources: [
@@ -470,6 +526,7 @@ const NOTIONS = [
   },
   {
     id: "electronique-analogique", titre: "Électronique analogique", domaine: "electricite",
+    niveau: "L2",
     description: "Diodes, transistors, amplificateur opérationnel.",
     prerequis: ["regime-sinusoidal"],
     ressources: [
@@ -479,6 +536,7 @@ const NOTIONS = [
   },
   {
     id: "machines-electriques", titre: "Machines électriques", domaine: "electricite",
+    niveau: "L3",
     description: "Transformateur, machines à courant continu, synchrones et asynchrones.",
     prerequis: ["regime-sinusoidal", "electromagnetisme"],
     ressources: [
@@ -488,6 +546,7 @@ const NOTIONS = [
   },
   {
     id: "electronique-puissance", titre: "Électronique de puissance", domaine: "electricite",
+    niveau: "L3",
     description: "Hacheurs, onduleurs, redresseurs.",
     prerequis: ["electronique-analogique", "machines-electriques", "semi-conducteurs"],
     ressources: [
@@ -497,6 +556,7 @@ const NOTIONS = [
   },
   {
     id: "moteurs-speciaux", titre: "Moteurs brushless & pas-à-pas", domaine: "electricite",
+    niveau: "M1",
     description: "Les moteurs de la mécatronique : principe, pilotage, choix selon l'application.",
     prerequis: ["machines-electriques"],
     ressources: [
@@ -507,6 +567,7 @@ const NOTIONS = [
   },
   {
     id: "commande-moteurs", titre: "Commande des moteurs & variateurs", domaine: "electricite",
+    niveau: "M1",
     description: "Boucles de courant, de vitesse et de position ; MLI, variateurs.",
     prerequis: ["electronique-puissance", "moteurs-speciaux", "pid"],
     ressources: [
@@ -516,6 +577,7 @@ const NOTIONS = [
   },
   {
     id: "conversion-an", titre: "Conversion analogique-numérique", domaine: "electricite",
+    niveau: "L3",
     description: "CAN et CNA : résolution, quantification, fréquence d'échantillonnage.",
     prerequis: ["electronique-analogique", "echantillonnage"],
     ressources: [
@@ -525,6 +587,7 @@ const NOTIONS = [
   },
   {
     id: "batteries", titre: "Batteries & stockage d'énergie", domaine: "electricite",
+    niveau: "L3",
     description: "Technologies d'accumulateurs, charge, autonomie, gestion (BMS).",
     prerequis: ["circuits"],
     ressources: [
@@ -534,6 +597,7 @@ const NOTIONS = [
   },
   {
     id: "pcb", titre: "Conception de cartes électroniques", domaine: "electricite",
+    niveau: "L3",
     description: "Schéma, routage et fabrication d'un circuit imprimé (PCB).",
     prerequis: ["electronique-analogique"],
     ressources: [
@@ -545,6 +609,7 @@ const NOTIONS = [
   // ------------------------------------------- Capteurs & instrumentation
   {
     id: "metrologie", titre: "Métrologie & incertitudes", domaine: "instrumentation",
+    niveau: "L3",
     description: "Erreurs de mesure, incertitudes de type A et B, propagation, étalonnage.",
     prerequis: ["probas"],
     ressources: [
@@ -555,6 +620,7 @@ const NOTIONS = [
   },
   {
     id: "capteurs", titre: "Capteurs & chaîne de mesure", domaine: "instrumentation",
+    niveau: "L3",
     description: "Principes physiques des capteurs, sensibilité, linéarité, bande passante.",
     prerequis: ["electronique-analogique", "metrologie"],
     ressources: [
@@ -564,6 +630,7 @@ const NOTIONS = [
   },
   {
     id: "conditionnement", titre: "Conditionnement & acquisition", domaine: "instrumentation",
+    niveau: "M1",
     description: "Amplification, filtrage anti-repliement, numérisation d'un signal de capteur.",
     prerequis: ["capteurs", "filtrage", "conversion-an"],
     ressources: [
@@ -573,6 +640,7 @@ const NOTIONS = [
   },
   {
     id: "capteurs-mouvement", titre: "Codeurs & capteurs de mouvement", domaine: "instrumentation",
+    niveau: "L3",
     description: "Codeurs incrémentaux et absolus, résolveurs, capteurs de position et de vitesse.",
     prerequis: ["capteurs"],
     ressources: [
@@ -583,6 +651,7 @@ const NOTIONS = [
   },
   {
     id: "capteurs-effort", titre: "Capteurs de force & de pression", domaine: "instrumentation",
+    niveau: "L3",
     description: "Jauges de déformation, pont de Wheatstone, cellules de charge, capteurs de pression.",
     prerequis: ["capteurs", "rdm"],
     ressources: [
@@ -594,6 +663,7 @@ const NOTIONS = [
   },
   {
     id: "capteurs-temperature", titre: "Capteurs de température", domaine: "instrumentation",
+    niveau: "L3",
     description: "Thermocouples, sondes à résistance, thermistances ; choix et mise en œuvre.",
     prerequis: ["capteurs"],
     ressources: [
@@ -604,6 +674,7 @@ const NOTIONS = [
   },
   {
     id: "capteurs-distance", titre: "Capteurs de distance (lidar, ultrasons)", domaine: "instrumentation",
+    niveau: "L3",
     description: "Télémétrie par temps de vol : ultrasons, infrarouge, lidar ; nuages de points.",
     prerequis: ["capteurs", "ondes"],
     ressources: [
@@ -615,6 +686,7 @@ const NOTIONS = [
   },
   {
     id: "plans-experiences", titre: "Plans d'expériences", domaine: "instrumentation",
+    niveau: "M1",
     description: "Organiser des essais pour identifier les facteurs influents avec un minimum de mesures.",
     prerequis: ["metrologie"],
     ressources: [
@@ -624,6 +696,7 @@ const NOTIONS = [
   },
   {
     id: "imu", titre: "Capteurs inertiels (IMU)", domaine: "instrumentation",
+    niveau: "M1",
     description: "Accéléromètres, gyromètres, magnétomètres ; estimation de l'orientation.",
     prerequis: ["capteurs", "dynamique"],
     ressources: [
@@ -635,6 +708,7 @@ const NOTIONS = [
   // ---------------------------------------------------------- Automatique
   {
     id: "modelisation-systemes", titre: "Modélisation des systèmes", domaine: "automatique",
+    niveau: "L3",
     description: "Schémas-blocs, fonction de transfert, systèmes du 1er et 2e ordre.",
     prerequis: ["laplace"],
     ressources: [
@@ -645,6 +719,7 @@ const NOTIONS = [
   },
   {
     id: "analyse-frequentielle", titre: "Réponse fréquentielle", domaine: "automatique",
+    niveau: "L3",
     description: "Diagrammes de Bode, Nyquist et Black.",
     prerequis: ["modelisation-systemes", "complexes"],
     ressources: [
@@ -654,6 +729,7 @@ const NOTIONS = [
   },
   {
     id: "stabilite", titre: "Stabilité & performances", domaine: "automatique",
+    niveau: "L3",
     description: "Critères de stabilité, marges de gain et de phase, précision, rapidité.",
     prerequis: ["analyse-frequentielle"],
     ressources: [
@@ -664,6 +740,7 @@ const NOTIONS = [
   },
   {
     id: "pid", titre: "Correcteurs PID", domaine: "automatique",
+    niveau: "L3",
     description: "Action proportionnelle, intégrale, dérivée ; réglage d'un asservissement.",
     prerequis: ["stabilite"],
     ressources: [
@@ -674,6 +751,7 @@ const NOTIONS = [
   },
   {
     id: "representation-etat", titre: "Représentation d'état", domaine: "automatique",
+    niveau: "M1",
     description: "Modèles d'état, commandabilité, observabilité, retour d'état.",
     prerequis: ["modelisation-systemes", "algebre-lineaire"],
     ressources: [
@@ -684,6 +762,7 @@ const NOTIONS = [
   },
   {
     id: "automatique-numerique", titre: "Automatique échantillonnée", domaine: "automatique",
+    niveau: "M1",
     description: "Transformée en Z, correcteurs numériques.",
     prerequis: ["pid", "echantillonnage"],
     ressources: [
@@ -693,6 +772,7 @@ const NOTIONS = [
   },
   {
     id: "identification", titre: "Identification des systèmes", domaine: "automatique",
+    niveau: "M1",
     description: "Construire le modèle d'un système à partir de mesures expérimentales.",
     prerequis: ["analyse-frequentielle", "probas"],
     ressources: [
@@ -702,6 +782,7 @@ const NOTIONS = [
   },
   {
     id: "kalman", titre: "Estimation & filtre de Kalman", domaine: "automatique",
+    niveau: "M2",
     description: "Observateurs, fusion de capteurs, estimation d'état en présence de bruit.",
     prerequis: ["representation-etat", "probas"],
     ressources: [
@@ -712,6 +793,7 @@ const NOTIONS = [
   },
   {
     id: "commande-optimale", titre: "Commande optimale (LQR)", domaine: "automatique",
+    niveau: "M2",
     description: "Commande minimisant un critère quadratique, compromis performance / énergie.",
     prerequis: ["representation-etat", "optimisation"],
     ressources: [
@@ -722,6 +804,7 @@ const NOTIONS = [
   },
   {
     id: "non-lineaire", titre: "Systèmes non linéaires", domaine: "automatique",
+    niveau: "M2",
     description: "Linéarisation, stabilité de Lyapunov, saturations et frottements.",
     prerequis: ["representation-etat"],
     ressources: [
@@ -732,6 +815,7 @@ const NOTIONS = [
   },
   {
     id: "multiphysique", titre: "Modélisation multiphysique", domaine: "automatique",
+    niveau: "M1",
     description: "Modèle unique d'un système mécanique, électrique et thermique (bond graph, Modelica).",
     prerequis: ["modelisation-systemes", "circuits", "dynamique"],
     ressources: [
@@ -744,6 +828,7 @@ const NOTIONS = [
   // --------------------------------------------------------------- Signal
   {
     id: "signaux", titre: "Signaux & systèmes linéaires", domaine: "signal",
+    niveau: "L3",
     description: "Convolution, réponse impulsionnelle, spectre d'un signal.",
     prerequis: ["fourier"],
     ressources: [
@@ -753,6 +838,7 @@ const NOTIONS = [
   },
   {
     id: "filtrage", titre: "Filtrage", domaine: "signal",
+    niveau: "L3",
     description: "Filtres passe-bas, passe-haut, passe-bande ; gabarits.",
     prerequis: ["signaux", "regime-sinusoidal"],
     ressources: [
@@ -764,6 +850,7 @@ const NOTIONS = [
   },
   {
     id: "echantillonnage", titre: "Échantillonnage & numérisation", domaine: "signal",
+    niveau: "L3",
     description: "Théorème de Shannon, repliement de spectre, quantification.",
     prerequis: ["signaux"],
     ressources: [
@@ -773,6 +860,7 @@ const NOTIONS = [
   },
   {
     id: "tns", titre: "Traitement numérique du signal", domaine: "signal",
+    niveau: "M1",
     description: "Transformée de Fourier discrète (FFT), filtres numériques RIF et RII.",
     prerequis: ["echantillonnage", "filtrage"],
     ressources: [
@@ -784,6 +872,7 @@ const NOTIONS = [
   },
   {
     id: "traitement-image", titre: "Traitement d'images", domaine: "signal",
+    niveau: "M1",
     description: "Filtrage, détection de contours, segmentation, morphologie.",
     prerequis: ["tns", "algebre-lineaire", "algorithmique"],
     ressources: [
@@ -795,6 +884,7 @@ const NOTIONS = [
   // --------------------------------------------------------- Informatique
   {
     id: "algorithmique", titre: "Algorithmique & programmation", domaine: "informatique",
+    niveau: "L1",
     description: "Variables, boucles, fonctions, structures de données (Python).",
     prerequis: [],
     ressources: [
@@ -805,6 +895,7 @@ const NOTIONS = [
   },
   {
     id: "prog-c", titre: "Programmation C / C++", domaine: "informatique",
+    niveau: "L2",
     description: "Types, pointeurs, mémoire, compilation : le langage des systèmes embarqués.",
     prerequis: ["algorithmique"],
     ressources: [
@@ -815,6 +906,7 @@ const NOTIONS = [
   },
   {
     id: "logique", titre: "Logique combinatoire & séquentielle", domaine: "informatique",
+    niveau: "L1",
     description: "Algèbre de Boole, portes logiques, bascules, machines à états.",
     prerequis: [],
     ressources: [
@@ -825,6 +917,7 @@ const NOTIONS = [
   },
   {
     id: "fpga", titre: "Logique programmable (FPGA)", domaine: "informatique",
+    niveau: "M1",
     description: "Description matérielle en VHDL / Verilog, synthèse sur circuit programmable.",
     prerequis: ["logique"],
     ressources: [
@@ -836,6 +929,7 @@ const NOTIONS = [
   },
   {
     id: "automates", titre: "Automates programmables & Grafcet", domaine: "informatique",
+    niveau: "L2",
     description: "API industriels, langages normalisés (IEC 61131-3), description séquentielle.",
     prerequis: ["logique"],
     ressources: [
@@ -847,6 +941,7 @@ const NOTIONS = [
   },
   {
     id: "embarque", titre: "Systèmes embarqués", domaine: "informatique",
+    niveau: "L3",
     description: "Microcontrôleurs, entrées/sorties, timers, interruptions.",
     prerequis: ["prog-c", "logique", "electronique-analogique"],
     ressources: [
@@ -857,6 +952,7 @@ const NOTIONS = [
   },
   {
     id: "bus-communication", titre: "Bus de communication", domaine: "informatique",
+    niveau: "M1",
     description: "Liaisons série UART, I2C, SPI et bus CAN entre cartes, capteurs et actionneurs.",
     prerequis: ["embarque"],
     ressources: [
@@ -868,6 +964,7 @@ const NOTIONS = [
   },
   {
     id: "temps-reel", titre: "Systèmes temps réel (RTOS)", domaine: "informatique",
+    niveau: "M1",
     description: "Tâches, ordonnancement, priorités, synchronisation, respect des échéances.",
     prerequis: ["embarque"],
     ressources: [
@@ -877,6 +974,7 @@ const NOTIONS = [
   },
   {
     id: "reseaux-industriels", titre: "Réseaux industriels & IoT", domaine: "informatique",
+    niveau: "M1",
     description: "Bus de terrain, Ethernet industriel, protocoles pour objets connectés (MQTT).",
     prerequis: ["bus-communication", "automates"],
     ressources: [
@@ -887,6 +985,7 @@ const NOTIONS = [
   },
   {
     id: "apprentissage", titre: "Apprentissage automatique", domaine: "informatique",
+    niveau: "M1",
     description: "Régression, classification, réseaux de neurones ; apprendre un modèle à partir de données.",
     prerequis: ["probas", "optimisation", "algorithmique"],
     ressources: [
@@ -900,6 +999,7 @@ const NOTIONS = [
   // ------------------------------------------------------------ Matériaux
   {
     id: "science-materiaux", titre: "Science des matériaux", domaine: "materiaux",
+    niveau: "L1",
     description: "Familles de matériaux, structure cristalline, liaisons.",
     prerequis: [],
     ressources: [
@@ -909,6 +1009,7 @@ const NOTIONS = [
   },
   {
     id: "comportement-materiaux", titre: "Comportement mécanique des matériaux", domaine: "materiaux",
+    niveau: "L2",
     description: "Essai de traction, élasticité, plasticité, rupture.",
     prerequis: ["science-materiaux"],
     ressources: [
@@ -918,6 +1019,7 @@ const NOTIONS = [
   },
   {
     id: "metaux", titre: "Métaux & traitements thermiques", domaine: "materiaux",
+    niveau: "L3",
     description: "Aciers, alliages d'aluminium, diagrammes de phases, trempe et revenu.",
     prerequis: ["science-materiaux"],
     ressources: [
@@ -928,6 +1030,7 @@ const NOTIONS = [
   },
   {
     id: "polymeres-composites", titre: "Polymères & composites", domaine: "materiaux",
+    niveau: "L3",
     description: "Thermoplastiques, thermodurcissables, élastomères ; matériaux à fibres et stratifiés.",
     prerequis: ["science-materiaux"],
     ressources: [
@@ -939,6 +1042,7 @@ const NOTIONS = [
   },
   {
     id: "fatigue", titre: "Fatigue & rupture", domaine: "materiaux",
+    niveau: "M1",
     description: "Endommagement sous charges répétées, courbes de Wöhler, propagation de fissures, ténacité.",
     prerequis: ["comportement-materiaux"],
     ressources: [
@@ -949,6 +1053,7 @@ const NOTIONS = [
   },
   {
     id: "corrosion", titre: "Corrosion & durabilité", domaine: "materiaux",
+    niveau: "M1",
     description: "Mécanismes de corrosion, protection des surfaces, vieillissement des matériaux.",
     prerequis: ["metaux"],
     ressources: [
@@ -958,6 +1063,7 @@ const NOTIONS = [
   },
   {
     id: "choix-materiaux", titre: "Choix des matériaux", domaine: "materiaux",
+    niveau: "L3",
     description: "Méthode d'Ashby : indices de performance, cartes de propriétés, compromis masse / coût / tenue.",
     prerequis: ["comportement-materiaux", "metaux", "polymeres-composites"],
     ressources: [
@@ -970,6 +1076,7 @@ const NOTIONS = [
   // ----------------------------------------------------------- Conception
   {
     id: "dessin-technique", titre: "Dessin technique & CAO", domaine: "conception",
+    niveau: "L1",
     description: "Lecture de plans, projections, modélisation 3D.",
     prerequis: [],
     ressources: [
@@ -980,6 +1087,7 @@ const NOTIONS = [
   },
   {
     id: "cotation", titre: "Cotation fonctionnelle (GPS)", domaine: "conception",
+    niveau: "L2",
     description: "Tolérances dimensionnelles et géométriques, spécification des produits.",
     prerequis: ["dessin-technique"],
     ressources: [
@@ -989,6 +1097,7 @@ const NOTIONS = [
   },
   {
     id: "fabrication", titre: "Procédés de fabrication", domaine: "conception",
+    niveau: "L3",
     description: "Usinage, moulage, tôlerie, impression 3D ; concevoir une pièce fabricable.",
     prerequis: ["dessin-technique", "choix-materiaux"],
     ressources: [
@@ -1002,6 +1111,7 @@ const NOTIONS = [
   },
   {
     id: "mecanismes", titre: "Conception de mécanismes", domaine: "conception",
+    niveau: "L3",
     description: "Liaisons mécaniques, schéma cinématique, dimensionnement.",
     prerequis: ["cinematique", "statique", "cotation", "rdm"],
     ressources: [
@@ -1013,6 +1123,7 @@ const NOTIONS = [
   },
   {
     id: "transmission", titre: "Transmission de puissance", domaine: "conception",
+    niveau: "M1",
     description: "Engrenages, réducteurs, courroies, vis à billes ; rapport de réduction et rendement.",
     prerequis: ["mecanismes", "tribologie", "tenue-fatigue"],
     ressources: [
@@ -1024,6 +1135,7 @@ const NOTIONS = [
   },
   {
     id: "dimensionnement-actionneurs", titre: "Dimensionnement d'une chaîne d'actionnement", domaine: "conception",
+    niveau: "M1",
     description: "Choisir moteur, réducteur et variateur à partir de la charge et du profil de mouvement.",
     prerequis: ["transmission", "machines-electriques", "dynamique"],
     ressources: [
@@ -1033,6 +1145,7 @@ const NOTIONS = [
   },
   {
     id: "ingenierie-systeme", titre: "Ingénierie système", domaine: "conception",
+    niveau: "L3",
     description: "Analyse du besoin, exigences, architecture fonctionnelle, SysML, cycle en V.",
     prerequis: [],
     ressources: [
@@ -1044,6 +1157,7 @@ const NOTIONS = [
   },
   {
     id: "surete", titre: "Sûreté de fonctionnement", domaine: "conception",
+    niveau: "M1",
     description: "Fiabilité, analyse des modes de défaillance (AMDEC), arbres de défaillances.",
     prerequis: ["probas", "ingenierie-systeme"],
     ressources: [
@@ -1054,6 +1168,7 @@ const NOTIONS = [
   },
   {
     id: "mecatronique", titre: "Mécatronique", domaine: "conception",
+    niveau: "M2",
     description: "Concevoir ensemble la mécanique, l'électronique, la commande et l'informatique d'un système.",
     prerequis: ["dimensionnement-actionneurs", "commande-moteurs", "capteurs-mouvement", "embarque", "ingenierie-systeme", "multiphysique"],
     ressources: [
@@ -1065,6 +1180,7 @@ const NOTIONS = [
   },
   {
     id: "projet-mecatronique", titre: "Projet mécatronique : intégration", domaine: "conception",
+    niveau: "M2",
     description: "Du prototype au système complet : fabrication, cartes, communication, temps réel, sûreté.",
     prerequis: ["mecatronique", "fabrication", "pcb", "bus-communication", "temps-reel", "surete", "batteries", "gestion-thermique"],
     ressources: [
@@ -1076,6 +1192,7 @@ const NOTIONS = [
   // ------------------------------------------------------------ Robotique
   {
     id: "transformations", titre: "Transformations spatiales & rotations", domaine: "robotique",
+    niveau: "L3",
     description: "Matrices de rotation, transformations homogènes, angles d'Euler, quaternions.",
     prerequis: ["algebre-lineaire", "cinematique"],
     ressources: [
@@ -1086,6 +1203,7 @@ const NOTIONS = [
   },
   {
     id: "cinematique-robots", titre: "Cinématique des robots", domaine: "robotique",
+    niveau: "M1",
     description: "Modèles géométriques direct et inverse, jacobienne, singularités.",
     prerequis: ["transformations"],
     ressources: [
@@ -1097,6 +1215,7 @@ const NOTIONS = [
   },
   {
     id: "dynamique-robots", titre: "Dynamique des robots", domaine: "robotique",
+    niveau: "M2",
     description: "Équations du mouvement d'un bras articulé, couples moteurs nécessaires.",
     prerequis: ["cinematique-robots", "mecanique-analytique"],
     ressources: [
@@ -1106,6 +1225,7 @@ const NOTIONS = [
   },
   {
     id: "trajectoires", titre: "Génération de trajectoires", domaine: "robotique",
+    niveau: "M1",
     description: "Profils de vitesse, interpolation polynomiale, trajectoires articulaires et cartésiennes.",
     prerequis: ["cinematique-robots"],
     ressources: [
@@ -1115,6 +1235,7 @@ const NOTIONS = [
   },
   {
     id: "planification", titre: "Planification de mouvement", domaine: "robotique",
+    niveau: "M2",
     description: "Trouver un chemin sans collision : espace des configurations, A*, RRT.",
     prerequis: ["trajectoires", "algorithmique"],
     ressources: [
@@ -1125,6 +1246,7 @@ const NOTIONS = [
   },
   {
     id: "commande-robots", titre: "Commande des robots", domaine: "robotique",
+    niveau: "M2",
     description: "Commande en position, en couple calculé et en effort d'un bras robotisé.",
     prerequis: ["dynamique-robots", "trajectoires", "commande-moteurs", "non-lineaire"],
     ressources: [
@@ -1134,6 +1256,7 @@ const NOTIONS = [
   },
   {
     id: "robotique-mobile", titre: "Robotique mobile", domaine: "robotique",
+    niveau: "M1",
     description: "Modèles cinématiques des robots à roues, odométrie, suivi de trajectoire.",
     prerequis: ["transformations", "capteurs-mouvement"],
     ressources: [
@@ -1144,6 +1267,7 @@ const NOTIONS = [
   },
   {
     id: "vision", titre: "Vision par ordinateur", domaine: "robotique",
+    niveau: "M2",
     description: "Modèle de caméra, calibration, détection et suivi d'objets, stéréovision.",
     prerequis: ["traitement-image", "transformations", "optique"],
     ressources: [
@@ -1155,6 +1279,7 @@ const NOTIONS = [
   },
   {
     id: "slam", titre: "Localisation & cartographie (SLAM)", domaine: "robotique",
+    niveau: "M2",
     description: "Se localiser et construire une carte en même temps, par fusion de capteurs.",
     prerequis: ["robotique-mobile", "kalman", "imu", "vision", "capteurs-distance"],
     ressources: [
@@ -1165,6 +1290,7 @@ const NOTIONS = [
   },
   {
     id: "ros", titre: "ROS (Robot Operating System)", domaine: "robotique",
+    niveau: "M1",
     description: "Architecture logicielle d'un robot : nœuds, messages, simulation avec Gazebo.",
     prerequis: ["prog-c", "embarque"],
     ressources: [
@@ -1175,6 +1301,7 @@ const NOTIONS = [
   },
   {
     id: "robot-autonome", titre: "Robot autonome : intégration", domaine: "robotique",
+    niveau: "M2",
     description: "Assembler perception, décision et action dans un robot complet.",
     prerequis: ["commande-robots", "planification", "slam", "ros", "apprentissage"],
     ressources: [
