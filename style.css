@@ -252,7 +252,7 @@ main {
   border-radius: var(--rayon-m);
   background: none;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: var(--texte-doux);
   cursor: pointer;
 }
