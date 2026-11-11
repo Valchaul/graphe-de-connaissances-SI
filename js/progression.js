@@ -67,11 +67,11 @@ function rafraichirProgression() {
   const nombre = acquises.size;
   document.getElementById("prog-texte").textContent = `${nombre} / ${total} acquises`;
   document.getElementById("prog-remplissage").style.width = (100 * nombre) / total + "%";
-  document.getElementById("prog-effacer").hidden = nombre === 0;
+  if (nombre === 0) fermerConfirmation();
   const alerte = document.getElementById("prog-alerte");
   alerte.hidden = stockageDisponible;
   document.getElementById("progression").setAttribute("aria-label",
-    `Progression : ${nombre} notions acquises sur ${total}`);
+    `Progression : ${nombre} notions acquises sur ${total}. Activer pour effacer.`);
 
   if (notionDeLaFiche) {
     majFicheProgression(notionDeLaFiche);
@@ -107,12 +107,45 @@ document.getElementById("p-acquise-aide-bouton").addEventListener("click", () =>
   definirAcquises(cheminVers(notionDeLaFiche), true);
 });
 
-document.getElementById("prog-effacer").addEventListener("click", () => {
+// Cliquer sur la barre de progression ouvre une notification qui demande confirmation
+const boutonProgression = document.getElementById("progression");
+const confirmation = document.getElementById("prog-confirmation");
+
+function fermerConfirmation() {
+  confirmation.hidden = true;
+  boutonProgression.setAttribute("aria-expanded", "false");
+}
+
+boutonProgression.addEventListener("click", () => {
+  if (!confirmation.hidden) return fermerConfirmation();
   const n = acquises.size;
-  if (confirm(`Effacer toute la progression ?\n\nLes ${n} notion${n > 1 ? "s" : ""} cochée${n > 1 ? "s" : ""} seront décochée${n > 1 ? "s" : ""}.`)) {
-    viderProgression();
-  }
+  if (n === 0) return; // rien à effacer
+  document.getElementById("prog-question").textContent =
+    `Effacer toute la progression ? Les ${n} notion${n > 1 ? "s" : ""} cochée${n > 1 ? "s" : ""} seront décochée${n > 1 ? "s" : ""}.`;
+  confirmation.hidden = false;
+  boutonProgression.setAttribute("aria-expanded", "true");
+  document.getElementById("prog-annuler").focus();
 });
+document.getElementById("prog-annuler").addEventListener("click", () => {
+  fermerConfirmation();
+  boutonProgression.focus();
+});
+document.getElementById("prog-confirmer").addEventListener("click", () => {
+  viderProgression();
+  fermerConfirmation();
+  boutonProgression.focus();
+});
+// Un clic ailleurs ou Échap referme la notification
+document.addEventListener("click", (e) => {
+  if (!confirmation.hidden && !e.target.closest(".progression-zone")) fermerConfirmation();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !confirmation.hidden) {
+    fermerConfirmation();
+    boutonProgression.focus();
+    e.stopImmediatePropagation(); // Échap ne ferme pas aussi la fiche
+  }
+}, true);
 
 // Un autre onglet a modifié la progression : on se met à jour
 window.addEventListener("storage", (e) => {
