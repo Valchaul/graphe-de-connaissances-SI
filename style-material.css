@@ -1,0 +1,359 @@
+/* =====================================================================
+   Variante « Material 3 Expressive » (la dernière évolution de Material You)
+   Une feuille de style qui vient APRÈS style.css et en redéfinit l'apparence :
+   la structure et le comportement ne changent pas, seuls les couleurs, les formes,
+   la typographie, les ombres et les mouvements sont remplacés.
+
+   Pour comparer : dans index.html, mettre en commentaire la ligne
+   <link rel="stylesheet" href="style-material.css"> pour revenir au style d'origine.
+
+   Ce qui distingue « Expressive » du Material You de base :
+   - des couleurs plus vives et plus franches, appliquées en grands aplats
+     (chaque carte de la fiche a sa teinte) ;
+   - des formes plus audacieuses : très grands arrondis, et des boutons qui
+     « changent de forme » (de la pilule au carré arrondi) quand ils sont activés ;
+   - une typographie plus affirmée : titres plus gros et plus gras ;
+   - des mouvements « à ressort » : les éléments dépassent légèrement leur position
+     d'arrivée puis se stabilisent, et s'enfoncent quand on appuie ;
+   - de grandes zones à toucher, confortables au doigt.
+   Les notions de la carte sont dessinées par Cytoscape : leurs couleurs et leurs
+   coins se règlent dans js/graphe.js et js/config.js, pas ici.
+   ===================================================================== */
+
+:root {
+  /* Palette vive (couleur de départ : violet électrique, accompagné d'un rose et d'un turquoise) */
+  --m-primaire: #5b45d9;
+  --m-sur-primaire: #ffffff;
+  --m-primaire-pale: #e4deff;          /* « primary container » */
+  --m-sur-primaire-pale: #1c0a6b;
+  --m-secondaire-pale: #d3e9f7;
+  --m-sur-secondaire-pale: #08283c;
+  --m-tertiaire-pale: #ffd9e8;
+  --m-sur-tertiaire-pale: #4a0e29;
+  --m-surface: #fcf8ff;
+  --m-surface-1: #f4effc;              /* niveaux de surface, du plus clair au plus teinté */
+  --m-surface-2: #ece6f8;
+  --m-surface-3: #e3dcf3;
+  --m-surface-blanche: #ffffff;
+  --m-texte: #1c1b22;
+  --m-texte-doux: #4b4858;
+  --m-contour: #7c7889;
+  --m-contour-leger: #cbc4d9;
+  --m-erreur: #c4122f;
+
+  /* Mêmes noms que style.css : toute la page suit la nouvelle palette */
+  --fond: var(--m-surface);
+  --surface: var(--m-surface-blanche);
+  --texte: var(--m-texte);
+  --texte-doux: var(--m-texte-doux);
+  --bordure: var(--m-contour-leger);
+  --accent: var(--m-primaire);
+  --lien: #4430b8;
+  --lien-survol: #2c1b8c;
+  --acquis: #12803f;
+  --acquis-fond: #bff3d1;
+  --police: "Google Sans Flex", "Google Sans", "Roboto Flex", Roboto, system-ui, sans-serif;
+  --police-ui: "Google Sans Flex", "Google Sans", "Roboto Flex", Roboto, system-ui, sans-serif;
+
+  /* Formes : plus généreuses que dans Material You */
+  --rayon-s: 10px;
+  --rayon-m: 16px;
+  --rayon-l: 36px;
+
+  /* Mouvements « à ressort » : dépassement léger, puis retour */
+  --m-ressort: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --m-ressort-doux: cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  --m-sortie: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --m-ombre-1: 0 1px 2px rgba(40, 20, 100, 0.2), 0 2px 6px 2px rgba(40, 20, 100, 0.1);
+  --m-ombre-3: 0 6px 12px 4px rgba(40, 20, 100, 0.16), 0 2px 4px rgba(40, 20, 100, 0.2);
+}
+
+html, body { background: var(--m-surface); }
+
+/* ---------- En-tête : barre d'application colorée ---------- */
+.barre {
+  padding: 12px 28px;
+  border-bottom: none;
+  background: var(--m-primaire-pale);
+  box-shadow: var(--m-ombre-1);
+}
+.barre h1 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--m-sur-primaire-pale);
+}
+.barre h1 .sous-titre { font-weight: 500; color: var(--m-primaire); }
+
+/* Recherche : grande pilule, bien haute */
+#recherche {
+  width: min(360px, 50vw);
+  padding: 12px 20px 12px 50px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--m-surface-blanche);
+  background-position: 18px center;
+  background-size: 20px;
+  color: var(--m-texte);
+  font-weight: 500;
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow 0.25s, transform 0.4s var(--m-ressort);
+}
+#recherche::placeholder { color: var(--m-texte-doux); font-weight: 400; }
+#recherche:hover { box-shadow: inset 0 0 0 2px var(--m-contour-leger); }
+#recherche:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--m-primaire);
+  transform: scale(1.02);
+}
+
+/* Progression : texte en gras et jauge épaisse */
+.progression {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--m-sur-primaire-pale);
+  transition: background-color 0.2s, transform 0.4s var(--m-ressort);
+}
+.progression:hover { background: color-mix(in srgb, var(--m-primaire) 12%, transparent); }
+.progression:active { transform: scale(0.94); }
+.prog-barre { width: 96px; height: 12px; border-radius: 999px; background: var(--m-surface-blanche); }
+.prog-barre > span { border-radius: 999px; background: var(--m-primaire); }
+
+/* ---------- Légende : puces de filtre colorées ---------- */
+.bascule,
+.domaine {
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  text-transform: none;
+  transition: background-color 0.2s, border-radius 0.35s var(--m-ressort), transform 0.35s var(--m-ressort);
+}
+.bascule:active,
+.domaine:active { transform: scale(0.93); }
+
+.domaine {
+  gap: 8px;
+  color: var(--m-texte);
+  background: color-mix(in srgb, var(--c) 18%, var(--m-surface-blanche));
+}
+.domaine::before { /* pastille de la couleur du domaine */
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c);
+}
+.domaine:hover { background: color-mix(in srgb, var(--c) 30%, var(--m-surface-blanche)); }
+/* Domaine masqué : la puce se « dégonfle » en carré arrondi, contour seul */
+.domaine.off {
+  opacity: 1;
+  border-radius: 12px;
+  border-color: var(--m-contour-leger);
+  background: transparent;
+  color: var(--m-contour);
+  text-decoration: line-through;
+}
+.domaine.off::before { background: var(--m-contour-leger); }
+
+.bascule {
+  border-color: var(--m-contour-leger);
+  background: var(--m-surface-blanche);
+  color: var(--m-texte-doux);
+}
+.bascule:hover { background: color-mix(in srgb, var(--m-primaire) 10%, var(--m-surface-blanche)); }
+.bascule[aria-pressed="true"] {
+  border-color: transparent;
+  border-radius: 12px; /* activé : la pilule devient un carré arrondi */
+  background: var(--m-primaire);
+  color: var(--m-sur-primaire);
+  font-weight: 700;
+}
+
+/* ---------- Fiche : grande surface très arrondie ---------- */
+#panneau {
+  padding: 28px 24px 30px;
+  border: none;
+  border-radius: var(--rayon-l);
+  background: var(--m-surface-1);
+  box-shadow: var(--m-ombre-3);
+}
+/* Entrée à ressort : la fiche dépasse un peu puis se pose ; sortie rapide */
+#panneau.entre { animation: panneau-entree 0.55s var(--m-ressort-doux); }
+#panneau.sort { animation: panneau-sortie 0.25s var(--m-sortie) forwards; }
+
+#fermer {
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--m-surface-blanche);
+  color: var(--m-texte);
+  transition: background-color 0.2s, border-radius 0.35s var(--m-ressort), transform 0.35s var(--m-ressort);
+}
+#fermer:hover { background: var(--m-tertiaire-pale); border-radius: 14px; color: var(--m-sur-tertiaire-pale); }
+#fermer:active { transform: scale(0.88); }
+
+.badge {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-niveau {
+  padding: 3px 12px;
+  border: 2px solid var(--m-contour-leger);
+  background: transparent;
+  color: var(--m-texte);
+}
+
+#p-titre {
+  margin-top: 16px;
+  font-size: 2.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--m-sur-primaire-pale);
+}
+#p-description { font-size: 1.02rem; color: var(--m-texte-doux); }
+
+/* Cartes : chaque section de la fiche a sa teinte (aplats de couleur) */
+.bulle {
+  margin-top: 14px;
+  padding: 16px 20px 18px;
+  border: none;
+  border-radius: 28px;
+  background: var(--m-surface-blanche);
+}
+.bulle:nth-of-type(1) { background: var(--m-primaire-pale); }
+.bulle:nth-of-type(2) { background: var(--m-secondaire-pale); }
+.bulle:nth-of-type(3) { background: var(--m-tertiaire-pale); }
+#panneau h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: var(--m-texte);
+  opacity: 0.8;
+}
+
+/* Liens et boutons de liste : survol teinté, léger gonflement */
+#p-ressources a:hover,
+.liens-notions button:hover,
+.chemin button:hover {
+  background: color-mix(in srgb, var(--m-texte) 8%, transparent);
+  text-decoration: none;
+}
+#p-ressources a,
+.liens-notions button,
+.chemin button { transition: background-color 0.2s; border-radius: var(--rayon-s); }
+#p-ressources a { font-weight: 500; }
+#p-ressources a:hover { color: var(--lien-survol); }
+
+/* ---------- Statuts : puces à cocher qui changent de forme ---------- */
+.bouton-acquise {
+  --s: var(--m-primaire);
+  --s-fond: var(--m-primaire-pale);
+  padding: 9px 18px 9px 12px;
+  border: 2px solid var(--m-contour-leger);
+  border-radius: 999px;
+  background: var(--m-surface-blanche);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s, border-radius 0.35s var(--m-ressort), transform 0.35s var(--m-ressort);
+}
+.statut-acquise { --s: var(--acquis); --s-fond: var(--acquis-fond); }
+.statut-encours { --s: #2a5bd7; --s-fond: #cfdcff; }
+.statut-revoir { --s: #c2560a; --s-fond: #ffd9b8; }
+.bouton-acquise:hover { background: color-mix(in srgb, var(--s) 10%, var(--m-surface-blanche)); }
+.bouton-acquise:active { transform: scale(0.93); }
+.bouton-acquise::before { border-radius: 7px; width: 20px; height: 20px; }
+.bouton-acquise[aria-pressed="true"] {
+  border-color: var(--s);
+  border-radius: 14px; /* coché : la pilule devient un carré arrondi */
+  background: var(--s-fond);
+  font-weight: 700;
+}
+
+/* Bouton « Voir le chemin » : bouton rempli, qui se creuse quand le chemin est ouvert */
+.bouton-chemin {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--m-primaire);
+  color: var(--m-sur-primaire);
+  font-weight: 700;
+  transition: background-color 0.2s, border-radius 0.35s var(--m-ressort), transform 0.35s var(--m-ressort);
+}
+.bouton-chemin:hover { background: #4a35c4; }
+.bouton-chemin:active { transform: scale(0.95); }
+.bouton-chemin[aria-expanded="true"] { border-radius: 14px; }
+.bouton-chemin .compte { color: color-mix(in srgb, var(--m-sur-primaire) 80%, transparent); }
+
+.bouton-discret { border-radius: 999px; padding: 5px 14px; font-weight: 700; }
+.bouton-discret:hover { background: color-mix(in srgb, var(--m-primaire) 12%, transparent); text-decoration: none; }
+
+/* Chemin d'apprentissage : étapes rondes et bien visibles */
+.chemin li::before { width: 26px; height: 26px; border-width: 2px; border-radius: 50%; line-height: 22px; font-weight: 700; }
+.chemin li:not(:last-child)::after { left: 12px; top: 30px; width: 3px; border-radius: 2px; background: var(--m-contour-leger); }
+.etiquette-chemin { padding: 2px 12px; border: none; border-radius: 999px; font-weight: 700; }
+.etiquette-prochaine { background: var(--m-primaire); color: var(--m-sur-primaire); }
+.etiquette-but { background: var(--m-tertiaire-pale); color: var(--m-sur-tertiaire-pale); }
+.case-acquise { accent-color: var(--acquis); width: 20px; height: 20px; }
+
+/* ---------- Notification d'effacement : boîte de dialogue ---------- */
+.notification {
+  padding: 22px 24px 18px;
+  border: none;
+  border-radius: 32px;
+  background: var(--m-surface-blanche);
+  box-shadow: var(--m-ombre-3);
+}
+.notification p { font-weight: 500; }
+.bouton-danger {
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: var(--m-erreur);
+  font-weight: 700;
+  transition: background-color 0.2s, border-radius 0.35s var(--m-ressort), transform 0.35s var(--m-ressort);
+}
+.bouton-danger:hover { background: #9c0020; border-radius: 12px; }
+.bouton-danger:active { transform: scale(0.92); }
+
+/* ---------- Focus clavier ---------- */
+#recherche:focus-visible,
+.bascule:focus-visible,
+.domaine:focus-visible,
+#fermer:focus-visible,
+#panneau a:focus-visible,
+.liens-notions button:focus-visible,
+.bouton-chemin:focus-visible,
+.bouton-acquise:focus-visible,
+.bouton-discret:focus-visible,
+.case-acquise:focus-visible,
+.chemin button:focus-visible,
+.progression:focus-visible {
+  outline: 3px solid var(--m-primaire);
+  outline-offset: 2px;
+}
+#recherche:focus-visible { outline: none; }
+
+/* ---------- Petit écran : la fiche prend tout l'écran ---------- */
+@media (max-width: 720px) {
+  .barre { padding: 12px 16px; }
+  #panneau {
+    border-radius: 0;
+    padding: 20px 16px 28px;
+    background: var(--m-surface-1);
+  }
+  #fermer { top: 10px; right: 10px; }
+  #p-titre { font-size: 1.8rem; }
+}
+
+/* Mouvements réduits : ni ressort ni transitions (comme dans style.css) */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

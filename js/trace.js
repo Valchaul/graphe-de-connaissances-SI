@@ -122,7 +122,7 @@ function ajouterCoupures(traces) {
   // Pose les coupures sur les segments horizontaux (ou verticaux). Plusieurs croisements
   // très proches partagent une seule coupure plus longue. Renvoie les croisements qui n'ont
   // pas pu être traités faute de place sur la partie rectiligne du segment.
-  function poser(liste, surHorizontal) {
+  function poser(liste, surHorizontal, demi) {
     const parSegment = new Map();
     for (const c of liste) {
       const seg = surHorizontal ? c.h : c.v;
@@ -136,12 +136,12 @@ function ajouterCoupures(traces) {
       const groupes = [];
       for (const c of cs) {
         const dernier = groupes[groupes.length - 1];
-        if (dernier && distance(c) - distance(dernier[dernier.length - 1]) < 2 * COUPURE_DEMI_LONGUEUR + 6) dernier.push(c);
+        if (dernier && distance(c) - distance(dernier[dernier.length - 1]) < 2 * demi + 6) dernier.push(c);
         else groupes.push([c]);
       }
       for (const g of groupes) {
-        const debut = distance(g[0]) - COUPURE_DEMI_LONGUEUR;
-        const fin = distance(g[g.length - 1]) + COUPURE_DEMI_LONGUEUR;
+        const debut = distance(g[0]) - demi;
+        const fin = distance(g[g.length - 1]) + demi;
         if (debut < seg.debutDroit + 1 || fin > seg.longueur - seg.finDroite - 1) { restes.push(...g); continue; }
         traces[seg.ti].coupures.push({ debut: seg.position + debut, fin: seg.position + fin });
       }
@@ -150,7 +150,13 @@ function ajouterCoupures(traces) {
   }
 
   // D'abord sur la flèche horizontale ; si elle est trop courte, sur la verticale.
-  const restes = poser(poser(croisements, true), false);
+  // Un croisement très proche d'un virage (des deux côtés) n'a pas la place pour une coupure
+  // complète : on retente avec des coupures plus courtes plutôt que de laisser le croisement tel quel.
+  let restes = croisements;
+  for (const demi of [COUPURE_DEMI_LONGUEUR, COUPURE_DEMI_LONGUEUR * 0.75, COUPURE_DEMI_LONGUEUR * 0.5]) {
+    restes = poser(poser(restes, true, demi), false, demi);
+    if (restes.length === 0) break;
+  }
   traces.forEach((t) => t.coupures.sort((m, n) => m.debut - n.debut));
   return { coupes: croisements.length - restes.length, ignores: restes.length };
 }

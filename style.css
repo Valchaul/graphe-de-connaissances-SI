@@ -1,12 +1,36 @@
+/* Police des titres : Source Serif 4 (licence SIL Open Font, voir fonts/LICENSE.txt),
+   hébergée dans le dépôt : le site ne contacte aucun service tiers. */
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* le texte s'affiche tout de suite, dans une police de secours, le temps du chargement */
+  src: url("fonts/source-serif-4-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap; /* le texte s'affiche tout de suite, dans une police de secours, le temps du chargement */
+  src: url("fonts/source-serif-4-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap; /* le texte s'affiche tout de suite, dans une police de secours, le temps du chargement */
+  src: url("fonts/source-serif-4-latin-700-normal.woff2") format("woff2");
+}
+
 :root {
   --fond: #fbfaf7;
   --surface: #ffffff;
   --texte: #1f2328;
   --texte-doux: #5b6168;
   --bordure: #dcd8cf;
-  --accent: #3f5a8a;
-  --lien: #186ca8;         /* bleu des liens de ressources, plus vif que l'accent */
-  --lien-survol: rgb(22, 70, 99);
+  --lien: #186ca8;         /* LE bleu du site : liens, accent, boutons, focus */
+  --accent: var(--lien);
+  --lien-survol: color-mix(in srgb, var(--lien) 65%, #000); /* le même bleu, assombri */
   --acquis: #2f7d4f;       /* vert des notions acquises */
   --acquis-fond: #e7f3ec;
   --police: "Source Serif 4", Georgia, "Times New Roman", serif;
@@ -17,6 +41,20 @@
   --rayon-s: 6px;   /* petits éléments : badge, boutons de la fiche */
   --rayon-m: 8px;   /* contrôles : recherche, filtres de domaine, notions du graphe */
   --rayon-l: 12px;  /* conteneurs : fiche latérale, cadres de domaine, encadré d'erreur */
+
+  /* Échelle des tailles de texte : tout le site utilise ces valeurs */
+  --t-xs: 0.72rem;  /* badges, niveaux, étiquettes */
+  --t-s: 0.82rem;   /* puces de la légende, boutons discrets, compteur */
+  --t-m: 0.9rem;    /* texte courant de l'interface : boutons, liens, notification */
+  --t-l: 1.35rem;   /* titre de la page */
+  --t-xl: 1.65rem;  /* titre de la fiche */
+
+  /* Échelle des espacements (marges, remplissages, écarts) : tout le site utilise ces valeurs */
+  --e-1: 4px;
+  --e-2: 8px;
+  --e-3: 12px;
+  --e-4: 16px;
+  --e-5: 24px;
 
   --largeur-panneau: clamp(400px, 34vw, 560px);
 }
@@ -42,8 +80,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 20px;
+  gap: var(--e-4);
+  padding: var(--e-3) var(--e-5);
   border-bottom: 1px solid var(--bordure);
   background: var(--surface);
   position: relative;
@@ -54,32 +92,32 @@ body {
 .barre h1 {
   margin: 0;
   font-family: var(--police);
-  font-size: 1.35rem;
+  font-size: var(--t-l);
   font-weight: 600;
 }
 
 .barre h1 .sous-titre {
   font-weight: 400;
   color: var(--texte-doux);
-  margin-left: 6px;
+  margin-left: var(--e-2);
 }
 
 .outils {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--e-2);
 }
 
 /* Bouton à bascule : enfoncé (aria-pressed="true") = option active */
 .bascule {
   flex: none;
-  margin-right: 6px; /* petit écart avec les domaines */
-  padding: 4px 8px;
+  margin-right: var(--e-2); /* petit écart avec les domaines */
+  padding: var(--e-1) var(--e-2);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-m);
   background: var(--surface);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: var(--t-s);
   color: var(--texte-doux);
   cursor: pointer;
 }
@@ -93,26 +131,29 @@ body {
 
 #recherche {
   width: min(320px, 50vw);
-  padding: 4px 12px 4px 34px; /* place pour la loupe */
-  border: 1px solid var(--bordure);
+  padding: var(--e-1) var(--e-3) var(--e-1) 34px; /* 34 px : place pour la loupe */
+  border: none;
   border-radius: var(--rayon-m);
   font: inherit;
-  background: var(--fond) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5'/%3E%3Cpath d='M10 10l4 4'/%3E%3C/svg%3E") 11px center / 16px no-repeat;
+  background: color-mix(in srgb, var(--bordure) 45%, var(--fond)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5'/%3E%3Cpath d='M10 10l4 4'/%3E%3C/svg%3E") 11px center / 16px no-repeat;
 }
 
-#recherche:focus-visible,
-.bascule:focus-visible,
-.domaine:focus-visible,
-#fermer:focus-visible,
-#panneau a:focus-visible,
-.liens-notions button:focus-visible,
-.bouton-chemin:focus-visible,
-.bouton-acquise:focus-visible,
-.bouton-discret:focus-visible,
-.case-acquise:focus-visible,
-.chemin button:focus-visible {
+/* Focus clavier : un même contour pour tout élément qu'on peut atteindre avec Tab (liens, boutons,
+   champs, cases). :focus-visible ne l'affiche qu'à la navigation au clavier, jamais au clic.
+   :where() lui donne la priorité la plus basse : un style plus précis peut le remplacer. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline-offset: 2px;
+}
+#recherche:focus-visible { outline-offset: 0; } /* la recherche n'a pas de bordure : le contour la suit de près */
+
+/* Survol : le changement de couleur est progressif (0,15 s) au lieu d'être instantané.
+   Même priorité minimale ; les transitions plus précises (jauge, chevron) restent prioritaires. */
+:where(a, button, input, summary) {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(a, button, input, summary) { transition: none; }
 }
 
 /* ---------- Légende / filtres ---------- */
@@ -121,8 +162,8 @@ body {
   flex-wrap: nowrap; /* une seule ligne : défile si l'écran est trop étroit */
   overflow-x: auto;
   scrollbar-width: none; /* défile sans barre visible (molette, tactile) */
-  gap: 4px;
-  padding: 8px 20px;
+  gap: var(--e-1);
+  padding: var(--e-2) var(--e-5);
   /* Bande transparente posée sur le haut de la carte : js/filtres.js remonte la carte dessous */
   position: relative;
   z-index: 5;
@@ -136,12 +177,12 @@ body {
   display: inline-flex;
   align-items: center;
   flex: none;
-  padding: 4px 9px;
+  padding: var(--e-1) var(--e-2);
   border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
   border-radius: var(--rayon-m);
   background: color-mix(in srgb, var(--c) 4%, var(--surface));
   font: inherit;
-  font-size: 0.72rem;
+  font-size: var(--t-xs);
   font-weight: 600;
   text-transform: uppercase;
   color: var(--c);
@@ -176,10 +217,11 @@ main {
 #panneau {
   width: var(--largeur-panneau);
   max-width: 60vw;
-  margin: calc(var(--h-legende, 0px)) 12px 12px 0; /* sous la légende, qui recouvre le haut */
+  margin: calc(var(--h-legende, 0px)) var(--e-3) var(--e-3) 0; /* sous la légende, qui recouvre le haut */
   overflow-y: auto;
-  padding: 24px 28px 28px;
+  padding: 0 var(--e-5) var(--e-5); /* pas de marge en haut : l'étiquette du domaine touche le bandeau */
   border: 1px solid var(--bordure);
+  border-top: 4px solid var(--c, var(--bordure)); /* bandeau de la couleur du domaine */
   border-radius: var(--rayon-l);
   background: var(--surface);
   position: relative;
@@ -197,8 +239,10 @@ main {
   from { transform: none; opacity: 1; }
   to   { transform: translateY(calc(100% + 24px)); opacity: 0; }
 }
-#panneau.entre { animation: panneau-entree 0.28s ease-out; }
-#panneau.sort { animation: panneau-sortie 0.22s ease-in forwards; }
+/* Mouvement repris de Material 3 Expressive : entrée « à ressort » (la fiche dépasse un peu
+   sa position puis se pose), sortie rapide qui accélère. */
+#panneau.entre { animation: panneau-entree 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+#panneau.sort { animation: panneau-sortie 0.25s cubic-bezier(0.3, 0, 0.8, 0.15) forwards; }
 
 #fermer {
   position: absolute;
@@ -219,9 +263,9 @@ main {
 .badge {
   display: inline-block;
   margin: 0;
-  padding: 3px 10px;
+  padding: var(--e-1) var(--e-3);
   border-radius: var(--rayon-s);
-  font-size: 0.75rem;
+  font-size: var(--t-xs);
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: #fff;
@@ -232,21 +276,47 @@ main {
 .badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-right: 40px; /* laisse la place au bouton de fermeture */
+  align-items: center;
+  gap: var(--e-2);
+  margin-right: 40px; /* laisse la place au bouton de fermeture (32 px + marge) */
+}
+
+/* Étiquette du domaine : une languette accrochée sous le bandeau de couleur. Deux petits raccords
+   concaves (les ::before et ::after) l'y relient avec des bords arrondis, comme l'onglet d'un classeur. */
+#p-domaine {
+  --raccord: 8px;
+  position: relative;
+  padding: 6px var(--e-3) 5px;
+  border-radius: 0 0 var(--rayon-s) var(--rayon-s);
+}
+#p-domaine::before,
+#p-domaine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: var(--raccord);
+  height: var(--raccord);
+}
+#p-domaine::before { /* raccord de gauche */
+  right: 100%;
+  background: radial-gradient(circle at 0 100%, transparent var(--raccord), var(--c, var(--accent)) calc(var(--raccord) + 0.5px));
+}
+#p-domaine::after { /* raccord de droite */
+  left: 100%;
+  background: radial-gradient(circle at 100% 100%, transparent var(--raccord), var(--c, var(--accent)) calc(var(--raccord) + 0.5px));
 }
 .badge-niveau {
   color: var(--texte);
   background: var(--fond);
   border: 1px solid var(--bordure);
-  padding: 2px 9px; /* 1 px de moins que le badge plein : la bordure compense */
+  padding: 2px var(--e-2); /* 1 px de moins que le badge plein : la bordure compense */
   cursor: help;
 }
 
 /* Niveau rappelé après le nom dans les listes « Prérequis » et « Ouvre vers » */
 .niveau-liste {
-  margin-left: 8px;
-  font-size: 0.72rem;
+  margin-left: var(--e-2);
+  font-size: var(--t-xs);
   letter-spacing: 0.03em;
   color: var(--texte-doux);
 }
@@ -257,18 +327,17 @@ main {
 .progression {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 8px;
+  gap: var(--e-3);
+  padding: var(--e-2) var(--e-2);
   border: none;
   border-radius: var(--rayon-m);
   background: none;
   font: inherit;
-  font-size: 0.75rem;
+  font-size: var(--t-xs);
   color: var(--texte-doux);
   cursor: pointer;
 }
 .progression:hover { background: var(--fond); }
-.progression:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* Notification sous la barre de progression */
 .notification {
@@ -277,28 +346,27 @@ main {
   right: 0;
   z-index: 20;
   width: 280px;
-  padding: 14px 16px;
+  padding: var(--e-4) var(--e-4);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-l);
   background: var(--surface);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-  font-size: 0.88rem;
+  font-size: var(--t-m);
 }
 .notification[hidden] { display: none; }
-.notification p { margin: 0 0 12px; }
-.notification-boutons { display: flex; justify-content: flex-end; gap: 8px; }
+.notification p { margin: 0 0 var(--e-3); }
+.notification-boutons { display: flex; justify-content: flex-end; gap: var(--e-2); }
 .bouton-danger {
-  padding: 4px 12px;
+  padding: var(--e-1) var(--e-3);
   border: none;
   border-radius: var(--rayon-s);
   background: #b91c1c;
   color: #fff;
   font: inherit;
-  font-size: 0.8rem;
+  font-size: var(--t-s);
   cursor: pointer;
 }
 .bouton-danger:hover { background: #991b1b; }
-.bouton-danger:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .prog-texte { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .prog-barre {
   width: 72px;
@@ -317,32 +385,32 @@ main {
 
 /* Petit bouton textuel (« Effacer », « Les cocher aussi ») */
 .bouton-discret {
-  padding: 2px 8px;
+  padding: 2px var(--e-2);
   border: none;
   border-radius: var(--rayon-s);
   background: none;
   font: inherit;
-  font-size: 0.8rem;
+  font-size: var(--t-s);
   color: var(--lien);
   cursor: pointer;
 }
 .bouton-discret:hover { background: var(--fond); text-decoration: underline; }
 
 /* Boutons de statut de la fiche : des cases à cocher qui se remplissent de leur couleur */
-.statuts { display: flex; flex-wrap: wrap; gap: 8px; }
+.statuts { display: flex; flex-wrap: wrap; gap: var(--e-2); }
 .bouton-acquise {
   --s: var(--acquis);
   --s-fond: var(--acquis-fond);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--e-2);
+  padding: var(--e-2) var(--e-3);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-m);
   background: var(--surface);
   color: var(--texte);
   font: inherit;
-  font-size: 0.9rem;
+  font-size: var(--t-m);
   cursor: pointer;
 }
 .statut-encours { --s: #1d4ed8; --s-fond: #eaf0fe; }
@@ -362,23 +430,22 @@ main {
   border-color: var(--s);
   background: var(--s-fond);
   color: var(--texte);
-  font-weight: 600;
 }
 .bouton-acquise[aria-pressed="true"]::before {
   border-color: var(--s);
   background: var(--s) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5l2.5 2.5 4.5-5'/%3E%3C/svg%3E") center / 12px no-repeat;
 }
 .aide-acquise {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
+  margin: var(--e-3) 0 0;
+  font-size: var(--t-s);
   color: var(--texte-doux);
 }
-.aide-acquise .bouton-discret { margin-left: 4px; }
+.aide-acquise .bouton-discret { margin-left: var(--e-1); }
 .aide-acquise p { margin: 0; }
 /* Liste des prérequis manquants : compacte, avec défilement si elle est longue */
 #panneau .aide-acquise ul {
-  margin: 6px 0 0;
-  padding: 0 0 0 18px;
+  margin: var(--e-2) 0 0;
+  padding: 0 0 0 var(--e-4);
   list-style: disc;
   max-height: 200px;
   overflow-y: auto;
@@ -389,15 +456,15 @@ main {
 .bouton-chemin {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 6px 12px;
+  gap: var(--e-2);
+  margin-top: var(--e-3);
+  padding: var(--e-2) var(--e-3);
   border: 1px solid var(--lien);
   border-radius: var(--rayon-m);
   background: var(--surface);
   color: var(--lien);
   font: inherit;
-  font-size: 0.9rem;
+  font-size: var(--t-m);
   font-weight: 600;
   cursor: pointer;
 }
@@ -419,8 +486,8 @@ main {
 .bouton-chemin[aria-expanded="true"]::after { transform: translateY(2px) rotate(-135deg); }
 
 .chemin-resume {
-  margin: 16px 0 14px;
-  font-size: 0.88rem;
+  margin: var(--e-4) 0 var(--e-4);
+  font-size: var(--t-m);
   color: var(--texte-doux);
 }
 
@@ -436,9 +503,9 @@ main {
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--e-3);
   margin: 0;
-  padding: 3px 0 7px;
+  padding: var(--e-1) 0 var(--e-2);
 }
 .chemin li::before {
   content: counter(etape);
@@ -452,7 +519,7 @@ main {
   border-radius: var(--rayon-s);
   background: var(--surface);
   color: var(--c);
-  font-size: 0.72rem;
+  font-size: var(--t-xs);
   font-weight: 600;
   line-height: 21px;
   text-align: center;
@@ -470,8 +537,8 @@ main {
 .chemin li.but::before { background: var(--c); color: #fff; }
 
 .chemin button {
-  padding: 2px 6px;
-  margin-left: -6px;
+  padding: 2px var(--e-2);
+  margin-left: calc(-1 * var(--e-2));
   border: none;
   border-radius: var(--rayon-s);
   background: none;
@@ -492,15 +559,15 @@ main {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2px 8px;
+  gap: 2px var(--e-2);
 }
 .chemin .niveau-liste { margin: 0; }
 .etiquette-chemin {
   margin: 0;
-  padding: 1px 8px;
+  padding: 1px var(--e-2);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-s);
-  font-size: 0.7rem;
+  font-size: var(--t-xs);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--texte-doux);
@@ -512,7 +579,7 @@ main {
   flex: none;
   width: 18px;
   height: 18px;
-  margin: 5px 0 0 auto;
+  margin: var(--e-1) 0 0 auto;
   accent-color: var(--acquis);
   cursor: pointer;
 }
@@ -528,9 +595,9 @@ main {
 
 #p-titre {
   font-family: var(--police);
-  font-size: 1.65rem;
+  font-size: var(--t-xl);
   line-height: 1.25;
-  margin: 12px 40px 8px 0; /* laisse la place au bouton de fermeture */
+  margin: var(--e-3) 40px var(--e-2) 0; /* laisse la place au bouton de fermeture */
 }
 
 #p-description {
@@ -540,17 +607,18 @@ main {
 }
 
 #panneau h3 {
-  font-size: 0.78rem;
+  font-size: var(--t-s);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--texte-doux);
-  margin: 0 0 8px;
+  letter-spacing: 0.1em;
+  color: var(--texte);
+  margin: 0 0 var(--e-3);
 }
 
 /* Chaque section de la fiche est une bulle (encadré) */
 .bulle {
-  margin-top: 14px;
-  padding: 12px 16px 14px;
+  margin-top: var(--e-4);
+  padding: var(--e-3) var(--e-4) var(--e-4);
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-m);
 }
@@ -567,8 +635,8 @@ main {
 #p-ressources a,
 .liens-notions button {
   display: inline-block;
-  padding: 4px 8px;
-  margin-left: -8px;
+  padding: var(--e-1) var(--e-2);
+  margin-left: calc(-1 * var(--e-2));
   border-radius: var(--rayon-s);
   line-height: 1.4;
 }
@@ -577,7 +645,7 @@ main {
 #p-ressources a {
   display: inline-flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--e-3);
   color: var(--lien);
   text-decoration: none;
 }
@@ -587,7 +655,7 @@ main {
   flex: none;
   width: 16px;
   height: 16px;
-  margin-top: 3px; /* aligne le logo sur la première ligne du titre */
+  margin-top: var(--e-1); /* aligne le logo sur la première ligne du titre */
   border-radius: 4px;
   object-fit: contain;
 }
@@ -604,12 +672,12 @@ main {
 .liens-notions button::before {
   content: "●";
   color: var(--c);
-  margin-right: 6px;
+  margin-right: var(--e-2);
   font-size: 0.7em;
 }
 .liens-notions button.acquise::after {
   content: "✓";
-  margin-left: 8px;
+  margin-left: var(--e-2);
   font-size: 0.85em;
   font-weight: 700;
   color: var(--acquis);
@@ -626,25 +694,25 @@ main {
   bottom: 12px;
   left: 12px;
   right: 12px;
-  padding: 12px 16px;
+  padding: var(--e-3) var(--e-4);
   background: #fff4f2;
   border: 1px solid #d9a39a;
   border-radius: var(--rayon-l);
   color: #7a2a1d;
-  font-size: 0.9rem;
+  font-size: var(--t-m);
 }
 
 /* ---------- Petit écran : panneau ---------- */
 @media (max-width: 720px) {
   /* Grille : titre, puis sous-titre + progression sur la même ligne, puis recherche */
-  .barre { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 10px 16px; }
+  .barre { display: grid; grid-template-columns: 1fr auto; gap: var(--e-1) var(--e-3); padding: var(--e-3) var(--e-4); }
   .barre h1, .outils { display: contents; }
   .barre h1 .titre { grid-column: 1 / -1; }
-  .barre h1 .sous-titre { margin: 0; font-size: 0.9rem; align-self: center; }
-  .progression { padding: 4px 0; }
+  .barre h1 .sous-titre { margin: 0; font-size: var(--t-m); align-self: center; }
+  .progression { padding: var(--e-1) 0; }
   .notification { left: auto; right: 0; width: min(280px, calc(100vw - 32px)); }
-  #recherche { grid-column: 1 / -1; width: auto; min-width: 0; margin-top: 4px; }
-  #legende { padding: 8px 16px; flex-wrap: nowrap; overflow-x: auto; }
+  #recherche { grid-column: 1 / -1; width: auto; min-width: 0; margin-top: var(--e-1); }
+  #legende { padding: var(--e-2) var(--e-4); flex-wrap: nowrap; overflow-x: auto; }
   .domaine { flex: none; }
   main { flex-direction: column; }
   #panneau {
@@ -656,7 +724,8 @@ main {
     max-width: none;
     margin: 0;
     border: none;
+    border-top: 4px solid var(--c, var(--bordure));
     border-radius: 0;
-    padding: 16px 20px 26px;
+    padding: 0 var(--e-5) var(--e-5);
   }
 }

@@ -142,13 +142,40 @@ function reinitialiserChemin() {
   notionAffichee = null;
 }
 
+// Déroulement animé du chemin : la section grandit (ou rétrécit) en se fondant. Réservé au clic sur
+// le bouton : les mises à jour du chemin (case cochée…) ne rejouent pas l'animation.
+let animationChemin = null;
+function animerChemin(ouvrir) {
+  const section = document.getElementById("p-chemin");
+  if (animationChemin) animationChemin.cancel();
+  if (sansAnimation.matches) { section.hidden = !ouvrir; return; }
+  section.hidden = false; // visible le temps de l'animation, même pour une fermeture
+  const hauteur = section.scrollHeight;
+  const images = [
+    { height: "0px", opacity: 0 },
+    { height: hauteur + "px", opacity: 1 },
+  ];
+  animationChemin = section.animate(ouvrir ? images : images.reverse(), {
+    duration: ouvrir ? 320 : 220,
+    easing: "cubic-bezier(0.2, 0, 0, 1)",
+  });
+  section.style.overflow = "hidden";
+  animationChemin.onfinish = animationChemin.oncancel = () => {
+    section.style.overflow = "";
+    section.hidden = !ouvrir;
+    animationChemin = null;
+  };
+}
+
 document.getElementById("p-chemin-bouton").addEventListener("click", () => {
   if (parcours) { // le chemin est ouvert : on le masque
     parcours = null;
     majChemin(notionAffichee);
+    animerChemin(false);
     return;
   }
   parcours = { but: notionAffichee, etapes: cheminVers(notionAffichee) };
   majChemin(notionAffichee);
+  animerChemin(true);
   document.getElementById("p-chemin").scrollIntoView({ block: "nearest", behavior: "smooth" });
 });

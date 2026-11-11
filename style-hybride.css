@@ -1,0 +1,227 @@
+/* =====================================================================
+   Variante « hybride » : entre le style académique (style.css) et Material 3 Expressive
+   (style-material.css). Une feuille de style qui vient APRÈS style.css.
+   À utiliser À LA PLACE de style-material.css, pas en plus.
+
+   Ce qui est gardé du style académique :
+   - le papier chaud et les titres en police à empattements ;
+   - des couleurs sobres : un bleu-gris pour l'accent, la couleur de chaque domaine
+     seulement là où elle sert à repérer (puces, badges, étapes) ;
+   - des traits fins pour structurer, et des majuscules espacées pour les petits titres.
+
+   Ce qui est emprunté à Material 3 Expressive :
+   - des formes arrondies : pilules pour les puces et les boutons, grands coins pour la fiche ;
+   - des surfaces légèrement teintées au lieu de simples traits ;
+   - des boutons qui changent de forme quand on les active, et des mouvements à ressort
+     (mesurés : un dépassement très léger) ;
+   - des zones à toucher confortables.
+   Les notions de la carte sont dessinées par Cytoscape : leurs couleurs et leurs
+   coins se règlent dans js/graphe.js et js/config.js, pas ici.
+   ===================================================================== */
+
+:root {
+  /* Palette : papier chaud, encre, et un bleu ardoise pour l'accent */
+  --h-papier: #fbfaf7;
+  --h-papier-1: #f4f1ea;               /* niveaux de surface teintés (beige) */
+  --h-papier-2: #ece8de;
+  --h-ardoise: #3f5a8a;
+  --h-ardoise-pale: #e3e9f4;           /* version pâle, pour les éléments sélectionnés */
+  --h-sur-ardoise-pale: #16233d;
+  --h-trait: #d9d4c8;
+
+  --fond: var(--h-papier);
+  --surface: #ffffff;
+  --bordure: var(--h-trait);
+  --accent: var(--h-ardoise);
+  --lien: #1b5fa0;
+  --lien-survol: #123f6b;
+  --acquis: #2f7d4f;
+  --acquis-fond: #dcf0e4;
+
+  /* Formes : entre les deux styles */
+  --rayon-s: 8px;
+  --rayon-m: 12px;
+  --rayon-l: 24px;
+
+  --h-ressort: cubic-bezier(0.34, 1.4, 0.64, 1);      /* ressort mesuré */
+  --h-ressort-doux: cubic-bezier(0.2, 0.9, 0.3, 1.08);
+  --h-sortie: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --h-ombre-1: 0 1px 3px rgba(60, 50, 30, 0.12);
+  --h-ombre-3: 0 4px 16px rgba(60, 50, 30, 0.16);
+}
+
+/* ---------- En-tête : sobre, avec un trait et une ombre légère ---------- */
+.barre {
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--h-trait);
+  background: var(--surface);
+  box-shadow: var(--h-ombre-1);
+}
+
+/* Recherche : pilule discrète, sans bordure, qui se souligne au survol et au focus */
+#recherche {
+  padding: 8px 18px 8px 42px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--h-papier-1);
+  background-position: 15px center;
+  background-size: 17px;
+  box-shadow: inset 0 0 0 1.5px transparent;
+  transition: background-color 0.2s, box-shadow 0.25s;
+}
+#recherche:hover { box-shadow: inset 0 0 0 1.5px var(--h-trait); }
+#recherche:focus-visible {
+  outline: none;
+  background-color: var(--surface);
+  box-shadow: inset 0 0 0 2px var(--h-ardoise);
+}
+
+/* Progression : jauge arrondie */
+.progression { padding: 6px 14px; border-radius: 999px; transition: background-color 0.2s, transform 0.3s var(--h-ressort); }
+.progression:hover { background: var(--h-papier-1); }
+.progression:active { transform: scale(0.96); }
+.prog-barre { width: 80px; height: 8px; border-radius: 999px; background: var(--h-papier-2); }
+.prog-barre > span { border-radius: 999px; background: var(--acquis); }
+
+/* ---------- Légende : puces en pilule, texte en majuscules couleur du domaine ---------- */
+.bascule,
+.domaine {
+  padding: 5px 13px;
+  border-radius: 999px;
+  transition: background-color 0.2s, border-radius 0.3s var(--h-ressort), transform 0.3s var(--h-ressort);
+}
+.bascule:active,
+.domaine:active { transform: scale(0.95); }
+
+.domaine {
+  border-width: 1px;
+  background: color-mix(in srgb, var(--c) 9%, var(--surface));
+}
+.domaine:hover { background: color-mix(in srgb, var(--c) 18%, var(--surface)); }
+/* Domaine masqué : la pilule devient un carré arrondi, contour seul */
+.domaine.off {
+  opacity: 1;
+  border-radius: 8px;
+  border-color: var(--h-trait);
+  background: transparent;
+  color: #8b8f96;
+}
+
+.bascule { background: var(--surface); }
+.bascule:hover { background: var(--h-papier-1); }
+.bascule[aria-pressed="true"] {
+  border-color: transparent;
+  border-radius: 8px; /* activé : la pilule devient un carré arrondi */
+  background: var(--h-ardoise-pale);
+  color: var(--h-sur-ardoise-pale);
+}
+
+/* ---------- Fiche : grande carte arrondie, sur papier teinté ---------- */
+#panneau {
+  padding: 26px 26px 30px;
+  border: 1px solid var(--h-trait);
+  border-radius: var(--rayon-l);
+  background: var(--h-papier-1);
+  box-shadow: var(--h-ombre-3);
+}
+#panneau.entre { animation: panneau-entree 0.45s var(--h-ressort-doux); }
+#panneau.sort { animation: panneau-sortie 0.22s var(--h-sortie) forwards; }
+
+#fermer {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: background-color 0.2s, border-radius 0.3s var(--h-ressort), transform 0.3s var(--h-ressort);
+}
+#fermer:hover { background: var(--surface); border-radius: 10px; }
+#fermer:active { transform: scale(0.9); }
+
+.badge { padding: 4px 12px; border-radius: 999px; }
+.badge-niveau { padding: 3px 11px; background: var(--surface); }
+
+#p-titre { font-size: 1.8rem; letter-spacing: -0.01em; }
+
+/* Sections : cartes blanches sur le papier teinté, sans trait, au coin généreux */
+.bulle {
+  margin-top: 12px;
+  padding: 14px 18px 16px;
+  border: none;
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--h-trait);
+}
+#panneau h3 { font-weight: 700; color: var(--h-ardoise); }
+
+#p-ressources a:hover,
+.liens-notions button:hover,
+.chemin button:hover { background: var(--h-papier-1); }
+#p-ressources a,
+.liens-notions button,
+.chemin button { transition: background-color 0.2s; }
+
+/* ---------- Statuts : puces qui changent de forme quand elles sont cochées ---------- */
+.bouton-acquise {
+  --s: var(--acquis);
+  --s-fond: var(--acquis-fond);
+  padding: 7px 15px 7px 11px;
+  border-radius: 999px;
+  transition: background-color 0.2s, border-radius 0.3s var(--h-ressort), transform 0.3s var(--h-ressort);
+}
+.statut-acquise { --s: var(--acquis); --s-fond: var(--acquis-fond); }
+.statut-encours { --s: #1d4ed8; --s-fond: #e4ebfd; }
+.statut-revoir { --s: #c2610c; --s-fond: #fdebd8; }
+.bouton-acquise:hover { background: color-mix(in srgb, var(--s) 8%, var(--surface)); }
+.bouton-acquise:active { transform: scale(0.95); }
+.bouton-acquise[aria-pressed="true"] { border-radius: 10px; border-width: 1.5px; }
+
+/* « Voir le chemin » : bouton tonal en pilule, qui se creuse quand le chemin est ouvert */
+.bouton-chemin {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--h-ardoise-pale);
+  color: var(--h-sur-ardoise-pale);
+  transition: background-color 0.2s, border-radius 0.3s var(--h-ressort), transform 0.3s var(--h-ressort);
+}
+.bouton-chemin:hover { background: color-mix(in srgb, var(--h-ardoise) 18%, var(--h-ardoise-pale)); }
+.bouton-chemin:active { transform: scale(0.96); }
+.bouton-chemin[aria-expanded="true"] { border-radius: 10px; }
+
+.bouton-discret { border-radius: 999px; padding: 4px 12px; }
+.bouton-discret:hover { text-decoration: none; background: var(--h-ardoise-pale); }
+
+/* Chemin : étapes rondes, étiquettes en pilule */
+.chemin li::before { border-radius: 50%; width: 25px; height: 25px; line-height: 22px; }
+.chemin li:not(:last-child)::after { left: 11.5px; top: 29px; }
+.etiquette-chemin { border-radius: 999px; padding: 1px 10px; }
+.etiquette-prochaine { border-color: transparent; background: var(--h-ardoise-pale); color: var(--h-sur-ardoise-pale); }
+
+/* ---------- Notification d'effacement ---------- */
+.notification {
+  padding: 18px 20px 14px;
+  border: none;
+  border-radius: 24px;
+  box-shadow: var(--h-ombre-3), 0 0 0 1px var(--h-trait);
+}
+.bouton-danger {
+  padding: 7px 18px;
+  border-radius: 999px;
+  transition: background-color 0.2s, border-radius 0.3s var(--h-ressort), transform 0.3s var(--h-ressort);
+}
+.bouton-danger:hover { border-radius: 10px; }
+.bouton-danger:active { transform: scale(0.94); }
+
+/* ---------- Petit écran : la fiche prend tout l'écran ---------- */
+@media (max-width: 720px) {
+  .barre { padding: 10px 16px; }
+  #panneau {
+    border: none;
+    border-radius: 0;
+    padding: 18px 16px 28px;
+  }
+}
+
+/* Mouvements réduits : ni ressort ni transitions */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

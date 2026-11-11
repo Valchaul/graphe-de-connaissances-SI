@@ -94,6 +94,7 @@ function choisir(id, centrer) {
 
   // Panneau
   const d = DOMAINES[n.domaine];
+  panneau.style.setProperty("--c", d?.couleur); // bandeau de la fiche
   const badge = document.getElementById("p-domaine");
   badge.textContent = d?.nom || n.domaine;
   badge.style.setProperty("--c", d?.couleur);
