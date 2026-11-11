@@ -3,7 +3,7 @@
 Carte interactive des notions des sciences de l'ingénieur (niveau école d'ingénieur).
 Chaque notion indique ses prérequis et renvoie vers des ressources existantes.
 
-[`https://valchaul.github.io/graphe-de-connaissance-SI/`](Découvrez la carte ici)
+[`Découvrez la carte ici`](https://valchaul.github.io/graphe-de-connaissance-SI/)
 
 ## Voir le site en local
 
