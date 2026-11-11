@@ -4,6 +4,7 @@
 
 const domainesMasques = new Set();
 const legende = document.getElementById("legende");
+const basculeIlots = document.getElementById("bascule-ilots"); // premier élément de la légende
 for (const [cle, d] of Object.entries(DOMAINES)) {
   const bouton = document.createElement("button");
   bouton.className = "domaine";
@@ -23,7 +24,6 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
 }
 
 // Bouton « Îlots par domaine » : affiche ou masque les cadres et recalcule la carte.
-const basculeIlots = document.getElementById("bascule-ilots");
 basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
 basculeIlots.addEventListener("click", () => {
   grouperParDomaine = !grouperParDomaine;

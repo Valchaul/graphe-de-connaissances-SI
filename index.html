@@ -18,15 +18,16 @@
               title="Ce navigateur refuse la sauvegarde (navigation privée ?) : la progression sera perdue à la fermeture.">⚠</span>
         <button id="prog-effacer" class="bouton-discret" type="button" hidden>Effacer</button>
       </div>
-      <button id="bascule-ilots" class="bascule" type="button" aria-pressed="true"
-              title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
-        Îlots par domaine
-      </button>
       <input id="recherche" type="search" placeholder="Rechercher une notion…" autocomplete="off">
     </div>
   </header>
 
-  <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)"></nav>
+  <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)">
+    <button id="bascule-ilots" class="bascule" type="button" aria-pressed="true"
+              title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
+        Îlots par domaine
+      </button>
+</nav>
 
   <main>
     <div id="graphe" aria-label="Carte des notions"></div>
