@@ -321,9 +321,8 @@ main {
 .bouton-acquise {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 2px;
-  padding: 8px 14px;
+  gap: 8px;
+  padding: 6px 12px;
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-m);
   background: var(--surface);
@@ -366,7 +365,7 @@ main {
   align-items: center;
   gap: 8px;
   margin-top: 10px;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: 1px solid var(--lien);
   border-radius: var(--rayon-m);
   background: var(--surface);
@@ -596,7 +595,7 @@ main {
   font-size: 0.9rem;
 }
 
-/* ---------- Petit écran : panneau en bas ---------- */
+/* ---------- Petit écran : panneau ---------- */
 @media (max-width: 720px) {
   /* Grille : titre, puis sous-titre + progression sur la même ligne, puis recherche */
   .barre { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 10px 16px; }
@@ -619,6 +618,6 @@ main {
     margin: 0;
     border: none;
     border-radius: 0;
-    padding: 20px 22px 28px;
+    padding: 18px 20px 26px;
   }
 }
