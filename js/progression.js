@@ -81,7 +81,7 @@ function viderProgression() {
 // Compteur de l'en-tête. Les domaines masqués (légende) ne comptent ni parmi les notions
 // totales ni parmi les acquises : on mesure la progression sur ce qui est affiché.
 function majCompteur() {
-  const visibles = NOTIONS.filter((n) => !domainesMasques.has(n.domaine));
+  const visibles = NOTIONS.filter(afficheeParDomaineEtNiveau);
   const total = visibles.length;
   const nombre = visibles.filter((n) => acquises.has(n.id)).length;
   document.getElementById("prog-texte").textContent = `${nombre} / ${total} acquises`;
@@ -108,6 +108,7 @@ function rafraichirProgression() {
   if (new Set([...acquises, ...enCours, ...aReviser]).size === 0) fermerConfirmation();
   document.getElementById("prog-alerte").hidden = stockageDisponible;
 
+  if (statutsMasques.size) appliquerFiltres(); // le filtre par statut suit les changements de statut
   if (notionDeLaFiche) {
     majFicheProgression(notionDeLaFiche);
     majChemin(notionDeLaFiche); // redessine la liste du chemin avec les cases cochées

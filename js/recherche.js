@@ -9,7 +9,7 @@ recherche.addEventListener("input", () => {
   const q = sansAccents(recherche.value.trim());
   cy.elements().removeClass("attenue choisi chemin trouve");
   if (!q) return;
-  const trouves = cy.nodes(".notion").filter((nd) => sansAccents(nd.data("label")).includes(q));
+  const trouves = cy.nodes(".notion").filter((nd) => nd.style("display") !== "none" && sansAccents(nd.data("label")).includes(q)); // les notions masquées par un filtre ne sont pas proposées
   cy.elements().not(trouves).not(".cadre").addClass("attenue");
   trouves.addClass("trouve");
 });

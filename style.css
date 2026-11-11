@@ -729,3 +729,50 @@ main {
     padding: 0 var(--e-5) var(--e-5);
   }
 }
+
+
+/* ---------- Filtres par niveau et par statut ---------- */
+.filtres-zone { position: relative; }
+.bouton-filtres {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1);
+  margin-right: 0;
+  padding: 6px var(--e-3);
+  border-radius: var(--rayon-m);
+}
+.icone-filtre { display: block; flex: none; }
+#filtres-compte { font-variant-numeric: tabular-nums; } /* nombre de filtres actifs, à droite de l'entonnoir */
+.panneau-filtres { width: 300px; right: 0; }
+.panneau-filtres h3 {
+  margin: 0 0 var(--e-2);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.puces { display: flex; flex-wrap: wrap; gap: var(--e-1); margin-bottom: var(--e-3); }
+.puce-filtre {
+  padding: var(--e-1) var(--e-3);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  font: inherit;
+  font-size: var(--t-s);
+  color: var(--texte);
+  cursor: pointer;
+}
+.puce-filtre:hover { background: var(--fond); }
+.puce-filtre[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent);
+}
+.puce-filtre[aria-pressed="false"] { color: var(--texte-doux); text-decoration: line-through; }
+
+@media (max-width: 720px) {
+  /* Recherche et bouton Filtres sur la même ligne */
+  #recherche { grid-column: 1; grid-row: 3; }
+  .filtres-zone { grid-column: 2; grid-row: 3; }
+  .panneau-filtres { width: min(300px, calc(100vw - 32px)); }
+}

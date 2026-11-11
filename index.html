@@ -31,6 +31,23 @@
           </div>
         </div>
       </div>
+      <!-- Filtres par niveau et par statut (js/filtres-avances.js) -->
+      <div class="filtres-zone">
+        <button id="filtres-bouton" class="bascule bouton-filtres" type="button" aria-pressed="false"
+                aria-expanded="false" aria-controls="filtres-panneau"
+                aria-label="Filtres" title="Filtrer les notions affichées par niveau ou par statut">
+          <svg class="icone-filtre" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 3h12l-4.5 5.5V13l-3-1.5V8.5z"/>
+          </svg><span id="filtres-compte"></span></button>
+        <div id="filtres-panneau" class="notification panneau-filtres" role="dialog" aria-label="Filtres" hidden>
+          <h3>Niveaux affichés</h3>
+          <div id="filtres-niveaux" class="puces"></div>
+          <h3>Statuts affichés</h3>
+          <div id="filtres-statuts" class="puces"></div>
+          <button id="filtres-reset" class="bouton-discret" type="button" hidden>Tout réafficher</button>
+        </div>
+      </div>
       <input id="recherche" type="search" placeholder="Rechercher une notion" autocomplete="off">
     </div>
   </header>
@@ -111,6 +128,7 @@
   <script src="js/panneau.js"></script>
   <script src="js/chemin.js"></script>
   <script src="js/filtres.js"></script>
+  <script src="js/filtres-avances.js"></script>
   <script src="js/recherche.js"></script>
   <script src="js/main.js"></script>
 </body>
