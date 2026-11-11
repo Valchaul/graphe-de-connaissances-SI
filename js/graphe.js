@@ -31,7 +31,7 @@ const cy = cytoscape({
   elements,
   layout: { name: "preset" }, // les positions sont fournies par ELK (voir placement.js)
   autoungrabify: true,        // notions non déplaçables : les flèches sont calculées pour leur place
-  minZoom: 0.15,
+  minZoom: 0.05,
   maxZoom: 2.5,
   style: [
     {

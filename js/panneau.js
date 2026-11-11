@@ -121,7 +121,17 @@ function deselectionner() {
   history.replaceState(null, "", location.pathname);
 }
 
-cy.on("tap", "node.notion", (e) => choisir(e.target.id(), false));
+// Sur écran tactile, Cytoscape élargit la zone sensible autour des notions (de plusieurs pixels,
+// donc de beaucoup une fois la carte dézoomée). On ne garde que les appuis dans la notion elle-même.
+function appuiDansLaNotion(e) {
+  const b = e.target.boundingBox({ includeLabels: false });
+  return e.position.x >= b.x1 && e.position.x <= b.x2 && e.position.y >= b.y1 && e.position.y <= b.y2;
+}
+
+cy.on("tap", "node.notion", (e) => {
+  if (appuiDansLaNotion(e)) choisir(e.target.id(), false);
+  else deselectionner(); // à côté de la notion : comme un appui sur le fond
+});
 cy.on("tap", (e) => { if (e.target === cy) deselectionner(); });
 document.getElementById("fermer").addEventListener("click", deselectionner);
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") deselectionner(); });
