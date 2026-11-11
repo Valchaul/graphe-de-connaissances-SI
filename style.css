@@ -98,7 +98,9 @@ body {
 .domaine:focus-visible,
 #fermer:focus-visible,
 #panneau a:focus-visible,
-.liens-notions button:focus-visible {
+.liens-notions button:focus-visible,
+.bouton-chemin:focus-visible,
+.chemin button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
@@ -222,6 +224,118 @@ main {
   margin-left: 8px;
   font-size: 0.72rem;
   letter-spacing: 0.03em;
+  color: var(--texte-doux);
+}
+
+/* ---------- Chemin d'apprentissage ---------- */
+.bouton-chemin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: 1px solid var(--lien);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  color: var(--lien);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bouton-chemin:hover { background: color-mix(in srgb, var(--lien) 8%, var(--surface)); }
+.bouton-chemin .compte { font-weight: 400; color: var(--texte-doux); }
+
+/* Flèche : vers le bas quand le chemin est fermé (« déplier »), vers le haut quand il est ouvert (« replier ») */
+.bouton-chemin::after {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px 0 2px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+.bouton-chemin[aria-expanded="true"]::after { transform: translateY(2px) rotate(-135deg); }
+
+.chemin-resume {
+  margin: 16px 0 14px;
+  font-size: 0.88rem;
+  color: var(--texte-doux);
+}
+
+/* Étapes numérotées, reliées par un trait vertical ; la couleur est celle du domaine */
+#panneau ol.chemin {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: etape;
+}
+.chemin li {
+  counter-increment: etape;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 3px 0 7px;
+}
+.chemin li::before {
+  content: counter(etape);
+  position: relative;
+  z-index: 1;
+  flex: none;
+  box-sizing: border-box;
+  width: 26px;
+  height: 24px;
+  border: 1.5px solid var(--c);
+  border-radius: var(--rayon-s);
+  background: var(--surface);
+  color: var(--c);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 21px;
+  text-align: center;
+}
+.chemin li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 27px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--bordure);
+}
+.chemin li.courant::before,
+.chemin li.but::before { background: var(--c); color: #fff; }
+
+.chemin button {
+  padding: 2px 6px;
+  margin-left: -6px;
+  border: none;
+  border-radius: var(--rayon-s);
+  background: none;
+  font: inherit;
+  line-height: 1.4;
+  color: var(--texte);
+  text-align: left;
+  cursor: pointer;
+}
+.chemin button:hover { background: var(--fond); text-decoration: underline; }
+.chemin li.courant button,
+.chemin li.but button { font-weight: 700; }
+
+.chemin .niveau-liste { margin: 8px 0 0; }
+.etiquette-but {
+  margin: 5px 0 0 auto;
+  padding: 1px 8px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-s);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--texte-doux);
 }
 

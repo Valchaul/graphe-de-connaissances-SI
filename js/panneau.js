@@ -89,6 +89,7 @@ function choisir(id, centrer) {
     document.getElementById("p-suivants"),
     NOTIONS.filter((m) => (m.prerequis || []).includes(id)).map((m) => m.id)
   );
+  majChemin(id); // bouton « Voir le chemin » et liste d'apprentissage (js/chemin.js)
 
   panneau.hidden = false;
   cy.resize();
@@ -110,6 +111,7 @@ function choisir(id, centrer) {
 }
 
 function deselectionner() {
+  reinitialiserChemin();
   cy.elements().removeClass("attenue choisi chemin trouve");
   panneau.hidden = true;
   cy.resize();

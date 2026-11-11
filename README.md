@@ -14,6 +14,12 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
 
 - **Clic sur une notion** : affiche sa fiche (ressources, prérequis, suites possibles) et met en évidence
   toute sa chaîne de prérequis.
+- **Voir le chemin** : dans la section « Prérequis » de la fiche, ce bouton liste dans l'ordre
+  toutes les notions à apprendre avant celle-ci (prérequis directs et indirects), des bases jusqu'à
+  la notion visée. Cliquer sur une étape ouvre sa fiche sans perdre le chemin, qui reste affiché
+  avec l'étape en cours. À chaque instant, une notion n'apparaît qu'après tous ses prérequis ;
+  entre deux notions possibles, la plus basse en niveau passe d'abord. Le même bouton, devenu
+  « Masquer le chemin », referme la liste.
 - **Recherche** : taper un mot, puis Entrée pour ouvrir le premier résultat.
 - **Légende** : cliquer sur un domaine pour le masquer ou l'afficher.
 - **Échap** ou clic dans le vide : désélectionner.
@@ -94,6 +100,7 @@ Chaque push sur `main` met ensuite le site à jour.
 | `js/trace.js`         | Tracé des flèches : arrondis et coupures aux croisements      |
 | `js/placement.js`     | Placement par ELK et cadrage de la vue                        |
 | `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
+| `js/chemin.js`        | Chemin d'apprentissage : ordre des notions à apprendre avant  |
 | `js/filtres.js`       | Filtres par domaine et bouton « Îlots par domaine »           |
 | `js/recherche.js`     | Recherche par titre                                           |
 | `js/main.js`          | Démarrage (lance le placement, ouvre `#id-de-notion`)         |
