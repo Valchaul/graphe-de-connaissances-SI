@@ -33,6 +33,7 @@
   --lien-survol: color-mix(in srgb, var(--lien) 65%, #000); /* le même bleu, assombri */
   --acquis: #2f7d4f;       /* vert des notions acquises */
   --acquis-fond: #e7f3ec;
+  --fond-champ: color-mix(in srgb, var(--bordure) 45%, var(--fond)); /* fond de la recherche et de la barre de progression */
   --police: "Source Serif 4", Georgia, "Times New Roman", serif;
   --police-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -150,7 +151,7 @@ body {
   border: none;
   border-radius: var(--rayon-m);
   font: inherit;
-  background: color-mix(in srgb, var(--bordure) 45%, var(--fond)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5'/%3E%3Cpath d='M10 10l4 4'/%3E%3C/svg%3E") 11px center / 16px no-repeat;
+  background: var(--fond-champ) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236b7280' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='6.5' cy='6.5' r='4.5'/%3E%3Cpath d='M10 10l4 4'/%3E%3C/svg%3E") 11px center / 16px no-repeat;
 }
 
 /* Focus clavier : un même contour pour tout élément qu'on peut atteindre avec Tab (liens, boutons,
@@ -388,7 +389,7 @@ main {
   width: 72px;
   height: 6px;
   border-radius: 3px;
-  background: var(--bordure);
+  background: var(--fond-champ);
   overflow: hidden;
 }
 .prog-barre > span {
@@ -878,8 +879,58 @@ main {
 #accueil-fermer { display: block; margin: var(--e-3) 0 0 auto; }
 #accueil-fermer[hidden] { display: none; }
 
-/* Bouton « Filtrer pour une formation… » du panneau des filtres */
-#filtres-formation-bouton { margin-left: calc(-1 * var(--e-2)); } /* son texte s'aligne sur les titres du panneau */
+/* Réglages de la section « Catégories » du panneau des filtres : deux lignes de même forme,
+   le libellé à gauche et la commande à droite (interrupteur ou chevron). */
+.reglage-filtres {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-3);
+  width: 100%;
+  min-height: var(--hauteur-controle);
+  padding: var(--e-1) var(--e-3);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  font: inherit;
+  font-size: var(--t-s);
+  color: var(--texte);
+  text-align: left;
+  cursor: pointer;
+}
+.reglage-filtres + .reglage-filtres { margin-top: var(--e-1); }
+.reglage-filtres:hover { background: var(--fond); }
+.bouton-reglage svg { flex: none; color: var(--texte-doux); }
+/* Interrupteur « Îlots par domaine » : une case à cocher dessinée comme un interrupteur */
+.interrupteur {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 32px;
+  height: 18px;
+  margin: 0;
+  border-radius: 9px;
+  background: var(--bordure);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.interrupteur::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s;
+}
+.interrupteur:checked { background: var(--accent); }
+.interrupteur:checked::after { transform: translateX(14px); }
+@media (prefers-reduced-motion: reduce) {
+  .interrupteur, .interrupteur::after { transition: none; }
+}
 #filtres-reset { margin-bottom: var(--e-3); }
 
 @media (max-width: 720px) {

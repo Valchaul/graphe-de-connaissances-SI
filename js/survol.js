@@ -1,8 +1,11 @@
 // =====================================================================
-//  Survol d'une notion (souris uniquement) :
+//  Survol d'une notion :
 //  - met en évidence sa chaîne de prérequis et ses suites, sans cliquer ;
 //  - affiche une info-bulle avec sa description.
-//  Sur écran tactile (pas de survol), rien de tout cela : on touche pour ouvrir la fiche.
+//  À la souris, il suffit de passer sur la notion. Sur écran tactile, c'est le doigt posé
+//  sur la notion qui joue ce rôle : la mise en évidence dure tant qu'il reste posé. Un
+//  appui bref ouvre la fiche comme avant ; un appui long (le doigt reste posé) ne l'ouvre
+//  pas, pour laisser le temps de regarder.
 // =====================================================================
 
 const avecSouris = window.matchMedia("(hover: hover)").matches;
@@ -97,3 +100,25 @@ if (avecSouris) {
   // Déplacer ou zoomer la carte, ou cliquer : l'info-bulle ne doit pas rester en arrière-plan
   cy.on("viewport tap", () => { masquerInfobulle(); });
 }
+
+// ---------- Écran tactile : le doigt posé sur une notion ----------
+let appuiLong = false; // vrai après un appui long : panneau.js n'ouvre alors pas la fiche au relâchement
+const auDoigt = (e) => (e.originalEvent?.type || "").startsWith("touch");
+
+function finDuToucher() {
+  if (!notionSurvolee) return;
+  notionSurvolee = null;
+  eteindre();
+  masquerInfobulle();
+}
+cy.on("tapstart", "node.notion", (e) => {
+  appuiLong = false;
+  if (!auDoigt(e) || !appuiDansLaNotion(e)) return;
+  notionSurvolee = e.target;
+  if (!evidenceActive()) allumer(e.target);
+  clearTimeout(minuterie);
+  minuterie = setTimeout(() => afficherInfobulle(e.target), DELAI_INFOBULLE);
+});
+cy.on("taphold", "node.notion", (e) => { if (auDoigt(e) && notionSurvolee) appuiLong = true; });
+cy.on("tapend", (e) => { if (auDoigt(e)) finDuToucher(); });
+cy.on("viewport", finDuToucher); // le doigt déplace ou zoome la carte : ce n'est plus un toucher de notion

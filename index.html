@@ -47,20 +47,23 @@
           <h3>Statuts affichés</h3>
           <div id="filtres-statuts" class="puces"></div>
           <button id="filtres-reset" class="bouton-discret" type="button" hidden>Tout réafficher</button>
-          <h3>Catégories affichées</h3>
-          <button id="filtres-formation-bouton" class="bouton-discret" type="button">Filtrer pour une formation…</button>
+          <h3>Catégories</h3>
+          <label class="reglage-filtres" title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
+            <span>Îlots par domaine</span>
+            <input id="bascule-ilots" class="interrupteur" type="checkbox" role="switch" checked></label>
+          <button id="filtres-formation-bouton" class="reglage-filtres bouton-reglage" type="button"
+                  title="Choisir une formation pour n'afficher que ses catégories">
+            <span>Filtrer pour une formation</span>
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+          </button>
         </div>
       </div>
       <input id="recherche" type="search" placeholder="Rechercher une notion" autocomplete="off">
     </div>
   </header>
 
-  <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)">
-    <button id="bascule-ilots" class="bascule" type="button" aria-pressed="true"
-              title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
-        Îlots par domaine
-      </button>
-</nav>
+  <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)"></nav>
 
   <main>
     <div id="graphe" aria-label="Carte des notions"></div>

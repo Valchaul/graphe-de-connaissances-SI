@@ -115,13 +115,13 @@ const cy = cytoscape({
         "border-opacity": 0.35,
         label: "data(label)",
         "font-family": "system-ui, sans-serif",
-        "font-size": 13,
+        "font-size": TAILLE_TITRE_CADRE,
         "font-weight": 600,
         "text-transform": "uppercase",
         color: "data(couleur)",
         "text-valign": "top",
         "text-halign": "center",
-        "text-margin-y": 30, // ramène le titre à l'intérieur du cadre
+        "text-margin-y": TAILLE_TITRE_CADRE + 18, // ramène le titre à l'intérieur du cadre
         events: "no",
         "z-index-compare": "manual",
         "z-index": 0,

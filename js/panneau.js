@@ -163,6 +163,7 @@ function appuiDansLaNotion(e) {
 }
 
 cy.on("tap", "node.notion", (e) => {
+  if (appuiLong) return; // appui long au doigt : on regardait seulement la mise en évidence (survol.js)
   if (appuiDansLaNotion(e)) choisir(e.target.id(), false);
   else deselectionner(); // à côté de la notion : comme un appui sur le fond
 });

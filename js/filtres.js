@@ -1,5 +1,5 @@
 // =====================================================================
-//  Filtres par domaine (mémorisés dans le navigateur) et bouton « Îlots par domaine »
+//  Filtres par domaine (mémorisés dans le navigateur) et case « Îlots par domaine »
 // =====================================================================
 
 const domainesMasques = new Set();
@@ -51,7 +51,7 @@ function masquerNotionsFiltrees() {
   });
 }
 const legende = document.getElementById("legende");
-const basculeIlots = document.getElementById("bascule-ilots"); // premier élément de la légende
+const basculeIlots = document.getElementById("bascule-ilots"); // case à cocher du panneau des filtres
 const boutonsDomaines = {}; // clé du domaine -> son bouton dans la légende
 // Barre les domaines masqués dans la légende (après un clic ou un changement de formation)
 function majLegende() {
@@ -74,12 +74,11 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
   legende.appendChild(bouton);
 }
 
-// Bouton « Îlots par domaine » : affiche ou masque les cadres et recalcule la carte.
-basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
-basculeIlots.addEventListener("click", () => {
-  grouperParDomaine = !grouperParDomaine;
+// Case « Îlots par domaine » : affiche ou masque les cadres et recalcule la carte.
+basculeIlots.checked = grouperParDomaine;
+basculeIlots.addEventListener("change", () => {
+  grouperParDomaine = basculeIlots.checked;
   memoriserPreferenceIlots(grouperParDomaine);
-  basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
   placer(false).catch(afficherErreurPlacement);
 });
 

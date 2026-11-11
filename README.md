@@ -16,7 +16,7 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
   (« Mécanique & matériaux », « Électricité & automatique », « Informatique & numérique »,
   « Industrie & énergie » ou « Généraliste ») et masque les domaines qui n'en font pas partie ;
   ceux du tronc commun restent affichés. C'est un simple filtre : chaque domaine se réaffiche
-  d'un clic dans la légende, et « Filtrer pour une formation… », dans le panneau des filtres
+  d'un clic dans la légende, et « Filtrer pour une formation », dans le panneau des filtres
   (entonnoir), rouvre l'écran. Le site ne retient pas la formation mais les **domaines affichés**,
   mémorisés dans le navigateur. Les formations se règlent dans `FORMATIONS`, au début de
   `data/notions.js`.
@@ -92,7 +92,7 @@ interrompue par une petite coupure : deux lignes qui se traversent sans se touch
 pas reliées. L'arrondi des virages et la longueur des coupures se règlent dans
 [`js/config.js`](js/config.js) (`RAYON_COUDES`, `COUPURE_DEMI_LONGUEUR`).
 Les notions sont regroupées dans un cadre par domaine. Pour revenir à une carte sans cadres,
-cliquer sur le bouton « Îlots par domaine » de l'en-tête (le choix est mémorisé dans le navigateur).
+décocher « Îlots par domaine » dans le panneau des filtres (entonnoir) (le choix est mémorisé dans le navigateur).
 Les espacements du placement sont regroupés dans `OPTIONS_ELK`, dans [`js/placement.js`](js/placement.js).
 
 Si une erreur se glisse dans le contenu (prérequis inconnu, identifiant en double, boucle de
@@ -117,7 +117,7 @@ prérequis), un encadré rouge l'indique en bas de la page.
 | `js/progression.js`   | Suivi de progression : cases à cocher, sauvegarde, compteur   |
 | `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
 | `js/chemin.js`        | Chemin d'apprentissage : ordre des notions à apprendre avant  |
-| `js/filtres.js`       | Filtres par domaine (mémorisés), bouton « Îlots par domaine » |
+| `js/filtres.js`       | Filtres par domaine (mémorisés), case « Îlots par domaine »   |
 | `js/formation.js`     | Écran d'accueil : filtre les domaines selon une formation     |
 | `js/recherche.js`     | Recherche par titre                                           |
 | `js/main.js`          | Démarrage (filtres, placement, ouvre `#id-de-notion`)         |
