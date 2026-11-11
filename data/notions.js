@@ -42,10 +42,16 @@ const NIVEAUX = {
 
 // Raccourcis pour les sources les plus utilisées
 const WP = (page) => "https://fr.wikipedia.org/wiki/" + page;
+const WV = (page) => "https://fr.wikiversity.org/wiki/" + page;          // Wikiversité : cours en français
+const PHET = (simulation) => "https://phet.colorado.edu/fr/simulations/" + simulation; // simulations interactives, en français
+const FEYNMAN = "https://www.feynmanlectures.caltech.edu/";              // cours de Feynman, en lecture libre
+const HYPERPHYSICS = "http://hyperphysics.phy-astr.gsu.edu/hbase/";      // cartes de concepts (site sans https)
 const MIT = (cours) => "https://ocw.mit.edu/courses/" + cours + "/";
 const ROBOTIQUE_MODERNE = "http://hades.mech.northwestern.edu/index.php/Modern_Robotics";
 const PYTHON_ROBOTICS = "https://atsushisakai.github.io/PythonRobotics/";
 const DSP_GUIDE = "https://www.dspguide.com/";
+const BARANIUK = "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Signal_Processing_and_Modeling/Signals_and_Systems_(Baraniuk_et_al.)";
+const KUPHALDT_AC ="https://workforce.libretexts.org/Bookshelves/Electronics_Technology/Electric_Circuits_II_-_Alternating_Current_(Kuphaldt)/";
 
 const NOTIONS = [
   // ---------------------------------------------------------------- Maths
@@ -128,7 +134,7 @@ const NOTIONS = [
     id: "analyse-numerique", titre: "Analyse numérique", domaine: "maths",
     niveau: "L3",
     description: "Résolution approchée : interpolation, intégration, schémas d'Euler / Runge-Kutta.",
-    prerequis: ["equa-diff", "algorithmique"],
+    prerequis: ["equa-diff", "python-scientifique"],
     ressources: [
       { titre: "femto-physique — Analyse numérique", url: "https://femto-physique.fr/analyse-numerique/" },
       { titre: "MIT 2.086 — Numerical Computation for Mechanical Engineers (EN)", url: MIT("2-086-numerical-computation-for-mechanical-engineers-fall-2014") },
@@ -179,6 +185,31 @@ const NOTIONS = [
       { titre: "Wikipédia — Optimisation", url: WP("Optimisation_(mathématiques)") },
     ],
   },
+  {
+    id: "tenseurs", titre: "Calcul tensoriel", domaine: "maths",
+    niveau: "L3",
+    description: "Tenseurs d'ordre 2, notation indicielle, changement de base, valeurs et directions principales.",
+    prerequis: ["analyse-vectorielle"],
+    ressources: [
+      { titre: "continuummechanics.org — Tensor Notation (EN)", url: "https://www.continuummechanics.org/tensornotationbasic.html" },
+      { titre: "NASA — An Introduction to Tensors for Students of Physics and Engineering (PDF, EN)", url: "https://www.grc.nasa.gov/www/k-12/Numbers/Math/documents/Tensors_TM2002211716.pdf" },
+      { titre: "Wikipédia — Tenseur", url: WP("Tenseur") },
+      { titre: "Wikipédia — Calcul tensoriel", url: WP("Calcul_tensoriel") },
+    ],
+  },
+  {
+    id: "algebre-lineaire-numerique", titre: "Algèbre linéaire numérique", domaine: "maths",
+    niveau: "L3",
+    description: "Résoudre et approcher par le calcul : moindres carrés, factorisations LU et QR, valeurs singulières (SVD), conditionnement.",
+    prerequis: ["algebre-lineaire", "python-scientifique"],
+    ressources: [
+      { titre: "Boyd & Vandenberghe — Introduction to Applied Linear Algebra (livre gratuit, EN)", url: "https://web.stanford.edu/~boyd/vmls/" },
+      { titre: "MIT 18.065 — Matrix Methods in Data Analysis, Signal Processing, and Machine Learning (EN)", url: MIT("18-065-matrix-methods-in-data-analysis-signal-processing-and-machine-learning-spring-2018") },
+      { titre: "NumPy — algèbre linéaire (documentation, EN)", url: "https://numpy.org/doc/stable/reference/routines.linalg.html" },
+      { titre: "Wikipédia — Méthode des moindres carrés", url: WP("Méthode_des_moindres_carrés") },
+      { titre: "Wikipédia — Décomposition en valeurs singulières", url: WP("Décomposition_en_valeurs_singulières") },
+    ],
+  },
 
   // ------------------------------------------------------------- Physique
   {
@@ -188,18 +219,48 @@ const NOTIONS = [
     prerequis: ["analyse"],
     ressources: [
       { titre: "femto-physique — Mécanique", url: "https://femto-physique.fr/mecanique/" },
+      { titre: "Khan Academy — Physique (vidéos et exercices)", url: "https://fr.khanacademy.org/science/physics" },
+      { titre: "MIT 8.01SC — Classical Mechanics (EN)", url: MIT("8-01sc-classical-mechanics-fall-2016") },
       { titre: "OpenStax — University Physics vol. 1 (EN)", url: "https://openstax.org/details/books/university-physics-volume-1" },
+      { titre: "Tracker — mesurer un mouvement à partir d'une vidéo (logiciel libre, EN)", url: "https://opensourcephysics.github.io/tracker-website/" },
       { titre: "Wikipédia — Mécanique newtonienne", url: WP("Mécanique_newtonienne") },
+    ],
+  },
+  {
+    id: "oscillateurs", titre: "Oscillateurs", domaine: "physique",
+    niveau: "L1",
+    description: "Oscillateur harmonique, amortissement, oscillations forcées et résonance.",
+    prerequis: ["meca-point"],
+    ressources: [
+      { titre: "femto-physique — Oscillateurs mécaniques", url: "https://femto-physique.fr/mecanique/oscillateurs-mecaniques.php" },
+      { titre: "PhET — Masses et ressorts (simulation)", url: PHET("masses-and-springs") },
+      { titre: "Feynman — Lectures on Physics, vol. I, ch. 21 : l'oscillateur harmonique (EN)", url: FEYNMAN + "I_21.html" },
+      { titre: "Wikipédia — Oscillateur harmonique", url: WP("Oscillateur_harmonique") },
+    ],
+  },
+  {
+    id: "electrostatique", titre: "Électrostatique & magnétostatique", domaine: "physique",
+    niveau: "L1",
+    description: "Charges, champ et potentiel électriques ; champ magnétique créé par des courants.",
+    prerequis: ["meca-point"],
+    ressources: [
+      { titre: "femto-physique — Interaction électrostatique", url: "https://femto-physique.fr/electromagnetisme/interaction-electrostatique.php" },
+      { titre: "PhET — Charges et champs (simulation)", url: PHET("charges-and-fields") },
+      { titre: "OpenStax — University Physics vol. 2 (EN)", url: "https://openstax.org/details/books/university-physics-volume-2" },
+      { titre: "HyperPhysics — Electricity and Magnetism (carte de concepts, EN)", url: HYPERPHYSICS + "emcon.html" },
+      { titre: "Wikipédia — Électrostatique", url: WP("Électrostatique") },
     ],
   },
   {
     id: "electromagnetisme", titre: "Électromagnétisme", domaine: "physique",
     niveau: "L2",
     description: "Champs électrique et magnétique, induction, équations de Maxwell.",
-    prerequis: ["analyse-vectorielle"],
+    prerequis: ["electrostatique", "analyse-vectorielle"],
     ressources: [
       { titre: "femto-physique — Électromagnétisme", url: "https://femto-physique.fr/electromagnetisme/" },
+      { titre: "PhET — Loi de Faraday (simulation)", url: PHET("faradays-law") },
       { titre: "MIT 8.02 — Electricity and Magnetism (EN)", url: MIT("8-02-physics-ii-electricity-and-magnetism-spring-2007") },
+      { titre: "Feynman — Lectures on Physics, vol. II (EN)", url: FEYNMAN + "II_toc.html" },
       { titre: "Wikipédia — Électromagnétisme", url: WP("Électromagnétisme") },
     ],
   },
@@ -207,8 +268,9 @@ const NOTIONS = [
     id: "ondes", titre: "Ondes & propagation", domaine: "physique",
     niveau: "L2",
     description: "Équation d'onde, ondes progressives et stationnaires, interférences, effet Doppler.",
-    prerequis: ["meca-point", "equa-diff"],
+    prerequis: ["oscillateurs", "equa-diff"],
     ressources: [
+      { titre: "PhET — Onde sur une corde (simulation)", url: PHET("wave-on-a-string") },
       { titre: "MIT 8.03SC — Vibrations and Waves (EN)", url: MIT("8-03sc-physics-iii-vibrations-and-waves-fall-2016") },
       { titre: "OpenStax — University Physics vol. 1, partie ondes (EN)", url: "https://openstax.org/details/books/university-physics-volume-1" },
       { titre: "Wikipédia — Onde", url: WP("Onde") },
@@ -255,6 +317,65 @@ const NOTIONS = [
       { titre: "MIT 6.012 — Microelectronic Devices and Circuits (EN)", url: MIT("6-012-microelectronic-devices-and-circuits-fall-2009") },
       { titre: "Wikipédia — Semi-conducteur", url: WP("Semi-conducteur") },
       { titre: "Wikipédia — Jonction p-n", url: WP("Jonction_p-n") },
+    ],
+  },
+  {
+    id: "relativite", titre: "Relativité restreinte", domaine: "physique",
+    niveau: "L2",
+    description: "Postulats d'Einstein, dilatation du temps, contraction des longueurs, équivalence masse-énergie.",
+    prerequis: ["meca-point"],
+    ressources: [
+      { titre: "Wikiversité — Relativité restreinte (cours)", url: WV("Relativité_restreinte") },
+      { titre: "MIT 8.20 — Introduction to Special Relativity (EN)", url: MIT("8-20-introduction-to-special-relativity-january-iap-2021") },
+      { titre: "Feynman — Lectures on Physics, vol. I, ch. 15 (EN)", url: FEYNMAN + "I_15.html" },
+      { titre: "Wikipédia — Relativité restreinte", url: WP("Relativité_restreinte") },
+    ],
+  },
+  {
+    id: "quantique", titre: "Physique quantique", domaine: "physique",
+    niveau: "L3",
+    description: "Dualité onde-corpuscule, équation de Schrödinger, niveaux d'énergie, effet tunnel.",
+    prerequis: ["ondes", "probas"],
+    ressources: [
+      { titre: "Wikiversité — Introduction à la mécanique quantique (cours)", url: WV("Introduction_à_la_mécanique_quantique") },
+      { titre: "PhET — Interférences d'ondes quantiques (simulation)", url: PHET("quantum-wave-interference") },
+      { titre: "MIT 8.04 — Quantum Physics I (EN)", url: MIT("8-04-quantum-physics-i-spring-2016") },
+      { titre: "Feynman — Lectures on Physics, vol. III (EN)", url: FEYNMAN + "III_toc.html" },
+      { titre: "Wikipédia — Mécanique quantique", url: WP("Mécanique_quantique") },
+    ],
+  },
+  {
+    id: "physique-statistique", titre: "Physique statistique", domaine: "physique",
+    niveau: "L3",
+    description: "Du microscopique au macroscopique : distribution de Boltzmann, entropie statistique, gaz parfaits.",
+    prerequis: ["thermo", "probas"],
+    ressources: [
+      { titre: "femto-physique — Physique statistique", url: "https://femto-physique.fr/physique_statistique/" },
+      { titre: "MIT 8.044 — Statistical Physics I (EN)", url: MIT("8-044-statistical-physics-i-spring-2013") },
+      { titre: "Wikipédia — Physique statistique", url: WP("Physique_statistique") },
+    ],
+  },
+  {
+    id: "physique-solide", titre: "Physique du solide", domaine: "physique",
+    niveau: "M1",
+    description: "Réseau cristallin, bandes d'énergie, phonons : l'origine des propriétés électriques, thermiques et magnétiques des solides.",
+    prerequis: ["quantique", "physique-statistique", "science-materiaux"],
+    ressources: [
+      { titre: "MIT 8.231 — Physics of Solids I (EN)", url: MIT("8-231-physics-of-solids-i-fall-2006") },
+      { titre: "HyperPhysics — Condensed Matter (carte de concepts, EN)", url: HYPERPHYSICS + "solcon.html" },
+      { titre: "Wikipédia — Physique du solide", url: WP("Physique_du_solide") },
+    ],
+  },
+  {
+    id: "lasers", titre: "Lasers & optoélectronique", domaine: "physique",
+    niveau: "M1",
+    description: "Émission stimulée, lasers, LED, photodiodes, fibres optiques.",
+    prerequis: ["optique", "quantique", "semi-conducteurs"],
+    ressources: [
+      { titre: "MIT RES.6-005 — Understanding Lasers and Fiberoptics (vidéos, EN)", url: MIT("res-6-005-understanding-lasers-and-fiberoptics-spring-2008") },
+      { titre: "RP Photonics — encyclopédie de la photonique (EN)", url: "https://www.rp-photonics.com/encyclopedia.html" },
+      { titre: "Wikipédia — Laser", url: WP("Laser") },
+      { titre: "Wikipédia — Opto-électronique", url: WP("Opto-électronique") },
     ],
   },
 
@@ -317,7 +438,7 @@ const NOTIONS = [
     id: "mmc", titre: "Mécanique des milieux continus", domaine: "mecanique",
     niveau: "L3",
     description: "Tenseurs des contraintes et des déformations, élasticité linéaire.",
-    prerequis: ["rdm"],
+    prerequis: ["rdm", "tenseurs"],
     ressources: [
       { titre: "continuummechanics.org — cours en ligne illustré (EN)", url: "https://www.continuummechanics.org/" },
       { titre: "Bower — Applied Mechanics of Solids (livre gratuit, EN)", url: "http://solidmechanics.org/contents.php" },
@@ -508,6 +629,8 @@ const NOTIONS = [
     description: "Lois de Kirchhoff, dipôles, régime continu et transitoire.",
     prerequis: ["analyse"],
     ressources: [
+      { titre: "femto-physique — Étude des réseaux électriques", url: "https://femto-physique.fr/electrocinetique/etude-des-reseaux-electriques.php" },
+      { titre: "PhET — Kit de construction de circuits (simulation)", url: PHET("circuit-construction-kit-dc") },
       { titre: "MIT 6.002 — Circuits and Electronics (EN)", url: MIT("6-002-circuits-and-electronics-spring-2007") },
       { titre: "Fiore — DC Electrical Circuit Analysis (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/DC_Electrical_Circuit_Analysis_-_A_Practical_Approach_(Fiore)" },
       { titre: "Wikipédia — Lois de Kirchhoff", url: WP("Lois_de_Kirchhoff") },
@@ -530,15 +653,52 @@ const NOTIONS = [
     description: "Diodes, transistors, amplificateur opérationnel.",
     prerequis: ["regime-sinusoidal"],
     ressources: [
+      { titre: "femto-physique — L'amplificateur linéaire intégré", url: "https://femto-physique.fr/electrocinetique/ampli-op.php" },
       { titre: "MIT 6.002 — Circuits and Electronics (EN)", url: MIT("6-002-circuits-and-electronics-spring-2007") },
+      { titre: "Fiore — Semiconductor Devices (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Semiconductor_Devices_-_Theory_and_Application_(Fiore)" },
       { titre: "Wikipédia — Amplificateur opérationnel", url: WP("Amplificateur_opérationnel") },
+    ],
+  },
+  {
+    id: "triphase", titre: "Réseaux triphasés", domaine: "electricite",
+    niveau: "L2",
+    description: "Tensions simples et composées, couplages étoile et triangle, puissances en triphasé.",
+    prerequis: ["regime-sinusoidal"],
+    ressources: [
+      { titre: "Fiore — AC Electrical Circuit Analysis, ch. 9 : Polyphase Power (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/AC_Electrical_Circuit_Analysis%3A_A_Practical_Approach_(Fiore)/09%3A_Polyphase_Power" },
+      { titre: "Kuphaldt — Polyphase AC Circuits (livre gratuit, EN)", url: KUPHALDT_AC + "07%3A_Polyphase_AC_Circuits" },
+      { titre: "Wikipédia — Courant triphasé", url: WP("Courant_triphasé") },
+    ],
+  },
+  {
+    id: "securite-electrique", titre: "Sécurité électrique & protection", domaine: "electricite",
+    niveau: "L2",
+    description: "Dangers du courant électrique, schémas de liaison à la terre, disjoncteurs et différentiels, habilitation.",
+    prerequis: ["triphase"],
+    ressources: [
+      { titre: "INRS — Risques électriques", url: "https://www.inrs.fr/risques/electriques/ce-qu-il-faut-retenir.html" },
+      { titre: "Schneider Electric — Guide de l'installation électrique (wiki)", url: "https://fr.electrical-installation.org/frwiki/Accueil" },
+      { titre: "Wikipédia — Schéma de liaison à la terre", url: WP("Schéma_de_liaison_à_la_terre") },
+      { titre: "Wikipédia — Habilitation électrique", url: WP("Habilitation_électrique") },
+    ],
+  },
+  {
+    id: "transformateur", titre: "Transformateurs & circuits magnétiques", domaine: "electricite",
+    niveau: "L3",
+    description: "Circuits magnétiques, pertes, transformateur monophasé et triphasé.",
+    prerequis: ["triphase", "electromagnetisme"],
+    ressources: [
+      { titre: "Wikiversité — Transformateur monophasé (cours)", url: WV("Transformateur_monophasé") },
+      { titre: "Kuphaldt — Transformers (livre gratuit, EN)", url: KUPHALDT_AC + "10%3A_Transformers" },
+      { titre: "MIT 6.061 — Introduction to Electric Power Systems (EN)", url: MIT("6-061-introduction-to-electric-power-systems-spring-2011") },
+      { titre: "Wikipédia — Transformateur électrique", url: WP("Transformateur_électrique") },
     ],
   },
   {
     id: "machines-electriques", titre: "Machines électriques", domaine: "electricite",
     niveau: "L3",
-    description: "Transformateur, machines à courant continu, synchrones et asynchrones.",
-    prerequis: ["regime-sinusoidal", "electromagnetisme"],
+    description: "Machines à courant continu, synchrones et asynchrones : principe, modèle, caractéristiques.",
+    prerequis: ["transformateur"],
     ressources: [
       { titre: "MIT 6.685 — Electric Machines (EN)", url: MIT("6-685-electric-machines-fall-2013") },
       { titre: "Wikipédia — Machine électrique", url: WP("Machine_électrique") },
@@ -603,6 +763,40 @@ const NOTIONS = [
     ressources: [
       { titre: "KiCad — documentation officielle", url: "https://docs.kicad.org/" },
       { titre: "Wikipédia — Circuit imprimé", url: WP("Circuit_imprimé") },
+    ],
+  },
+  {
+    id: "alimentations", titre: "Alimentations électroniques", domaine: "electricite",
+    niveau: "L3",
+    description: "Régulateurs linéaires et à découpage, découplage : alimenter proprement une carte électronique.",
+    prerequis: ["electronique-analogique"],
+    ressources: [
+      { titre: "Texas Instruments — Linear and Switching Voltage Regulator Fundamentals (note d'application, EN)", url: "https://www.ti.com/lit/an/snva558/snva558.pdf" },
+      { titre: "Fiore — Operational Amplifiers, ch. 8 : Voltage Regulation (livre gratuit, EN)", url: "https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Electronics/Operational_Amplifiers_and_Linear_Integrated_Circuits_-_Theory_and_Application_(Fiore)/08%3A_Voltage_Regulation" },
+      { titre: "Wikipédia — Régulateur de tension", url: WP("Régulateur_de_tension") },
+      { titre: "Wikipédia — Alimentation à découpage", url: WP("Alimentation_à_découpage") },
+    ],
+  },
+  {
+    id: "cem", titre: "Compatibilité électromagnétique (CEM)", domaine: "electricite",
+    niveau: "M1",
+    description: "Sources de perturbations, couplages, blindage, filtrage ; règles de routage et normes.",
+    prerequis: ["ondes-em", "pcb", "alimentations"],
+    ressources: [
+      { titre: "LearnEMC — Introduction to EMC (tutoriels, EN)", url: "https://learnemc.com/introduction-to-emc" },
+      { titre: "Texas Instruments — PCB Design Guidelines for Reduced EMI (note d'application, EN)", url: "https://www.ti.com/lit/an/szza009/szza009.pdf" },
+      { titre: "Wikipédia — Compatibilité électromagnétique", url: WP("Compatibilité_électromagnétique") },
+    ],
+  },
+  {
+    id: "reseaux-electriques", titre: "Réseaux électriques", domaine: "electricite",
+    niveau: "M1",
+    description: "Production, transport et distribution de l'électricité ; équilibre du réseau, protections, réseaux intelligents.",
+    prerequis: ["machines-electriques", "securite-electrique"],
+    ressources: [
+      { titre: "RTE — éCO2mix : le réseau électrique français en temps réel", url: "https://www.rte-france.com/eco2mix" },
+      { titre: "MIT 6.061 — Introduction to Electric Power Systems (EN)", url: MIT("6-061-introduction-to-electric-power-systems-spring-2011") },
+      { titre: "Wikipédia — Réseau électrique", url: WP("Réseau_électrique") },
     ],
   },
 
@@ -704,6 +898,21 @@ const NOTIONS = [
       { titre: "Wikipédia — Centrale à inertie", url: WP("Centrale_à_inertie") },
     ],
   },
+  {
+    id: "gnss", titre: "Positionnement par satellites (GNSS)", domaine: "instrumentation",
+    niveau: "M1",
+    description: "GPS, Galileo : mesure de pseudo-distances, sources d'erreur, précision, corrections différentielles (RTK).",
+    prerequis: ["capteurs", "ondes-em"],
+    ressources: [
+      { titre: "SparkFun — GPS Basics (tutoriel, EN)", url: "https://learn.sparkfun.com/tutorials/gps-basics" },
+      { titre: "NovAtel — An Introduction to GNSS (livre en ligne, EN)", url: "https://novatel.com/an-introduction-to-gnss" },
+      { titre: "ESA Navipedia — encyclopédie du positionnement par satellites (EN)", url: "https://gssc.esa.int/navipedia/index.php/Main_Page" },
+      { titre: "ESA Navipedia — GNSS Basic Observables (EN)", url: "https://gssc.esa.int/navipedia/index.php/GNSS_Basic_Observables" },
+      { titre: "rtklibexplorer — positionnement RTK à bas coût en pratique (blog, EN)", url: "https://rtklibexplorer.wordpress.com/" },
+      { titre: "Wikipédia — Système de positionnement par satellites", url: WP("Système_de_positionnement_par_satellites") },
+      { titre: "Wikipédia — Cinématique temps réel (RTK)", url: WP("Cinématique_temps_réel") },
+    ],
+  },
 
   // ---------------------------------------------------------- Automatique
   {
@@ -763,8 +972,8 @@ const NOTIONS = [
   {
     id: "automatique-numerique", titre: "Automatique échantillonnée", domaine: "automatique",
     niveau: "M1",
-    description: "Transformée en Z, correcteurs numériques.",
-    prerequis: ["pid", "echantillonnage"],
+    description: "Correcteurs numériques, synthèse dans le plan Z, choix de la période d'échantillonnage.",
+    prerequis: ["pid", "transformee-z"],
     ressources: [
       { titre: "Iqbal — Introduction to Control Systems, partie systèmes échantillonnés (EN)", url: "https://eng.libretexts.org/Bookshelves/Industrial_and_Systems_Engineering/Introduction_to_Control_Systems_(Iqbal)" },
       { titre: "Wikipédia — Transformation en Z", url: WP("Transformation_en_Z") },
@@ -774,7 +983,7 @@ const NOTIONS = [
     id: "identification", titre: "Identification des systèmes", domaine: "automatique",
     niveau: "M1",
     description: "Construire le modèle d'un système à partir de mesures expérimentales.",
-    prerequis: ["analyse-frequentielle", "probas"],
+    prerequis: ["analyse-frequentielle", "probas", "algebre-lineaire-numerique"],
     ressources: [
       { titre: "MIT 2.160 — Identification, Estimation, and Learning (EN)", url: MIT("2-160-identification-estimation-and-learning-spring-2006") },
       { titre: "Wikipédia — Identification de système", url: WP("Identification_de_système") },
@@ -824,6 +1033,36 @@ const NOTIONS = [
       { titre: "Wikipédia — Graphe de liaisons", url: WP("Graphe_de_liaisons") },
     ],
   },
+  {
+    id: "commande-predictive", titre: "Commande prédictive (MPC)", domaine: "automatique",
+    niveau: "M2",
+    description: "Optimiser la commande sur un horizon glissant, à partir d'un modèle, en respectant des contraintes.",
+    prerequis: ["commande-optimale", "automatique-numerique"],
+    ressources: [
+      { titre: "Rawlings, Mayne & Diehl — Model Predictive Control (livre gratuit, EN)", url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/" },
+      { titre: "Steve Brunton — Model Predictive Control (vidéo, EN)", url: "https://www.youtube.com/watch?v=YwodGM2eoy4" },
+      { titre: "MathWorks — Understanding Model Predictive Control (vidéos, EN)", url: "https://www.mathworks.com/videos/series/understanding-model-predictive-control.html" },
+      { titre: "Boyd — Model Predictive Control, cours Stanford EE364b (diapositives, EN)", url: "https://web.stanford.edu/class/ee364b/lectures/mpc_slides.pdf" },
+      { titre: "APMonitor — Dynamic Optimization (cours avec exemples Python, EN)", url: "https://apmonitor.com/do/" },
+      { titre: "do-mpc — bibliothèque Python de commande prédictive (EN)", url: "https://www.do-mpc.com/en/latest/" },
+      { titre: "Wikipédia — Commande prédictive", url: WP("Commande_prédictive") },
+    ],
+  },
+  {
+    id: "commande-robuste", titre: "Commande robuste", domaine: "automatique",
+    niveau: "M2",
+    description: "Garantir stabilité et performances malgré les incertitudes du modèle : marges, fonctions de sensibilité, synthèse H∞.",
+    prerequis: ["representation-etat", "stabilite"],
+    ressources: [
+      { titre: "Steve Brunton — Control Bootcamp (vidéos, EN)", url: "https://www.youtube.com/playlist?list=PLMrJAkhIeNNR20Mz-VpzgfQs5zrYi085m" },
+      { titre: "Åström & Murray — Feedback Systems, chapitres sur la robustesse (livre gratuit, EN)", url: "https://fbswiki.org/wiki/index.php/Main_Page" },
+      { titre: "MIT 6.245 — Multivariable Control Systems (EN)", url: MIT("6-245-multivariable-control-systems-spring-2004") },
+      { titre: "Skogestad & Postlethwaite — Multivariable Feedback Control, premiers chapitres (EN)", url: "https://skoge.folk.ntnu.no/book/" },
+      { titre: "python-control — bibliothèque Python d'automatique (EN)", url: "https://python-control.readthedocs.io/en/latest/" },
+      { titre: "Wikipédia — Commande robuste", url: WP("Commande_robuste") },
+      { titre: "Wikipédia — Commande H-infini", url: WP("Commande_H-infini") },
+    ],
+  },
 
   // --------------------------------------------------------------- Signal
   {
@@ -833,6 +1072,7 @@ const NOTIONS = [
     prerequis: ["fourier"],
     ressources: [
       { titre: "MIT 6.003 — Signals and Systems (EN)", url: MIT("6-003-signals-and-systems-fall-2011") },
+      { titre: "Baraniuk — Signals and Systems (livre gratuit, EN)", url: BARANIUK },
       { titre: "Wikipédia — Traitement du signal", url: WP("Traitement_du_signal") },
     ],
   },
@@ -859,10 +1099,22 @@ const NOTIONS = [
     ],
   },
   {
+    id: "transformee-z", titre: "Transformée en Z", domaine: "signal",
+    niveau: "L3",
+    description: "L'équivalent de Laplace pour les signaux échantillonnés : équations aux différences, pôles et zéros, stabilité.",
+    prerequis: ["echantillonnage", "laplace"],
+    ressources: [
+      { titre: "The Scientist and Engineer's Guide to DSP, ch. 33 : The z-Transform (livre gratuit, EN)", url: DSP_GUIDE + "ch33.htm" },
+      { titre: "Baraniuk — Signals and Systems, ch. 12 : Z-Transform (livre gratuit, EN)", url: BARANIUK + "/12%3A_Z-Transform_and_Discrete_Time_System_Design" },
+      { titre: "J. O. Smith — Introduction to Digital Filters (livre gratuit, EN)", url: "https://ccrma.stanford.edu/~jos/filters/" },
+      { titre: "Wikipédia — Transformation en Z", url: WP("Transformation_en_Z") },
+    ],
+  },
+  {
     id: "tns", titre: "Traitement numérique du signal", domaine: "signal",
     niveau: "M1",
     description: "Transformée de Fourier discrète (FFT), filtres numériques RIF et RII.",
-    prerequis: ["echantillonnage", "filtrage"],
+    prerequis: ["transformee-z", "filtrage"],
     ressources: [
       { titre: "The Scientist and Engineer's Guide to DSP (livre gratuit, EN)", url: DSP_GUIDE },
       { titre: "Downey — Think DSP (livre gratuit, Python, EN)", url: "https://greenteapress.com/wp/think-dsp/" },
@@ -874,10 +1126,58 @@ const NOTIONS = [
     id: "traitement-image", titre: "Traitement d'images", domaine: "signal",
     niveau: "M1",
     description: "Filtrage, détection de contours, segmentation, morphologie.",
-    prerequis: ["tns", "algebre-lineaire", "algorithmique"],
+    prerequis: ["tns", "python-scientifique"],
     ressources: [
       { titre: "scikit-image — galerie d'exemples (Python, EN)", url: "https://scikit-image.org/docs/stable/auto_examples/" },
       { titre: "Wikipédia — Traitement d'images", url: WP("Traitement_d'images") },
+    ],
+  },
+  {
+    id: "signaux-aleatoires", titre: "Signaux aléatoires & bruit", domaine: "signal",
+    niveau: "M1",
+    description: "Corrélation, densité spectrale de puissance, bruit blanc, rapport signal sur bruit.",
+    prerequis: ["signaux", "probas"],
+    ressources: [
+      { titre: "MIT 6.011 — Signals, Systems and Inference (EN)", url: MIT("6-011-signals-systems-and-inference-spring-2018") },
+      { titre: "The Scientist and Engineer's Guide to DSP, ch. 2 : Statistics, Probability and Noise (livre gratuit, EN)", url: DSP_GUIDE + "ch2.htm" },
+      { titre: "Wikipédia — Signal aléatoire", url: WP("Signal_aléatoire") },
+      { titre: "Wikipédia — Rapport signal sur bruit", url: WP("Rapport_signal_sur_bruit") },
+    ],
+  },
+  {
+    id: "analyse-spectrale", titre: "Analyse spectrale", domaine: "signal",
+    niveau: "M1",
+    description: "Estimer le spectre d'un signal mesuré : FFT, fenêtres de pondération, périodogramme, spectrogramme.",
+    prerequis: ["tns", "signaux-aleatoires"],
+    ressources: [
+      { titre: "The Scientist and Engineer's Guide to DSP, ch. 9 : Applications of the DFT (livre gratuit, EN)", url: DSP_GUIDE + "ch9.htm" },
+      { titre: "SciPy — tutoriel de traitement du signal (Python, EN)", url: "https://docs.scipy.org/doc/scipy/tutorial/signal.html" },
+      { titre: "J. O. Smith — Spectral Audio Signal Processing (livre gratuit, EN)", url: "https://ccrma.stanford.edu/~jos/sasp/" },
+      { titre: "Wikipédia — Analyse spectrale", url: WP("Analyse_spectrale") },
+    ],
+  },
+  {
+    id: "modulation", titre: "Modulations & transmission", domaine: "signal",
+    niveau: "M1",
+    description: "Modulations d'amplitude, de fréquence et numériques ; bande passante, débit, bruit de canal.",
+    prerequis: ["filtrage", "signaux-aleatoires"],
+    ressources: [
+      { titre: "PySDR — guide de la radio logicielle et du traitement du signal en Python", url: "https://pysdr.org/fr/index-fr.html" },
+      { titre: "MIT 6.02 — Digital Communication Systems (EN)", url: MIT("6-02-introduction-to-eecs-ii-digital-communication-systems-fall-2012") },
+      { titre: "Wikipédia — Modulation du signal", url: WP("Modulation_du_signal") },
+    ],
+  },
+  {
+    id: "temps-frequence", titre: "Analyse temps-fréquence & ondelettes", domaine: "signal",
+    niveau: "M2",
+    description: "Suivre un contenu fréquentiel qui change au cours du temps : transformée de Fourier à court terme, ondelettes.",
+    prerequis: ["analyse-spectrale"],
+    ressources: [
+      { titre: "Polikar — The Wavelet Tutorial (EN)", url: "https://users.rowan.edu/~polikar/WTtutorial.html" },
+      { titre: "MIT 18.327 — Wavelets, Filter Banks and Applications (EN)", url: MIT("18-327-wavelets-filter-banks-and-applications-spring-2003") },
+      { titre: "PyWavelets — documentation (Python, EN)", url: "https://pywavelets.readthedocs.io/en/latest/" },
+      { titre: "Wikipédia — Ondelette", url: WP("Ondelette") },
+      { titre: "Wikipédia — Transformée de Fourier à court terme", url: WP("Transformée_de_Fourier_à_court_terme") },
     ],
   },
 
@@ -966,7 +1266,7 @@ const NOTIONS = [
     id: "temps-reel", titre: "Systèmes temps réel (RTOS)", domaine: "informatique",
     niveau: "M1",
     description: "Tâches, ordonnancement, priorités, synchronisation, respect des échéances.",
-    prerequis: ["embarque"],
+    prerequis: ["embarque", "linux"],
     ressources: [
       { titre: "FreeRTOS — documentation et livre gratuit (EN)", url: "https://www.freertos.org/" },
       { titre: "Wikipédia — Système temps réel", url: WP("Système_temps_réel") },
@@ -987,12 +1287,84 @@ const NOTIONS = [
     id: "apprentissage", titre: "Apprentissage automatique", domaine: "informatique",
     niveau: "M1",
     description: "Régression, classification, réseaux de neurones ; apprendre un modèle à partir de données.",
-    prerequis: ["probas", "optimisation", "algorithmique"],
+    prerequis: ["probas", "optimisation", "algebre-lineaire-numerique"],
     ressources: [
       { titre: "An Introduction to Statistical Learning (livre gratuit, EN)", url: "https://www.statlearning.com/" },
       { titre: "MIT 6.036 — Introduction to Machine Learning (EN)", url: MIT("6-036-introduction-to-machine-learning-fall-2020") },
       { titre: "scikit-learn — guide utilisateur (Python, EN)", url: "https://scikit-learn.org/stable/user_guide.html" },
       { titre: "Wikipédia — Apprentissage automatique", url: WP("Apprentissage_automatique") },
+    ],
+  },
+  {
+    id: "python-scientifique", titre: "Python scientifique & simulation", domaine: "informatique",
+    niveau: "L2",
+    description: "Calculer, tracer et simuler avec Python : tableaux NumPy, graphiques Matplotlib, bibliothèque SciPy.",
+    prerequis: ["algorithmique"],
+    ressources: [
+      { titre: "Python — tutoriel officiel", url: "https://docs.python.org/fr/3/tutorial/" },
+      { titre: "Scientific Python Lectures (cours en ligne, EN)", url: "https://lectures.scientific-python.org/" },
+      { titre: "NumPy — guide de démarrage (EN)", url: "https://numpy.org/doc/stable/user/quickstart.html" },
+      { titre: "Matplotlib — tutoriels (EN)", url: "https://matplotlib.org/stable/tutorials/index.html" },
+      { titre: "Wikipédia — SciPy", url: WP("SciPy") },
+    ],
+  },
+  {
+    id: "linux", titre: "Linux & systèmes d'exploitation", domaine: "informatique",
+    niveau: "L3",
+    description: "Ligne de commande, fichiers et droits, processus, mémoire : ce que fait un système d'exploitation.",
+    prerequis: ["prog-c"],
+    ressources: [
+      { titre: "Ubuntu-fr — tutoriel de la ligne de commande", url: "https://doc.ubuntu-fr.org/tutoriel/console_ligne_de_commande" },
+      { titre: "MIT — The Missing Semester of Your CS Education (EN)", url: "https://missing.csail.mit.edu/" },
+      { titre: "Arpaci-Dusseau — Operating Systems: Three Easy Pieces (livre gratuit, EN)", url: "https://pages.cs.wisc.edu/~remzi/OSTEP/" },
+      { titre: "Wikipédia — Système d'exploitation", url: WP("Système_d'exploitation") },
+    ],
+  },
+  {
+    id: "renforcement", titre: "Apprentissage par renforcement", domaine: "informatique",
+    niveau: "M2",
+    description: "Apprendre une stratégie par essais et récompenses : processus de décision markoviens, Q-learning, méthodes à gradient de politique.",
+    prerequis: ["apprentissage", "commande-optimale"],
+    ressources: [
+      { titre: "Sutton & Barto — Reinforcement Learning: An Introduction (livre gratuit, EN)", url: "http://incompleteideas.net/book/the-book-2nd.html" },
+      { titre: "David Silver — cours d'apprentissage par renforcement (vidéos et diapositives, EN)", url: "https://davidstarsilver.wordpress.com/teaching/" },
+      { titre: "Hugging Face — Deep Reinforcement Learning Course (cours pratique, EN)", url: "https://huggingface.co/learn/deep-rl-course/unit0/introduction" },
+      { titre: "OpenAI — Spinning Up in Deep RL (EN)", url: "https://spinningup.openai.com/en/latest/" },
+      { titre: "Stanford CS234 — Reinforcement Learning (EN)", url: "https://web.stanford.edu/class/cs234/" },
+      { titre: "Gymnasium — environnements d'entraînement (Python, EN)", url: "https://gymnasium.farama.org/" },
+      { titre: "Stable-Baselines3 — algorithmes prêts à l'emploi (Python, EN)", url: "https://stable-baselines3.readthedocs.io/en/master/" },
+      { titre: "Wikipédia — Apprentissage par renforcement", url: WP("Apprentissage_par_renforcement") },
+    ],
+  },
+  {
+    id: "structures-donnees", titre: "Structures de données & complexité", domaine: "informatique",
+    niveau: "L2",
+    description: "Listes, piles, files, tables de hachage, arbres, graphes ; coût en temps et en mémoire d'un algorithme.",
+    prerequis: ["algorithmique"],
+    ressources: [
+      { titre: "VisuAlgo — structures de données et algorithmes animés (EN)", url: "https://visualgo.net/en" },
+      { titre: "Miller & Ranum — Problem Solving with Algorithms and Data Structures using Python (livre interactif gratuit, EN)", url: "https://runestone.academy/ns/books/published/pythonds3/index.html" },
+      { titre: "MIT 6.006 — Introduction to Algorithms (EN)", url: MIT("6-006-introduction-to-algorithms-spring-2020") },
+      { titre: "Morin — Open Data Structures (livre gratuit, EN)", url: "https://opendatastructures.org/" },
+      { titre: "Galles — Data Structure Visualizations (animations, EN)", url: "https://www.cs.usfca.edu/~galles/visualization/Algorithms.html" },
+      { titre: "Wikipédia — Structure de données", url: WP("Structure_de_données") },
+      { titre: "Wikipédia — Analyse de la complexité des algorithmes", url: WP("Analyse_de_la_complexité_des_algorithmes") },
+    ],
+  },
+  {
+    id: "cybersecurite", titre: "Cybersécurité des systèmes connectés", domaine: "informatique",
+    niveau: "M2",
+    description: "Menaces sur les objets connectés et les réseaux industriels : authentification, chiffrement, mises à jour, analyse de risques.",
+    prerequis: ["reseaux-industriels", "linux"],
+    ressources: [
+      { titre: "ANSSI — SecNumacadémie (formation en ligne gratuite)", url: "https://secnumacademie.gouv.fr/" },
+      { titre: "ANSSI — Recommandations relatives à la sécurité des systèmes d'objets connectés", url: "https://www.cyber.gouv.fr/publications/recommandations-relatives-la-securite-des-systemes-dobjets-connectes" },
+      { titre: "OWASP — Internet of Things Project (EN)", url: "https://owasp.org/www-project-internet-of-things/" },
+      { titre: "NIST — Cybersecurity for IoT Program (EN)", url: "https://www.nist.gov/itl/applied-cybersecurity/nist-cybersecurity-iot-program" },
+      { titre: "MIT 6.858 — Computer Systems Security (EN)", url: MIT("6-858-computer-systems-security-fall-2014") },
+      { titre: "CryptoHack — apprendre la cryptographie par des défis (EN)", url: "https://cryptohack.org/" },
+      { titre: "Wikipédia — Sécurité des systèmes d'information", url: WP("Sécurité_des_systèmes_d'information") },
+      { titre: "Wikipédia — Internet des objets", url: WP("Internet_des_objets") },
     ],
   },
 
@@ -1070,6 +1442,22 @@ const NOTIONS = [
       { titre: "MIT 3.032 — Mechanical Behavior of Materials (EN)", url: MIT("3-032-mechanical-behavior-of-materials-fall-2007") },
       { titre: "The Engineering ToolBox — propriétés des matériaux (EN)", url: "https://www.engineeringtoolbox.com/" },
       { titre: "Wikipédia — Sélection des matériaux", url: WP("Sélection_des_matériaux") },
+    ],
+  },
+  {
+    id: "materiaux-fonctionnels", titre: "Matériaux fonctionnels", domaine: "materiaux",
+    niveau: "L3",
+    description: "Matériaux qui convertissent une grandeur en une autre : piézoélectriques, magnétiques, alliages à mémoire de forme.",
+    prerequis: ["science-materiaux", "electromagnetisme"],
+    ressources: [
+      { titre: "DoITPoMS — Piezoelectric Materials (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/piezoelectrics/index.php" },
+      { titre: "DoITPoMS — Ferromagnetic Materials (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/ferromagnetic/index.php" },
+      { titre: "DoITPoMS — Superelasticity and Shape Memory Alloys (cours interactif, EN)", url: "https://www.doitpoms.ac.uk/tlplib/superelasticity/index.php" },
+      { titre: "PI — Fundamentals of Piezo Technology (EN)", url: "https://www.pi-usa.us/en/expertise/technology/piezo-technology/fundamentals" },
+      { titre: "MIT 3.024 — Electronic, Optical and Magnetic Properties of Materials (EN)", url: MIT("3-024-electronic-optical-and-magnetic-properties-of-materials-spring-2013") },
+      { titre: "Wikipédia — Piézoélectricité", url: WP("Piézoélectricité") },
+      { titre: "Wikipédia — Alliage à mémoire de forme", url: WP("Alliage_à_mémoire_de_forme") },
+      { titre: "Wikipédia — Matériau intelligent", url: WP("Matériau_intelligent") },
     ],
   },
 
@@ -1188,6 +1576,36 @@ const NOTIONS = [
       { titre: "Académie de Grenoble — annuaire de ressources SII", url: "https://sii.web.ac-grenoble.fr/ressources-ingenierie-systeme/page-de-ressources-en-sii-sur-le-web" },
     ],
   },
+  {
+    id: "fabrication-additive", titre: "Fabrication additive", domaine: "conception",
+    niveau: "M1",
+    description: "Impression 3D : familles de procédés, matériaux, règles de conception propres à la fabrication couche par couche.",
+    prerequis: ["fabrication"],
+    ressources: [
+      { titre: "Protolabs Network — What is 3D printing? (guide, EN)", url: "https://www.hubs.com/guides/3d-printing/" },
+      { titre: "Protolabs Network — Additive manufacturing processes (EN)", url: "https://www.hubs.com/knowledge-base/additive-manufacturing-process/" },
+      { titre: "Loughborough University — The 7 categories of Additive Manufacturing (EN)", url: "https://www.lboro.ac.uk/research/amrg/about/the7categoriesofadditivemanufacturing/" },
+      { titre: "Prusa — base de connaissances de l'impression 3D", url: "https://help.prusa3d.com/" },
+      { titre: "Fab Academy — cours de fabrication numérique (EN)", url: "https://fabacademy.org/" },
+      { titre: "Wikipédia — Impression 3D", url: WP("Impression_3D") },
+      { titre: "Wikipédia — Optimisation topologique", url: WP("Optimisation_topologique") },
+    ],
+  },
+  {
+    id: "eco-conception", titre: "Éco-conception", domaine: "conception",
+    niveau: "M1",
+    description: "Réduire l'impact d'un produit sur tout son cycle de vie : analyse du cycle de vie, choix de matériaux, réparabilité, fin de vie.",
+    prerequis: ["choix-materiaux", "ingenierie-systeme"],
+    ressources: [
+      { titre: "Pôle Éco-conception — centre de ressources national", url: "https://www.eco-conception.fr/" },
+      { titre: "ADEME — Base Empreinte (données d'impact environnemental)", url: "https://base-empreinte.ademe.fr/" },
+      { titre: "ADEME — librairie : guides et études en accès libre", url: "https://librairie.ademe.fr/" },
+      { titre: "EcoInfo (CNRS) — impacts du numérique et de l'électronique", url: "https://ecoinfo.cnrs.fr/" },
+      { titre: "MacKay — Sustainable Energy, Without the Hot Air (livre gratuit, EN)", url: "https://www.withouthotair.com/" },
+      { titre: "Wikipédia — Écoconception", url: WP("Écoconception") },
+      { titre: "Wikipédia — Analyse du cycle de vie", url: WP("Analyse_du_cycle_de_vie") },
+    ],
+  },
 
   // ------------------------------------------------------------ Robotique
   {
@@ -1237,7 +1655,7 @@ const NOTIONS = [
     id: "planification", titre: "Planification de mouvement", domaine: "robotique",
     niveau: "M2",
     description: "Trouver un chemin sans collision : espace des configurations, A*, RRT.",
-    prerequis: ["trajectoires", "algorithmique"],
+    prerequis: ["trajectoires", "structures-donnees"],
     ressources: [
       { titre: "LaValle — Planning Algorithms (livre gratuit, EN)", url: "https://lavalle.pl/planning/" },
       { titre: "PythonRobotics — algorithmes illustrés (EN)", url: PYTHON_ROBOTICS },
@@ -1292,7 +1710,7 @@ const NOTIONS = [
     id: "ros", titre: "ROS (Robot Operating System)", domaine: "robotique",
     niveau: "M1",
     description: "Architecture logicielle d'un robot : nœuds, messages, simulation avec Gazebo.",
-    prerequis: ["prog-c", "embarque"],
+    prerequis: ["embarque", "linux"],
     ressources: [
       { titre: "ROS 2 — tutoriels officiels (EN)", url: "https://docs.ros.org/en/rolling/Tutorials.html" },
       { titre: "Gazebo — simulateur de robots (EN)", url: "https://gazebosim.org/" },
@@ -1308,6 +1726,45 @@ const NOTIONS = [
       { titre: "Correll — Introduction to Autonomous Robots (livre gratuit, EN)", url: "https://github.com/correll/Introduction-to-Autonomous-Robots" },
       { titre: "MIT 2.12 — Introduction to Robotics (projets, EN)", url: MIT("2-12-introduction-to-robotics-fall-2005") },
       { titre: "Wikipédia — Robotique", url: WP("Robotique") },
+    ],
+  },
+  {
+    id: "asservissement-visuel", titre: "Asservissement visuel", domaine: "robotique",
+    niveau: "M2",
+    description: "Commander un robot à partir des images d'une caméra : asservissement dans l'image ou en position.",
+    prerequis: ["vision", "commande-robots"],
+    ressources: [
+      { titre: "Chaumette & Hutchinson — Visual Servo Control, Part I (article de référence, EN)", url: "https://inria.hal.science/inria-00350283v1" },
+      { titre: "ViSP (Inria) — tutoriel d'asservissement visuel dans l'image (EN)", url: "https://visp-doc.inria.fr/doxygen/visp-daily/tutorial-ibvs.html" },
+      { titre: "Robot Academy — Image-Based Visual Servoing (vidéo, EN)", url: "https://robotacademy.net.au/lesson/image-based-visual-servoing/" },
+      { titre: "Robot Academy — Vision and Motion (cours vidéo, EN)", url: "https://robotacademy.net.au/masterclass/vision-and-motion/" },
+      { titre: "Wikipedia — Visual servoing (EN)", url: "https://en.wikipedia.org/wiki/Visual_servoing" },
+    ],
+  },
+  {
+    id: "prehension", titre: "Préhension & manipulation", domaine: "robotique",
+    niveau: "M2",
+    description: "Saisir et manipuler un objet : préhenseurs, contacts et frottement, stabilité d'une prise, choix d'une saisie.",
+    prerequis: ["cinematique-robots", "capteurs-effort"],
+    ressources: [
+      { titre: "Tedrake — Robotic Manipulation (cours en ligne MIT, EN)", url: "https://manipulation.csail.mit.edu/" },
+      { titre: "Lynch & Park — Modern Robotics, ch. 12 : Grasping and Manipulation (livre et vidéos, EN)", url: ROBOTIQUE_MODERNE },
+      { titre: "Wikipedia — Robot end effector (EN)", url: "https://en.wikipedia.org/wiki/Robot_end_effector" },
+      { titre: "Wikipédia — Préhenseur", url: WP("Préhenseur") },
+    ],
+  },
+  {
+    id: "cobotique", titre: "Robotique collaborative", domaine: "robotique",
+    niveau: "M2",
+    description: "Robots qui partagent l'espace de travail avec des personnes : modes de collaboration, limitation des efforts, analyse des risques.",
+    prerequis: ["commande-robots", "surete"],
+    ressources: [
+      { titre: "INRS — Robots collaboratifs", url: "https://www.inrs.fr/risques/robots-collaboratifs/ce-qu-il-faut-retenir.html" },
+      { titre: "INRS — 10 questions sur les robots collaboratifs (brochure)", url: "https://www.inrs.fr/media.html?refINRS=ED%206386" },
+      { titre: "Ministère du Travail — Guide de prévention pour les applications collaboratives robotisées (PDF)", url: "https://travail-emploi.gouv.fr/sites/travail-emploi/files/files-spip/pdf/guide_de_prevention_25_aout_2017.pdf" },
+      { titre: "Universal Robots Academy — formations en ligne gratuites", url: "https://academy.universal-robots.com/" },
+      { titre: "ISO/TS 15066 — spécification des robots collaboratifs (présentation, EN)", url: "https://www.iso.org/standard/62996.html" },
+      { titre: "Wikipédia — Cobotique", url: WP("Cobotique") },
     ],
   },
 ];
