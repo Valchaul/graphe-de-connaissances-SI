@@ -47,6 +47,8 @@
           <h3>Statuts affichés</h3>
           <div id="filtres-statuts" class="puces"></div>
           <button id="filtres-reset" class="bouton-discret" type="button" hidden>Tout réafficher</button>
+          <h3>Catégories affichées</h3>
+          <button id="filtres-formation-bouton" class="bouton-discret" type="button">Filtrer pour une formation…</button>
         </div>
       </div>
       <input id="recherche" type="search" placeholder="Rechercher une notion" autocomplete="off">
@@ -113,6 +115,15 @@
 
   <div id="erreurs" hidden></div>
 
+  <!-- Écran d'accueil : filtre les catégories selon une formation, au premier lancement ou depuis les filtres (js/formation.js) -->
+  <dialog id="accueil" class="accueil" aria-labelledby="accueil-titre">
+    <h2 id="accueil-titre">Quelle formation d'ingénieur suivez-vous ?</h2>
+    <p class="accueil-intro">La carte n'affichera que les catégories liées à cette formation.
+      <span id="accueil-tronc"></span> Chaque catégorie se réaffiche ensuite d'un clic dans la légende.</p>
+    <div id="accueil-choix" class="accueil-choix"></div>
+    <button id="accueil-fermer" class="bouton-discret" type="button" hidden>Annuler</button>
+  </dialog>
+
   <!-- Bibliothèques (graphe + placement automatique) -->
   <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/elkjs@0.9.3/lib/elk.bundled.js"></script>
@@ -130,6 +141,7 @@
   <script src="js/chemin.js"></script>
   <script src="js/filtres.js"></script>
   <script src="js/filtres-avances.js"></script>
+  <script src="js/formation.js"></script>
   <script src="js/recherche.js"></script>
   <script src="js/survol.js"></script>
   <script src="js/main.js"></script>

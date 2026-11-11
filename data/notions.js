@@ -13,6 +13,9 @@
 //    prerequis  liste d'ids de notions à connaître avant ([] si aucune)
 //    ressources liste de liens { titre: "...", url: "https://..." }
 //               (EN) dans le titre = ressource en anglais
+//
+//  Les formations de l'écran d'accueil (quels domaines afficher pour qui) sont
+//  dans FORMATIONS, juste après DOMAINES.
 // =====================================================================
 
 const DOMAINES = {
@@ -33,6 +36,18 @@ const DOMAINES = {
   management:      { nom: "Management & gestion de projet", couleur: "#4a4fa8" },
   donnees:         { nom: "Science des données & IA",   couleur: "#1b8750" },
   telecoms:        { nom: "Télécommunications & réseaux", couleur: "#8440c0" },
+};
+
+// Formations proposées par l'écran d'accueil (js/formation.js). Choisir une formation
+// affiche ses domaines et ceux du tronc commun, et masque les autres (on peut les
+// réafficher dans la légende). « domaines: null » = tout afficher.
+const TRONC_COMMUN = ["maths", "physique", "management"];
+const FORMATIONS = {
+  mecanique:   { nom: "Mécanique & matériaux",     domaines: ["mecanique", "materiaux", "conception", "energetique", "chimie"] },
+  electrique:  { nom: "Électricité & automatique", domaines: ["electricite", "automatique", "signal", "instrumentation", "robotique", "informatique"] },
+  numerique:   { nom: "Informatique & numérique",  domaines: ["informatique", "donnees", "telecoms", "signal"] },
+  industrie:   { nom: "Industrie & énergie",       domaines: ["industriel", "energetique", "conception", "mecanique", "chimie"] },
+  generaliste: { nom: "Généraliste",               domaines: null },
 };
 
 // Niveaux d'études, du plus bas au plus haut (l'ordre des clés sert de comparaison).

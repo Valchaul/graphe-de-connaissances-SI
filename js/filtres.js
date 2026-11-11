@@ -1,8 +1,21 @@
 // =====================================================================
-//  Filtres par domaine et bouton « Îlots par domaine »
+//  Filtres par domaine (mémorisés dans le navigateur) et bouton « Îlots par domaine »
 // =====================================================================
 
 const domainesMasques = new Set();
+
+// Les catégories masquées sont mémorisées dans le navigateur (s'il l'autorise) : on retrouve
+// la carte telle qu'on l'a laissée. Sans rien de mémorisé, c'est un premier lancement.
+const CLE_DOMAINES = "learn-map:domaines-masques";
+function lireDomainesMasques() {
+  try {
+    const liste = JSON.parse(localStorage.getItem(CLE_DOMAINES));
+    return Array.isArray(liste) ? liste.filter((d) => DOMAINES[d]) : null;
+  } catch { return null; }
+}
+function memoriserDomainesMasques() {
+  try { localStorage.setItem(CLE_DOMAINES, JSON.stringify([...domainesMasques])); } catch { /* sans mémoire : tant pis */ }
+}
 const niveauxMasques = new Set(); // niveaux décochés dans « Filtres » (js/filtres-avances.js)
 const statutsMasques = new Set(); // statuts décochés : "aucun", "acquise", "encours", "arevoir"
 
@@ -26,15 +39,24 @@ function afficheeParStatut(n) {
 // Applique tous les filtres (domaine, niveau, statut) : masque les notions, puis recalcule la carte
 // avec les seules notions visibles, sans toucher à la vue.
 function appliquerFiltres() {
+  masquerNotionsFiltrees();
+  placer(false).catch(afficherErreurPlacement);
+}
+// Masque les notions filtrées et met le compteur à jour, sans recalculer la carte
+function masquerNotionsFiltrees() {
   majCompteur(); // le compteur de progression ne compte que les domaines et niveaux affichés
   cy.nodes(".notion").forEach((noeud) => {
     const n = parId[noeud.id()];
     noeud.style("display", afficheeParDomaineEtNiveau(n) && afficheeParStatut(n) ? "element" : "none");
   });
-  placer(false).catch(afficherErreurPlacement);
 }
 const legende = document.getElementById("legende");
 const basculeIlots = document.getElementById("bascule-ilots"); // premier élément de la légende
+const boutonsDomaines = {}; // clé du domaine -> son bouton dans la légende
+// Barre les domaines masqués dans la légende (après un clic ou un changement de formation)
+function majLegende() {
+  for (const [cle, bouton] of Object.entries(boutonsDomaines)) bouton.classList.toggle("off", domainesMasques.has(cle));
+}
 for (const [cle, d] of Object.entries(DOMAINES)) {
   const bouton = document.createElement("button");
   bouton.className = "domaine";
@@ -44,9 +66,11 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
   bouton.addEventListener("click", () => {
     if (domainesMasques.has(cle)) domainesMasques.delete(cle);
     else domainesMasques.add(cle);
-    bouton.classList.toggle("off", domainesMasques.has(cle));
+    memoriserDomainesMasques();
+    majLegende();
     appliquerFiltres();
   });
+  boutonsDomaines[cle] = bouton;
   legende.appendChild(bouton);
 }
 

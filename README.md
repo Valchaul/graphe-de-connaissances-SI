@@ -12,6 +12,14 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
 
 ## Utilisation
 
+- **Filtre par formation** : au premier lancement, un écran demande la formation suivie
+  (« Mécanique & matériaux », « Électricité & automatique », « Informatique & numérique »,
+  « Industrie & énergie » ou « Généraliste ») et masque les domaines qui n'en font pas partie ;
+  ceux du tronc commun restent affichés. C'est un simple filtre : chaque domaine se réaffiche
+  d'un clic dans la légende, et « Filtrer pour une formation… », dans le panneau des filtres
+  (entonnoir), rouvre l'écran. Le site ne retient pas la formation mais les **domaines affichés**,
+  mémorisés dans le navigateur. Les formations se règlent dans `FORMATIONS`, au début de
+  `data/notions.js`.
 - **Clic sur une notion** : affiche sa fiche (ressources, prérequis, suites possibles) et met en évidence
   toute sa chaîne de prérequis.
 - **Voir le chemin** : dans la section « Prérequis » de la fiche, ce bouton liste dans l'ordre
@@ -36,7 +44,7 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
 - **Survol** (souris uniquement) : passer sur une notion allume sa chaîne de prérequis et ses suites,
   et affiche une info-bulle avec sa description. Sur écran tactile, on touche la notion pour ouvrir sa fiche.
 - **Recherche** : taper un mot, puis Entrée pour ouvrir le premier résultat.
-- **Légende** : cliquer sur un domaine pour le masquer ou l'afficher.
+- **Légende** : cliquer sur un domaine pour le masquer ou l'afficher (le choix est mémorisé).
 - **Échap** ou clic dans le vide : désélectionner.
 - **Lien direct** vers une notion : `index.html#rdm` (l'adresse se met à jour quand on clique).
 
@@ -96,7 +104,7 @@ prérequis), un encadré rouge l'indique en bas de la page.
 |-----------------------|---------------------------------------------------------------|
 | `index.html`          | Structure de la page et ordre de chargement des scripts       |
 | `style.css`           | Apparence de l'interface                                      |
-| `data/notions.js`     | **Le contenu** : domaines et notions                          |
+| `data/notions.js`     | **Le contenu** : domaines, formations et notions              |
 | `data/favicons.js`    | Liste des logos de sites (généré par `outils/favicons.js`)    |
 | `img/`                | Logos téléchargés (`favicons/`) et icône de lien générique    |
 | `outils/favicons.js`  | Script de téléchargement des logos (à lancer à la main)       |
@@ -109,9 +117,10 @@ prérequis), un encadré rouge l'indique en bas de la page.
 | `js/progression.js`   | Suivi de progression : cases à cocher, sauvegarde, compteur   |
 | `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
 | `js/chemin.js`        | Chemin d'apprentissage : ordre des notions à apprendre avant  |
-| `js/filtres.js`       | Filtres par domaine et bouton « Îlots par domaine »           |
+| `js/filtres.js`       | Filtres par domaine (mémorisés), bouton « Îlots par domaine » |
+| `js/formation.js`     | Écran d'accueil : filtre les domaines selon une formation     |
 | `js/recherche.js`     | Recherche par titre                                           |
-| `js/main.js`          | Démarrage (lance le placement, ouvre `#id-de-notion`)         |
+| `js/main.js`          | Démarrage (filtres, placement, ouvre `#id-de-notion`)         |
 
 Les scripts sont de simples fichiers chargés l'un après l'autre par `index.html` : ils
 partagent les mêmes variables, et l'ordre de la liste compte (chaque fichier utilise ceux

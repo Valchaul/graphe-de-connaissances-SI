@@ -836,3 +836,53 @@ main {
 .infobulle p { margin: 0; color: var(--texte-doux); }
 .infobulle-prete { display: block; margin-top: var(--e-2); font-size: var(--t-xs); color: var(--lien); }
 @media (prefers-reduced-motion: reduce) { .infobulle { transition: none; } }
+
+
+/* ---------- Écran d'accueil : choix de la formation (js/formation.js) ---------- */
+.accueil {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: var(--e-5);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-l);
+  background: var(--surface);
+  color: var(--texte);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  font-family: var(--police-ui);
+  font-size: var(--t-m);
+}
+.accueil::backdrop { background: rgba(31, 35, 40, 0.45); }
+.accueil h2 {
+  margin: 0 0 var(--e-2);
+  font-family: var(--police);
+  font-size: var(--t-xl);
+  line-height: 1.2;
+}
+.accueil-intro { margin: 0 0 var(--e-4); color: var(--texte-doux); line-height: 1.45; }
+.accueil-choix { display: grid; gap: var(--e-2); }
+.choix-formation {
+  display: grid;
+  gap: 2px;
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  font: inherit;
+  color: var(--texte);
+  text-align: left;
+  cursor: pointer;
+}
+.choix-formation:hover { border-color: var(--accent); background: var(--fond); }
+.choix-formation-nom { font-weight: 600; }
+.choix-formation-detail { font-size: var(--t-s); color: var(--texte-doux); line-height: 1.35; }
+#accueil-fermer { display: block; margin: var(--e-3) 0 0 auto; }
+#accueil-fermer[hidden] { display: none; }
+
+/* Bouton « Filtrer pour une formation… » du panneau des filtres */
+#filtres-formation-bouton { margin-left: calc(-1 * var(--e-2)); } /* son texte s'aligne sur les titres du panneau */
+#filtres-reset { margin-bottom: var(--e-3); }
+
+@media (max-width: 720px) {
+  .accueil { padding: var(--e-4); }
+  .accueil h2 { font-size: var(--t-l); }
+}

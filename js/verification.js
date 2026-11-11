@@ -2,7 +2,7 @@
 //  Vérification du contenu de data/notions.js
 //  Signale dans un encadré rouge les erreurs de saisie : identifiant en double,
 //  domaine, niveau ou prérequis inconnu, niveau inférieur à celui d'un prérequis,
-//  boucle de prérequis.
+//  boucle de prérequis, domaine inconnu dans une formation.
 // =====================================================================
 
 function verifierContenu() {
@@ -17,6 +17,11 @@ function verifierContenu() {
     if (!DOMAINES[n.domaine]) erreurs.push(`"${n.id}" : domaine inconnu "${n.domaine}"`);
     if (!n.niveau) erreurs.push(`"${n.id}" : niveau manquant (${Object.keys(NIVEAUX).join(", ")})`);
     else if (!NIVEAUX[n.niveau]) erreurs.push(`"${n.id}" : niveau inconnu "${n.niveau}"`);
+  }
+  for (const [cle, f] of Object.entries(FORMATIONS)) {
+    for (const d of [...(f.domaines || []), ...TRONC_COMMUN]) {
+      if (!DOMAINES[d]) erreurs.push(`Formation "${cle}" : domaine inconnu "${d}"`);
+    }
   }
   for (const n of NOTIONS) {
     for (const p of n.prerequis || []) {
