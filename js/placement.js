@@ -51,8 +51,9 @@ function cadrerSurLaHauteur() {
 }
 
 // Calcule le placement des notions visibles (relancé quand on filtre un domaine).
+// cadrer = false : la vue (zoom et position) reste telle que la personne l'a laissée.
 let dernierPlacement = 0;
-async function placer() {
+async function placer(cadrer = true) {
   const numero = ++dernierPlacement;
   const visibles = cy.nodes(".notion").filter((n) => n.style("display") !== "none");
   const ids = new Set(visibles.map((n) => n.id()));
@@ -147,7 +148,7 @@ async function placer() {
       position: { x: c.x + c.largeur / 2, y: c.y + c.hauteur / 2 },
     })));
   });
-  cadrerSurLaHauteur();
+  if (cadrer) cadrerSurLaHauteur();
 
   // Si une notion était sélectionnée, on réapplique sa mise en évidence.
   const choisie = cy.nodes(".choisi");

@@ -18,7 +18,7 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
     cy.nodes(".notion").forEach((noeud) => {
       noeud.style("display", domainesMasques.has(noeud.data("domaine")) ? "none" : "element");
     });
-    placer().catch(afficherErreurPlacement); // recalcule la carte avec les seules notions visibles
+    placer(false).catch(afficherErreurPlacement); // recalcule la carte avec les seules notions visibles, sans toucher à la vue
   });
   legende.appendChild(bouton);
 }
