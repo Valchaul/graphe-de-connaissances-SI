@@ -361,6 +361,16 @@ main {
   color: var(--texte-doux);
 }
 .aide-acquise .bouton-discret { margin-left: 4px; }
+.aide-acquise p { margin: 0; }
+/* Liste des prérequis manquants : compacte, avec défilement si elle est longue */
+#panneau .aide-acquise ul {
+  margin: 6px 0 0;
+  padding: 0 0 0 18px;
+  list-style: disc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.aide-acquise li { margin: 1px 0; }
 
 /* ---------- Chemin d'apprentissage ---------- */
 .bouton-chemin {
@@ -462,9 +472,18 @@ main {
 .chemin li.courant button,
 .chemin li.but button { font-weight: 700; }
 
-.chemin .niveau-liste { margin: 8px 0 0; }
+/* Titre, niveau et pastilles à la suite les uns des autres */
+.ligne-etape {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+}
+.chemin .niveau-liste { margin: 0; }
 .etiquette-chemin {
-  margin: 5px 0 0 6px;
+  margin: 0;
   padding: 1px 8px;
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-s);
@@ -475,17 +494,15 @@ main {
 }
 .etiquette-prochaine { border-color: var(--lien); color: var(--lien); }
 
-/* Case « acquise » à droite de chaque étape ; l'élément qui suit le niveau prend tout l'espace libre à sa gauche */
+/* Case « acquise » : toujours à droite de l'étape */
 .case-acquise {
   flex: none;
   width: 18px;
   height: 18px;
-  margin: 5px 0 0 10px;
+  margin: 5px 0 0 auto;
   accent-color: var(--acquis);
   cursor: pointer;
 }
-.chemin .niveau-liste + .etiquette-chemin,
-.chemin .niveau-liste + .case-acquise { margin-left: auto; }
 
 /* Étape acquise : le numéro devient un ✓ vert, le titre s'estompe */
 .chemin li.acquise::before {

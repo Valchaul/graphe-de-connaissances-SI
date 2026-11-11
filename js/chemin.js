@@ -105,13 +105,17 @@ function remplirChemin() {
     const niveau = document.createElement("span");
     niveau.className = "niveau-liste";
     niveau.textContent = n.niveau;
-    li.append(bouton, niveau);
+    // Titre, niveau et pastilles se suivent sur une même ligne (elle passe à la suivante si l'espace manque)
+    const ligne = document.createElement("div");
+    ligne.className = "ligne-etape";
+    ligne.append(bouton, niveau);
+    li.appendChild(ligne);
 
     const etiquette = (texte, classe) => {
       const e = document.createElement("span");
       e.className = "etiquette-chemin " + classe;
       e.textContent = texte;
-      li.appendChild(e);
+      ligne.appendChild(e);
     };
     if (id === prochaine) etiquette("prochaine", "etiquette-prochaine");
     if (i === tous.length - 1) {

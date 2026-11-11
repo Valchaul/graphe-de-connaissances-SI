@@ -129,6 +129,14 @@ function majFicheProgression(id) {
   if (manquants.length) {
     document.getElementById("p-acquise-aide-texte").textContent =
       `${manquants.length} prérequis ne ${manquants.length > 1 ? "sont" : "est"} pas coché${manquants.length > 1 ? "s" : ""}.`;
+    // Noms des prérequis manquants, dans l'ordre d'apprentissage
+    const liste = document.getElementById("p-acquise-aide-liste");
+    liste.innerHTML = "";
+    for (const m of manquants) {
+      const li = document.createElement("li");
+      li.textContent = parId[m].titre;
+      liste.appendChild(li);
+    }
   }
 }
 
