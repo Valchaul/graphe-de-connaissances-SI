@@ -4,6 +4,23 @@
 
 const panneau = document.getElementById("panneau");
 
+// Logo du site d'une ressource. Les logos sont téléchargés une fois pour toutes par
+// outils/favicons.js (liste dans data/favicons.js) : le site ne contacte aucun service tiers.
+// Les sites sans logo, ou dont le fichier manque, reçoivent une icône générique.
+const LOGO_GENERIQUE = "img/lien.svg";
+function logoDuLien(url) {
+  let site = "";
+  try { site = new URL(url).hostname.replace(/^www\./, ""); } catch { /* adresse invalide */ }
+  const img = document.createElement("img");
+  img.className = "logo-lien";
+  img.alt = ""; // décoratif : le titre du lien suffit
+  img.width = 16;
+  img.height = 16;
+  img.src = (typeof FAVICONS !== "undefined" && FAVICONS[site]) || LOGO_GENERIQUE;
+  img.addEventListener("error", () => { img.src = LOGO_GENERIQUE; }, { once: true });
+  return img;
+}
+
 function remplirListeNotions(ul, ids) {
   ul.innerHTML = "";
   if (!ids.length) {
@@ -50,9 +67,11 @@ function choisir(id, centrer) {
     const li = document.createElement("li");
     const a = document.createElement("a");
     a.href = r.url;
-    a.textContent = r.titre;
     a.target = "_blank";
     a.rel = "noopener";
+    const titre = document.createElement("span");
+    titre.textContent = r.titre;
+    a.append(logoDuLien(r.url), titre);
     li.appendChild(a);
     ulRes.appendChild(li);
   }

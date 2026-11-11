@@ -38,6 +38,18 @@ copier un bloc existant et l'adapter :
 },
 ```
 
+**Logos des ressources.** Chaque lien de la fiche s'affiche avec le logo de son site. Ces logos
+sont rangés dans `img/favicons/` et listés dans `data/favicons.js`. Quand tu ajoutes une
+ressource d'un site nouveau, lance une fois :
+
+```bash
+node outils/favicons.js
+```
+
+Le script ne télécharge que les logos manquants (`--refaire` pour tout retélécharger). Les sites
+sans logo, ou dont le logo est trop lourd (plus de 45 Ko), reçoivent une icône générique.
+Il faut Node 18 ou plus ; rien d'autre à installer.
+
 Le placement dans la carte est automatique : ELK range les notions en colonnes et trace
 les flèches à angles droits. Quand une flèche se divise, les branches partent d'un tronc
 commun (embranchement en T). Quand deux flèches indépendantes se croisent, l'une est
@@ -67,6 +79,9 @@ Chaque push sur `main` met ensuite le site à jour.
 | `index.html`          | Structure de la page et ordre de chargement des scripts       |
 | `style.css`           | Apparence de l'interface                                      |
 | `data/notions.js`     | **Le contenu** : domaines et notions                          |
+| `data/favicons.js`    | Liste des logos de sites (généré par `outils/favicons.js`)    |
+| `img/`                | Logos téléchargés (`favicons/`) et icône de lien générique    |
+| `outils/favicons.js`  | Script de téléchargement des logos (à lancer à la main)       |
 | `js/verification.js`  | Détection des erreurs dans le contenu                         |
 | `js/config.js`        | Réglages du rendu : tailles, arrondis, zoom, îlots            |
 | `js/graphe.js`        | Création du graphe et styles des notions, cadres et flèches   |

@@ -5,6 +5,8 @@
   --texte-doux: #5b6168;
   --bordure: #dcd8cf;
   --accent: #3f5a8a;
+  --lien: #1d4ed8;         /* bleu des liens de ressources, plus vif que l'accent */
+  --lien-survol: #1e3a8a;
   --police: "Source Serif 4", Georgia, "Times New Roman", serif;
   --police-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -241,11 +243,24 @@ main {
   line-height: 1.4;
 }
 
+/* Ressource : logo du site (16 px) puis titre ; le titre peut passer sur plusieurs lignes */
 #p-ressources a {
-  color: var(--accent);
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--lien);
   text-decoration: none;
 }
-#p-ressources a:hover { background: var(--fond); text-decoration: underline; }
+#p-ressources a:hover { background: var(--fond); color: var(--lien-survol); text-decoration: underline; }
+
+.logo-lien {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px; /* aligne le logo sur la première ligne du titre */
+  border-radius: 4px;
+  object-fit: contain;
+}
 
 .liens-notions button {
   border: none;
