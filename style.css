@@ -56,6 +56,7 @@
   --e-4: 16px;
   --e-5: 24px;
 
+  --hauteur-controle: 36px; /* recherche et bouton Filtres : même hauteur */
   --largeur-panneau: clamp(400px, 34vw, 560px);
 }
 
@@ -102,9 +103,15 @@ body {
   margin-left: var(--e-2);
 }
 
+/* Écran moyen : le sous-titre disparaît pour laisser la place aux outils */
+@media (min-width: 721px) and (max-width: 1100px) { .barre h1 .sous-titre { display: none; } }
+
 .outils {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  flex: 1;           /* les outils occupent la place laissée par le titre... */
+  min-width: 0;
   gap: var(--e-2);
 }
 
@@ -130,8 +137,12 @@ body {
 }
 
 #recherche {
-  width: min(320px, 50vw);
-  padding: var(--e-1) var(--e-3) var(--e-1) 34px; /* 34 px : place pour la loupe */
+  flex: 1 1 140px;   /* ...et la recherche remplit ce qui reste, jusqu'à 360 px */
+  width: 100%;
+  min-width: 0;
+  max-width: 360px;
+  height: var(--hauteur-controle);
+  padding: 0 var(--e-3) 0 34px; /* 34 px : place pour la loupe */
   border: none;
   border-radius: var(--rayon-m);
   font: inherit;
@@ -705,13 +716,14 @@ main {
 /* ---------- Petit écran : panneau ---------- */
 @media (max-width: 720px) {
   /* Grille : titre, puis sous-titre + progression sur la même ligne, puis recherche */
-  .barre { display: grid; grid-template-columns: 1fr auto; gap: var(--e-1) var(--e-3); padding: var(--e-3) var(--e-4); }
+  .barre { display: grid; grid-template-columns: 1fr auto auto; gap: var(--e-1) var(--e-3); padding: var(--e-3) var(--e-4); }
   .barre h1, .outils { display: contents; }
   .barre h1 .titre { grid-column: 1 / -1; }
   .barre h1 .sous-titre { margin: 0; font-size: var(--t-m); align-self: center; }
   .progression { padding: var(--e-1) 0; }
   .notification { left: auto; right: 0; width: min(280px, calc(100vw - 32px)); }
-  #recherche { grid-column: 1 / -1; width: auto; min-width: 0; margin-top: var(--e-1); }
+  .progression-zone { grid-column: 2 / 4; justify-self: end; }
+  #recherche { margin-top: var(--e-1); }
   #legende { padding: var(--e-2) var(--e-4); flex-wrap: nowrap; overflow-x: auto; }
   .domaine { flex: none; }
   main { flex-direction: column; }
@@ -738,7 +750,8 @@ main {
   align-items: center;
   gap: var(--e-1);
   margin-right: 0;
-  padding: 6px var(--e-3);
+  height: var(--hauteur-controle); /* même hauteur que la recherche */
+  padding: 0 var(--e-3);
   border-radius: var(--rayon-m);
 }
 .icone-filtre { display: block; flex: none; }
@@ -772,7 +785,7 @@ main {
 
 @media (max-width: 720px) {
   /* Recherche et bouton Filtres sur la même ligne */
-  #recherche { grid-column: 1; grid-row: 3; }
-  .filtres-zone { grid-column: 2; grid-row: 3; }
+  #recherche { grid-column: 1 / 3; grid-row: 3; max-width: none; width: 100%; } /* remplit toute la largeur */
+  .filtres-zone { grid-column: 3; grid-row: 3; margin-top: var(--e-1); }
   .panneau-filtres { width: min(300px, calc(100vw - 32px)); }
 }
