@@ -260,6 +260,14 @@ main {
    sa position puis se pose), sortie rapide qui accélère. */
 #panneau.entre { animation: panneau-entree 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.15); }
 #panneau.sort { animation: panneau-sortie 0.25s cubic-bezier(0.3, 0, 0.8, 0.15) forwards; }
+/* Passage direct d'une fiche à une autre : le nouveau contenu arrive par la droite et glisse
+   vers la gauche. Le cadre de la fiche et le bouton de fermeture ne bougent pas. */
+@keyframes fiche-balayage {
+  from { transform: translateX(48px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+#panneau.balaye { overflow-x: clip; } /* pas de barre de défilement horizontale pendant le glissement */
+#panneau.balaye > :not(#fermer) { animation: fiche-balayage 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
 #fermer {
   position: absolute;

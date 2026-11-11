@@ -45,16 +45,23 @@ function remplirListeNotions(ul, ids) {
 }
 
 // ---------- Ouverture et fermeture animées de la fiche ----------
-// La fiche glisse depuis le bas pour entrer et repart vers le bas pour sortir (voir style.css).
+// La fiche glisse depuis le bas pour entrer et repart vers le bas pour sortir ; quand on passe
+// d'une notion à une autre, seul son contenu est balayé vers la gauche (voir style.css).
 const sansAnimation = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-function ouvrirPanneau() {
+// id = notion que la fiche va montrer. Fiche fermée : elle entre par le bas. Fiche déjà ouverte
+// sur une autre notion : son contenu est balayé vers la gauche (le nouveau arrive par la droite).
+let ficheAffichee = null; // id de la notion montrée par la fiche ouverte
+function ouvrirPanneau(id) {
   const etaitFermee = panneau.hidden || panneau.classList.contains("sort");
-  panneau.classList.remove("sort", "entre");
+  const autreNotion = !etaitFermee && ficheAffichee !== id;
+  ficheAffichee = id;
+  panneau.classList.remove("sort", "entre", "balaye");
   panneau.hidden = false;
-  if (etaitFermee && !sansAnimation.matches) {
-    void panneau.offsetWidth; // relance l'animation même si on rouvre en pleine sortie
-    panneau.classList.add("entre");
+  if (sansAnimation.matches) return;
+  if (etaitFermee || autreNotion) {
+    void panneau.offsetWidth; // relance l'animation même si elle était déjà en cours
+    panneau.classList.add(etaitFermee ? "entre" : "balaye");
   }
 }
 
@@ -67,12 +74,14 @@ function fermerPanneau() {
 
 function terminerFermeture(force) {
   if (!force && !panneau.classList.contains("sort")) return;
-  panneau.classList.remove("sort", "entre");
+  panneau.classList.remove("sort", "entre", "balaye");
   panneau.hidden = true;
+  ficheAffichee = null;
   cy.resize(); // la carte récupère la place de la fiche
 }
 
 panneau.addEventListener("animationend", (e) => {
+  if (e.animationName === "fiche-balayage") panneau.classList.remove("balaye"); // jouée par le contenu de la fiche
   if (e.target !== panneau) return;
   if (panneau.classList.contains("sort")) terminerFermeture(false);
   else panneau.classList.remove("entre");
@@ -128,7 +137,7 @@ function choisir(id, centrer) {
   majFicheProgression(id); // bouton « Marquer comme acquise » (js/progression.js)
   majChemin(id); // bouton « Voir le chemin » et liste d'apprentissage (js/chemin.js)
 
-  ouvrirPanneau();
+  ouvrirPanneau(id);
   cy.resize();
   if (centrer) {
     // Cadre toute la chaîne (prérequis + suites). Le zoom est plafonné
