@@ -56,8 +56,6 @@ for (const [cle, f] of Object.entries(FORMATIONS)) {
   bouton.addEventListener("click", () => filtrerPourLaFormation(cle));
   accueilChoix.appendChild(bouton);
 }
-document.getElementById("accueil-tronc").textContent =
-  `Le tronc commun (${nomsDomaines(TRONC_COMMUN.filter((d) => DOMAINES[d]))}) reste toujours visible.`;
 
 // Ouvre l'écran. Au premier lancement, il n'y a pas de bouton « Annuler » : le fermer
 // (touche Échap) revient à choisir « Généraliste », qui affiche tout.
