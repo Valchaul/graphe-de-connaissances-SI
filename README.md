@@ -30,6 +30,11 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
   La progression est **mémorisée dans le navigateur** (`localStorage`) : pas de compte, rien
   n'est envoyé nulle part. Contrepartie : elle reste propre à ce navigateur et à cet appareil, et
   disparaît si on efface les données du site ou en navigation privée.
+- **Statuts sur la carte** : une pastille dans le coin haut droit de chaque notion indique son statut
+  (✓ vert pour acquise, trois points bleus pour en cours, flèche orange pour à réviser). Un triangle bleu dans le coin haut gauche
+  signale les notions **prêtes à apprendre** (tous leurs prérequis sont acquis).
+- **Survol** (souris uniquement) : passer sur une notion allume sa chaîne de prérequis et ses suites,
+  et affiche une info-bulle avec sa description. Sur écran tactile, on touche la notion pour ouvrir sa fiche.
 - **Recherche** : taper un mot, puis Entrée pour ouvrir le premier résultat.
 - **Légende** : cliquer sur un domaine pour le masquer ou l'afficher.
 - **Échap** ou clic dans le vide : désélectionner.
@@ -100,6 +105,7 @@ prérequis), un encadré rouge l'indique en bas de la page.
 | `js/graphe.js`        | Création du graphe et styles des notions, cadres et flèches   |
 | `js/trace.js`         | Tracé des flèches : arrondis et coupures aux croisements      |
 | `js/placement.js`     | Placement par ELK et cadrage de la vue                        |
+| `js/survol.js`        | Mise en évidence et info-bulle au survol d'une notion         |
 | `js/progression.js`   | Suivi de progression : cases à cocher, sauvegarde, compteur   |
 | `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
 | `js/chemin.js`        | Chemin d'apprentissage : ordre des notions à apprendre avant  |

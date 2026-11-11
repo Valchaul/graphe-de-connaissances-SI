@@ -10,6 +10,7 @@ const parId = Object.fromEntries(NOTIONS.map((n) => [n.id, n]));
 // ---------- Notions et flèches ----------
 const LARGEUR_NOEUD = 170;
 const HAUTEUR_NOEUD = 46;
+const MARGE_TEXTE = 6;     // espace entre le titre et le bord de la notion, de chaque côté (px)
 const RAYON_COUDES = 14; // arrondi des virages des flèches (px)
 
 // Croisements : quand deux flèches se coupent sans se rejoindre, l'une est interrompue

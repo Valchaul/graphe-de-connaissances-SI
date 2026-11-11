@@ -804,3 +804,35 @@ main {
   .filtres-zone { grid-column: 3; grid-row: 3; margin-top: var(--e-1); }
   .panneau-filtres { width: min(300px, calc(100vw - 32px)); }
 }
+
+
+/* ---------- Info-bulle d'une notion (au survol, js/survol.js) ---------- */
+.infobulle {
+  position: fixed;
+  z-index: 8;
+  max-width: 300px;
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  font-size: var(--t-s);
+  line-height: 1.45;
+  pointer-events: none; /* ne gêne jamais la souris */
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.infobulle[hidden] { display: none; }
+.infobulle.visible { opacity: 1; }
+.infobulle strong { display: block; font-size: var(--t-m); }
+.infobulle-meta {
+  display: block;
+  margin: 2px 0 var(--e-1);
+  font-size: var(--t-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+}
+.infobulle p { margin: 0; color: var(--texte-doux); }
+.infobulle-prete { display: block; margin-top: var(--e-2); font-size: var(--t-xs); color: var(--lien); }
+@media (prefers-reduced-motion: reduce) { .infobulle { transition: none; } }

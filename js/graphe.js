@@ -7,7 +7,7 @@ const elements = [];
 for (const n of NOTIONS) {
   elements.push({
     classes: "notion",
-    // label = titre (sert à la recherche) ; etiquette = ce qui s'affiche (titre, précédé d'un signe de statut)
+    // label = titre (sert à la recherche) ; etiquette = ce qui s'affiche (titre ; les statuts sont dessinés par des pastilles (voir progression.js))
     data: { id: n.id, label: n.titre, etiquette: n.titre, couleur: DOMAINES[n.domaine]?.couleur || "#888", domaine: n.domaine },
   });
 }
@@ -45,6 +45,7 @@ const cy = cytoscape({
         "background-opacity": 0.07,
         "border-width": 1.5,
         "border-color": "data(couleur)",
+        "border-opacity": 0.45, // contour adouci : il contraste moins avec le fond (notions sans statut)
         label: "data(etiquette)",
         "font-family": "system-ui, sans-serif",
         "font-size": 12,
@@ -52,7 +53,7 @@ const cy = cytoscape({
         "text-valign": "center",
         "text-halign": "center",
         "text-wrap": "wrap",
-        "text-max-width": 150,
+        "text-max-width": LARGEUR_NOEUD - 2 * MARGE_TEXTE, // largeur de la notion moins la marge de chaque côté
         "transition-property": "opacity, border-width",
         "transition-duration": "150ms",
         // Ordre d'empilement : cadres (0) < flèches (1) < chemin (3) < notions (4)
@@ -66,18 +67,38 @@ const cy = cytoscape({
       style: {
         "background-color": "#2f7d4f",
         "background-opacity": 0.16,
+        "border-opacity": 1,
         color: "#1d5a37",
       },
     },
     {
       // Notion en cours de travail : teinte bleue
       selector: "node.encours",
-      style: { "background-color": "#1d4ed8", "background-opacity": 0.12, "border-color": "#1d4ed8", color: "#1e3a8a" },
+      style: { "background-color": "#1d4ed8", "background-opacity": 0.12, "border-color": "#1d4ed8", "border-opacity": 1, color: "#1e3a8a" },
     },
     {
       // Notion à réviser : contour orange épais (se combine avec acquise)
       selector: "node.arevoir",
-      style: { "border-color": "#c2610c", "border-width": 2.5 },
+      style: { "border-color": "#c2610c", "border-width": 2.5, "border-opacity": 1 },
+    },
+    {
+      // Pastilles accrochées aux coins haut de la notion, en une seule image SVG large fabriquée par
+      // progression.js : à gauche « prête à apprendre » (triangle bleu), à droite le ou les statuts
+      // (coche verte, points bleus, flèche orange). Elles débordent un peu du cadre de la notion.
+      selector: "node[badge]",
+      style: {
+        "background-image": "data(badge)",
+        "background-fit": "none",
+        "background-clip": "none",
+        "background-image-containment": "over",
+        "background-width": (e) => e.data("badgeL"),
+        "background-height": 18,
+        "background-position-x": "0%",
+        "background-position-y": "0%",
+        "background-offset-x": -7,
+        "background-offset-y": -8,
+        "bounds-expansion": 12,
+      },
     },
     {
       // Cadre d'un domaine (fond très léger, titre en haut)
@@ -144,10 +165,11 @@ const cy = cytoscape({
       },
     },
     { selector: ".attenue", style: { opacity: 0.15 } },
-    { selector: "node.choisi", style: { "border-width": 3.5 } },
-    { selector: "node.trouve", style: { "border-width": 3.5 } },
+    { selector: ".survol-attenue", style: { opacity: 0.15 } }, // mise en évidence au survol (survol.js)
+    { selector: "node.choisi", style: { "border-width": 3.5, "border-opacity": 1 } },
+    { selector: "node.trouve", style: { "border-width": 3.5, "border-opacity": 1 } },
     {
-      selector: "edge.chemin",
+      selector: "edge.chemin, edge.survol-chemin",
       style: { "line-color": "#5b6168", "target-arrow-color": "#5b6168", width: 2, "z-index": 3 },
     },
   ],

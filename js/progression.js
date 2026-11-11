@@ -78,6 +78,36 @@ function viderProgression() {
 }
 
 // ---------- Affichage ----------
+// Une notion est « prête à apprendre » quand tous ses prérequis sont acquis et qu'elle ne l'est pas
+// encore (ni en cours de travail).
+function estPrete(id) {
+  return !acquises.has(id) && !enCours.has(id) && (parId[id].prerequis || []).every((p) => acquises.has(p));
+}
+
+// Image SVG des pastilles, pour les coins des notions de la carte. Une seule image aussi large que la
+// notion (plus le débord) : « prête à apprendre » est dessinée à gauche, les statuts à droite.
+const LARGEUR_PASTILLES = LARGEUR_NOEUD + 14;
+const DESSIN_PASTILLE = {
+  prete: { couleur: "#186ca8", trace: '<path d="M7.3 5.4v7.2L13 9z" fill="#fff"/>' },
+  acquise: { couleur: "#2f7d4f", trace: '<path d="M5.4 9.3l2.5 2.6 4.8-5.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' },
+  encours: { couleur: "#1d4ed8", trace: '<circle cx="5.4" cy="9" r="1.4" fill="#fff"/><circle cx="9" cy="9" r="1.4" fill="#fff"/><circle cx="12.6" cy="9" r="1.4" fill="#fff"/>' },
+  arevoir: { couleur: "#c2610c", trace: '<path d="M12.3 7.6A3.7 3.7 0 1 0 12.7 10.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><path d="M13.3 4.9v3.4H9.9z" fill="#fff"/>' },
+};
+const imagesPastilles = new Map(); // mémorise les images déjà fabriquées
+function imagePastilles(statuts, prete) {
+  const cle = (prete ? "prete|" : "|") + statuts.join("+");
+  if (!imagesPastilles.has(cle)) {
+    const pastille = (nom, x) =>
+      `<g transform="translate(${x} 0)"><circle cx="9" cy="9" r="8.2" fill="${DESSIN_PASTILLE[nom].couleur}" stroke="#fff" stroke-width="1.6"/>${DESSIN_PASTILLE[nom].trace}</g>`;
+    let dessin = prete ? pastille("prete", 0) : "";
+    const debutStatuts = LARGEUR_PASTILLES - (statuts.length * 20 - 2);
+    statuts.forEach((s, i) => { dessin += pastille(s, debutStatuts + i * 20); });
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${LARGEUR_PASTILLES}" height="18" viewBox="0 0 ${LARGEUR_PASTILLES} 18">${dessin}</svg>`;
+    imagesPastilles.set(cle, "data:image/svg+xml;utf8," + encodeURIComponent(svg));
+  }
+  return imagesPastilles.get(cle);
+}
+
 // Compteur de l'en-tête. Les domaines masqués (légende) ne comptent ni parmi les notions
 // totales ni parmi les acquises : on mesure la progression sur ce qui est affiché.
 function majCompteur() {
@@ -98,9 +128,11 @@ function rafraichirProgression() {
       noeud.toggleClass("acquise", acquises.has(id));
       noeud.toggleClass("encours", enCours.has(id));
       noeud.toggleClass("arevoir", aReviser.has(id));
-      // Un signe devant le titre : la couleur seule ne suffirait pas à tout le monde
-      const signes = (acquises.has(id) ? "✓ " : "") + (enCours.has(id) ? "… " : "") + (aReviser.has(id) ? "↻ " : "");
-      noeud.data("etiquette", signes + noeud.data("label"));
+      // Pastilles dans les coins de la notion : « prête à apprendre » à gauche, statut(s) à droite
+      const prete = estPrete(id);
+      const statuts = [acquises.has(id) && "acquise", enCours.has(id) && "encours", aReviser.has(id) && "arevoir"].filter(Boolean);
+      if (prete || statuts.length) noeud.data({ badge: imagePastilles(statuts, prete), badgeL: LARGEUR_PASTILLES });
+      else noeud.removeData("badge badgeL");
     });
   });
 
