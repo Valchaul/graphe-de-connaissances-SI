@@ -57,24 +57,30 @@
         <button id="p-acquise-aide-bouton" class="bouton-discret" type="button">Les cocher aussi</button>
       </p>
 
-      <h3>Ressources</h3>
-      <ul id="p-ressources"></ul>
+      <section class="bulle">
+        <h3>Ressources</h3>
+        <ul id="p-ressources"></ul>
+      </section>
 
-      <h3>Prérequis</h3>
-      <ul id="p-prerequis" class="liens-notions"></ul>
+      <section class="bulle">
+        <h3>Prérequis</h3>
+        <ul id="p-prerequis" class="liens-notions"></ul>
 
-      <!-- Chemin d'apprentissage : un seul bouton qui l'affiche ou le masque (js/chemin.js) -->
-      <div id="p-chemin-zone" hidden>
-        <button id="p-chemin-bouton" class="bouton-chemin" type="button"
-                aria-expanded="false" aria-controls="p-chemin"></button>
-        <section id="p-chemin" hidden aria-label="Chemin d'apprentissage">
-          <p id="p-chemin-resume" class="chemin-resume"></p>
-          <ol id="p-chemin-liste" class="chemin"></ol>
-        </section>
-      </div>
+        <!-- Chemin d'apprentissage : un seul bouton qui l'affiche ou le masque (js/chemin.js) -->
+        <div id="p-chemin-zone" hidden>
+          <button id="p-chemin-bouton" class="bouton-chemin" type="button"
+                  aria-expanded="false" aria-controls="p-chemin"></button>
+          <section id="p-chemin" hidden aria-label="Chemin d'apprentissage">
+            <p id="p-chemin-resume" class="chemin-resume"></p>
+            <ol id="p-chemin-liste" class="chemin"></ol>
+          </section>
+        </div>
+      </section>
 
-      <h3>Ouvre vers</h3>
-      <ul id="p-suivants" class="liens-notions"></ul>
+      <section class="bulle">
+        <h3>Ouvre vers</h3>
+        <ul id="p-suivants" class="liens-notions"></ul>
+      </section>
     </aside>
   </main>
 
