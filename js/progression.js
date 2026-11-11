@@ -58,7 +58,7 @@ function basculerAcquise(id) {
   definirAcquises([id], !acquises.has(id));
 }
 
-// « En cours de travail » et « À réviser » : un statut par notion, qu'on coche ou décoche
+// « En cours » et « À réviser » : un statut par notion, qu'on coche ou décoche
 function basculerStatut(id, ensemble) {
   if (ensemble.has(id)) ensemble.delete(id);
   else {
@@ -78,6 +78,18 @@ function viderProgression() {
 }
 
 // ---------- Affichage ----------
+// Compteur de l'en-tête. Les domaines masqués (légende) ne comptent ni parmi les notions
+// totales ni parmi les acquises : on mesure la progression sur ce qui est affiché.
+function majCompteur() {
+  const visibles = NOTIONS.filter((n) => !domainesMasques.has(n.domaine));
+  const total = visibles.length;
+  const nombre = visibles.filter((n) => acquises.has(n.id)).length;
+  document.getElementById("prog-texte").textContent = `${nombre} / ${total} acquises`;
+  document.getElementById("prog-remplissage").style.width = (total ? (100 * nombre) / total : 0) + "%";
+  document.getElementById("progression").setAttribute("aria-label",
+    `Progression : ${nombre} notions acquises sur ${total}. Activer pour effacer.`);
+}
+
 // Met à jour tout ce qui montre la progression : carte, compteur, fiche et chemin.
 function rafraichirProgression() {
   cy.batch(() => {
@@ -92,15 +104,9 @@ function rafraichirProgression() {
     });
   });
 
-  const total = NOTIONS.length;
-  const nombre = acquises.size;
-  document.getElementById("prog-texte").textContent = `${nombre} / ${total} acquises`;
-  document.getElementById("prog-remplissage").style.width = (100 * nombre) / total + "%";
+  majCompteur();
   if (new Set([...acquises, ...enCours, ...aReviser]).size === 0) fermerConfirmation();
-  const alerte = document.getElementById("prog-alerte");
-  alerte.hidden = stockageDisponible;
-  document.getElementById("progression").setAttribute("aria-label",
-    `Progression : ${nombre} notions acquises sur ${total}. Activer pour effacer.`);
+  document.getElementById("prog-alerte").hidden = stockageDisponible;
 
   if (notionDeLaFiche) {
     majFicheProgression(notionDeLaFiche);
@@ -108,7 +114,7 @@ function rafraichirProgression() {
   }
 }
 
-// Boutons de statut de la fiche : Acquise, En cours de travail, À réviser
+// Boutons de statut de la fiche : Acquise, En cours, À réviser
 function majFicheProgression(id) {
   notionDeLaFiche = id;
   const acquise = acquises.has(id);

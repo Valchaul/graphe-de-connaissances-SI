@@ -22,7 +22,7 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
   « Masquer le chemin », referme la liste.
 - **Suivi de progression** : la fiche propose trois cases. « Acquise » donne à la notion une teinte
   verte et un ✓ sur la carte, et fait avancer le compteur de l'en-tête (« 12 / 114 acquises »).
-  « En cours de travail » la teinte en bleu (…) ; elle s'exclut avec « Acquise ». « À réviser » lui
+  « En cours » la teinte en bleu (…) ; elle s'exclut avec « Acquise ». « À réviser » lui
   met un contour orange (↻) et peut se combiner avec « Acquise ». Dans le chemin d'apprentissage, chaque étape a sa case, la prochaine à
   apprendre est repérée et le résumé indique ce qu'il reste à faire. Quand on coche une notion
   dont les prérequis ne le sont pas, un lien propose de les cocher aussi. Un clic sur la

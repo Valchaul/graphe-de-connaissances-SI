@@ -15,6 +15,7 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
     if (domainesMasques.has(cle)) domainesMasques.delete(cle);
     else domainesMasques.add(cle);
     bouton.classList.toggle("off", domainesMasques.has(cle));
+    majCompteur(); // le compteur de progression ne compte que les domaines affichés
     cy.nodes(".notion").forEach((noeud) => {
       noeud.style("display", domainesMasques.has(noeud.data("domaine")) ? "none" : "element");
     });
