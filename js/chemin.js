@@ -77,17 +77,23 @@ function remplirChemin() {
   const but = parId[parcours.but];
   const etapes = parcours.etapes;
   const niveauDepart = parId[etapes[0]].niveau;
+  const faites = etapes.filter((id) => acquises.has(id)).length;
+  const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? "s" : ""}`;
   document.getElementById("p-chemin-resume").textContent =
-    `${etapes.length} notion${etapes.length > 1 ? "s" : ""} à apprendre avant « ${but.titre} », ` +
-    (niveauDepart === but.niveau ? `niveau ${but.niveau}.` : `de ${niveauDepart} à ${but.niveau}.`);
+    `${pluriel(etapes.length, "notion")} à apprendre avant « ${but.titre} », ` +
+    (niveauDepart === but.niveau ? `niveau ${but.niveau}.` : `de ${niveauDepart} à ${but.niveau}.`) +
+    (faites > 0 ? ` ${faites === 1 ? "1 déjà acquise" : faites + " déjà acquises"}, ${pluriel(etapes.length - faites, "restante")}.` : "");
 
   const liste = document.getElementById("p-chemin-liste");
+  const focus = document.activeElement?.dataset?.etape; // pour redonner le focus à la case qu'on vient de cocher
   liste.innerHTML = "";
   const tous = [...etapes, parcours.but];
+  const prochaine = tous.find((id) => !acquises.has(id)); // première notion encore à apprendre
   tous.forEach((id, i) => {
     const n = parId[id];
     const li = document.createElement("li");
     li.style.setProperty("--c", DOMAINES[n.domaine]?.couleur);
+    if (acquises.has(id)) li.classList.add("acquise");
     if (id === notionAffichee) {
       li.classList.add("courant");
       li.setAttribute("aria-current", "step");
@@ -100,15 +106,31 @@ function remplirChemin() {
     niveau.className = "niveau-liste";
     niveau.textContent = n.niveau;
     li.append(bouton, niveau);
+
+    const etiquette = (texte, classe) => {
+      const e = document.createElement("span");
+      e.className = "etiquette-chemin " + classe;
+      e.textContent = texte;
+      li.appendChild(e);
+    };
+    if (id === prochaine) etiquette("prochaine", "etiquette-prochaine");
     if (i === tous.length - 1) {
       li.classList.add("but");
-      const etiquette = document.createElement("span");
-      etiquette.className = "etiquette-but";
-      etiquette.textContent = "objectif";
-      li.appendChild(etiquette);
+      etiquette("objectif", "etiquette-but");
     }
+
+    // Case « acquise » de l'étape
+    const case_ = document.createElement("input");
+    case_.type = "checkbox";
+    case_.className = "case-acquise";
+    case_.checked = acquises.has(id);
+    case_.dataset.etape = id;
+    case_.setAttribute("aria-label", `Acquise : ${n.titre}`);
+    case_.addEventListener("change", () => basculerAcquise(id));
+    li.appendChild(case_);
     liste.appendChild(li);
   });
+  if (focus) liste.querySelector(`input[data-etape="${focus}"]`)?.focus();
 }
 
 function reinitialiserChemin() {

@@ -10,6 +10,14 @@
   <header class="barre">
     <h1>Graphe de connaissances <span>Sciences de l'ingénieur</span></h1>
     <div class="outils">
+      <div id="progression" class="progression" role="group"
+           title="Notions que tu as cochées comme acquises. Elles sont mémorisées dans ce navigateur uniquement.">
+        <span id="prog-texte" class="prog-texte"></span>
+        <span class="prog-barre"><span id="prog-remplissage"></span></span>
+        <span id="prog-alerte" class="prog-alerte" hidden
+              title="Ce navigateur refuse la sauvegarde (navigation privée ?) : la progression sera perdue à la fermeture.">⚠</span>
+        <button id="prog-effacer" class="bouton-discret" type="button" hidden>Effacer</button>
+      </div>
       <button id="bascule-ilots" class="bascule" type="button" aria-pressed="true"
               title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
         Îlots par domaine
@@ -31,6 +39,13 @@
       </div>
       <h2 id="p-titre"></h2>
       <p id="p-description"></p>
+
+      <!-- Suivi de progression : coche la notion comme acquise (js/progression.js) -->
+      <button id="p-acquise" class="bouton-acquise" type="button" aria-pressed="false"></button>
+      <p id="p-acquise-aide" class="aide-acquise" hidden>
+        <span id="p-acquise-aide-texte"></span>
+        <button id="p-acquise-aide-bouton" class="bouton-discret" type="button">Les cocher aussi</button>
+      </p>
 
       <h3>Ressources</h3>
       <ul id="p-ressources"></ul>
@@ -67,6 +82,7 @@
   <script src="js/graphe.js"></script>
   <script src="js/trace.js"></script>
   <script src="js/placement.js"></script>
+  <script src="js/progression.js"></script>
   <script src="js/panneau.js"></script>
   <script src="js/chemin.js"></script>
   <script src="js/filtres.js"></script>

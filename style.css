@@ -7,6 +7,8 @@
   --accent: #3f5a8a;
   --lien: #1d4ed8;         /* bleu des liens de ressources, plus vif que l'accent */
   --lien-survol: #1e3a8a;
+  --acquis: #2f7d4f;       /* vert des notions acquises */
+  --acquis-fond: #e7f3ec;
   --police: "Source Serif 4", Georgia, "Times New Roman", serif;
   --police-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
@@ -100,6 +102,9 @@ body {
 #panneau a:focus-visible,
 .liens-notions button:focus-visible,
 .bouton-chemin:focus-visible,
+.bouton-acquise:focus-visible,
+.bouton-discret:focus-visible,
+.case-acquise:focus-visible,
 .chemin button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
@@ -227,6 +232,88 @@ main {
   color: var(--texte-doux);
 }
 
+/* ---------- Suivi de progression ---------- */
+/* Compteur de l'en-tête : « 12 / 114 acquises » et une fine barre */
+.progression {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+  font-size: 0.85rem;
+  color: var(--texte-doux);
+}
+.prog-texte { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prog-barre {
+  width: 72px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bordure);
+  overflow: hidden;
+}
+.prog-barre > span {
+  display: block;
+  height: 100%;
+  background: var(--acquis);
+  transition: width 0.25s ease;
+}
+.prog-alerte { color: #b45309; cursor: help; }
+
+/* Petit bouton textuel (« Effacer », « Les cocher aussi ») */
+.bouton-discret {
+  padding: 2px 8px;
+  border: none;
+  border-radius: var(--rayon-s);
+  background: none;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--lien);
+  cursor: pointer;
+}
+.bouton-discret:hover { background: var(--fond); text-decoration: underline; }
+
+/* Bouton « Marquer comme acquise » de la fiche : une case à cocher qui se remplit en vert */
+.bouton-acquise {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+  padding: 8px 14px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface);
+  color: var(--texte);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.bouton-acquise:hover { background: var(--fond); }
+.bouton-acquise::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1.6px solid var(--texte-doux);
+  border-radius: 4px;
+  background: var(--surface) center / 12px no-repeat;
+}
+.bouton-acquise[aria-pressed="true"] {
+  border-color: var(--acquis);
+  background: var(--acquis-fond);
+  color: #1d5a37;
+  font-weight: 600;
+}
+.bouton-acquise[aria-pressed="true"]::before {
+  border-color: var(--acquis);
+  background: var(--acquis) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5l2.5 2.5 4.5-5'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+.aide-acquise {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--texte-doux);
+}
+.aide-acquise .bouton-discret { margin-left: 4px; }
+
 /* ---------- Chemin d'apprentissage ---------- */
 .bouton-chemin {
   display: inline-flex;
@@ -328,8 +415,8 @@ main {
 .chemin li.but button { font-weight: 700; }
 
 .chemin .niveau-liste { margin: 8px 0 0; }
-.etiquette-but {
-  margin: 5px 0 0 auto;
+.etiquette-chemin {
+  margin: 5px 0 0 6px;
   padding: 1px 8px;
   border: 1px solid var(--bordure);
   border-radius: var(--rayon-s);
@@ -338,6 +425,28 @@ main {
   text-transform: uppercase;
   color: var(--texte-doux);
 }
+.etiquette-prochaine { border-color: var(--lien); color: var(--lien); }
+
+/* Case « acquise » à droite de chaque étape ; l'élément qui suit le niveau prend tout l'espace libre à sa gauche */
+.case-acquise {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 5px 0 0 10px;
+  accent-color: var(--acquis);
+  cursor: pointer;
+}
+.chemin .niveau-liste + .etiquette-chemin,
+.chemin .niveau-liste + .case-acquise { margin-left: auto; }
+
+/* Étape acquise : le numéro devient un ✓ vert, le titre s'estompe */
+.chemin li.acquise::before {
+  content: "✓";
+  background: var(--acquis);
+  border-color: var(--acquis);
+  color: #fff;
+}
+.chemin li.acquise button { color: var(--texte-doux); }
 
 #p-titre {
   font-family: var(--police);
@@ -414,6 +523,13 @@ main {
   margin-right: 6px;
   font-size: 0.7em;
 }
+.liens-notions button.acquise::after {
+  content: "✓";
+  margin-left: 8px;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--acquis);
+}
 
 .vide {
   color: var(--texte-doux);
@@ -439,6 +555,7 @@ main {
   .barre { flex-wrap: wrap; padding: 10px 16px; }
   .barre h1 span { display: block; margin: 0; font-size: 0.9rem; }
   .outils { width: 100%; flex-wrap: wrap; }
+  .progression { flex: 1 1 100%; order: -2; padding: 0; }
   #recherche { flex: 1 1 100%; order: -1; width: auto; min-width: 0; } /* recherche en pleine largeur, au-dessus du bouton */
   #legende { padding: 8px 16px; flex-wrap: nowrap; overflow-x: auto; }
   .domaine { flex: none; }

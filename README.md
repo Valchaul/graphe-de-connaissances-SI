@@ -20,6 +20,15 @@ Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installa
   avec l'étape en cours. À chaque instant, une notion n'apparaît qu'après tous ses prérequis ;
   entre deux notions possibles, la plus basse en niveau passe d'abord. Le même bouton, devenu
   « Masquer le chemin », referme la liste.
+- **Suivi de progression** : le bouton « Marquer comme acquise » de la fiche coche la notion. Elle
+  prend alors une teinte verte et un ✓ sur la carte, et le compteur de l'en-tête (« 12 / 114
+  acquises ») avance. Dans le chemin d'apprentissage, chaque étape a sa case, la prochaine à
+  apprendre est repérée et le résumé indique ce qu'il reste à faire. Quand on coche une notion
+  dont les prérequis ne le sont pas, un lien propose de les cocher aussi. « Effacer » (dans
+  l'en-tête) remet tout à zéro.
+  La progression est **mémorisée dans le navigateur** (`localStorage`) : pas de compte, rien
+  n'est envoyé nulle part. Contrepartie : elle reste propre à ce navigateur et à cet appareil, et
+  disparaît si on efface les données du site ou en navigation privée.
 - **Recherche** : taper un mot, puis Entrée pour ouvrir le premier résultat.
 - **Légende** : cliquer sur un domaine pour le masquer ou l'afficher.
 - **Échap** ou clic dans le vide : désélectionner.
@@ -99,6 +108,7 @@ Chaque push sur `main` met ensuite le site à jour.
 | `js/graphe.js`        | Création du graphe et styles des notions, cadres et flèches   |
 | `js/trace.js`         | Tracé des flèches : arrondis et coupures aux croisements      |
 | `js/placement.js`     | Placement par ELK et cadrage de la vue                        |
+| `js/progression.js`   | Suivi de progression : cases à cocher, sauvegarde, compteur   |
 | `js/panneau.js`       | Fiche d'une notion et surbrillance de sa chaîne de prérequis  |
 | `js/chemin.js`        | Chemin d'apprentissage : ordre des notions à apprendre avant  |
 | `js/filtres.js`       | Filtres par domaine et bouton « Îlots par domaine »           |

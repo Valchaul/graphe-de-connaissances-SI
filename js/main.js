@@ -4,6 +4,8 @@
 //  notion demandée par l'adresse (#id-de-notion) s'il y en a une.
 // =====================================================================
 
+rafraichirProgression(); // applique la progression mémorisée (carte et compteur)
+
 const placementInitial = placer()
   .catch(afficherErreurPlacement)
   .finally(() => conteneur.classList.remove("en-attente"));

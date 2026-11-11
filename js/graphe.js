@@ -7,7 +7,8 @@ const elements = [];
 for (const n of NOTIONS) {
   elements.push({
     classes: "notion",
-    data: { id: n.id, label: n.titre, couleur: DOMAINES[n.domaine]?.couleur || "#888", domaine: n.domaine },
+    // label = titre (sert à la recherche) ; etiquette = ce qui s'affiche (titre, précédé d'un ✓ si acquise)
+    data: { id: n.id, label: n.titre, etiquette: n.titre, couleur: DOMAINES[n.domaine]?.couleur || "#888", domaine: n.domaine },
   });
 }
 for (const n of NOTIONS) {
@@ -44,7 +45,7 @@ const cy = cytoscape({
         "background-opacity": 0.07,
         "border-width": 1.5,
         "border-color": "data(couleur)",
-        label: "data(label)",
+        label: "data(etiquette)",
         "font-family": "system-ui, sans-serif",
         "font-size": 12,
         color: "#1f2328",
@@ -57,6 +58,15 @@ const cy = cytoscape({
         // Ordre d'empilement : cadres (0) < flèches (1) < chemin (3) < notions (4)
         "z-index-compare": "manual",
         "z-index": 4,
+      },
+    },
+    {
+      // Notion acquise (cochée par la personne qui visite le site, voir progression.js)
+      selector: "node.acquise",
+      style: {
+        "background-color": "#2f7d4f",
+        "background-opacity": 0.16,
+        color: "#1d5a37",
       },
     },
     {

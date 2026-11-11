@@ -37,6 +37,7 @@ function remplirListeNotions(ul, ids) {
     niveau.textContent = n.niveau;
     b.appendChild(niveau);
     b.style.setProperty("--c", DOMAINES[n.domaine]?.couleur);
+    b.classList.toggle("acquise", acquises.has(id)); // ✓ affiché par le CSS
     b.addEventListener("click", () => choisir(id, true));
     li.appendChild(b);
     ul.appendChild(li);
@@ -89,6 +90,7 @@ function choisir(id, centrer) {
     document.getElementById("p-suivants"),
     NOTIONS.filter((m) => (m.prerequis || []).includes(id)).map((m) => m.id)
   );
+  majFicheProgression(id); // bouton « Marquer comme acquise » (js/progression.js)
   majChemin(id); // bouton « Voir le chemin » et liste d'apprentissage (js/chemin.js)
 
   panneau.hidden = false;
@@ -112,6 +114,7 @@ function choisir(id, centrer) {
 
 function deselectionner() {
   reinitialiserChemin();
+  fermerFicheProgression();
   cy.elements().removeClass("attenue choisi chemin trouve");
   panneau.hidden = true;
   cy.resize();
