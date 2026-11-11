@@ -8,8 +8,14 @@
 </head>
 <body>
   <header class="barre">
-    <h1>Learn Map <span>Sciences de l'ingénieur</span></h1>
-    <input id="recherche" type="search" placeholder="Rechercher une notion…" autocomplete="off">
+    <h1>Graphe de connaissances <span>Sciences de l'ingénieur</span></h1>
+    <div class="outils">
+      <button id="bascule-ilots" class="bascule" type="button" aria-pressed="true"
+              title="Afficher ou masquer les cadres qui regroupent les notions par domaine">
+        Îlots par domaine
+      </button>
+      <input id="recherche" type="search" placeholder="Rechercher une notion…" autocomplete="off">
+    </div>
   </header>
 
   <nav id="legende" aria-label="Domaines (cliquer pour masquer / afficher)"></nav>

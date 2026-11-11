@@ -50,12 +50,29 @@ const parId = Object.fromEntries(NOTIONS.map((n) => [n.id, n]));
 // ---------- 2. Construction du graphe ----------
 const LARGEUR_NOEUD = 170;
 const HAUTEUR_NOEUD = 46;
-const RAYON_COUDES = 12; // arrondi des virages des flèches (px)
+const RAYON_COUDES = 14; // arrondi des virages des flèches (px)
+
+// Coins arrondis du graphe : mêmes valeurs que --rayon-m et --rayon-l dans style.css.
+const RAYON_NOTION = 8;
+const RAYON_CADRE = 12;
+
+// Croisements : quand deux flèches se coupent sans se rejoindre, l'une est interrompue
+// (une petite coupure dans le trait) pour montrer qu'elles ne sont pas reliées.
+const COUPURE_DEMI_LONGUEUR = 4; // demi-longueur de la coupure (px)
 const ZOOM_OUVERTURE_MAX = 1.2; // à l'ouverture, ne pas grossir au-delà (petites cartes)
 const ZOOM_OUVERTURE_MIN = 0.6; // ni réduire en dessous (le texte deviendrait illisible)
 
-// Regrouper les notions d'un même domaine dans un cadre (true) ou non (false).
-const GROUPER_PAR_DOMAINE = true;
+// Regrouper les notions d'un même domaine dans un cadre (îlot) ou non. Le bouton
+// « Îlots par domaine » de l'en-tête bascule ce réglage ; le choix est mémorisé dans le
+// navigateur (s'il l'autorise). Sans mémoire, les îlots sont affichés.
+const CLE_ILOTS = "learn-map:ilots";
+function lirePreferenceIlots() {
+  try { return localStorage.getItem(CLE_ILOTS) !== "non"; } catch { return true; }
+}
+function memoriserPreferenceIlots(valeur) {
+  try { localStorage.setItem(CLE_ILOTS, valeur ? "oui" : "non"); } catch { /* sans mémoire : tant pis */ }
+}
+let grouperParDomaine = lirePreferenceIlots();
 const MARGES_CADRE = "[top=46,left=22,bottom=22,right=22]"; // la marge du haut accueille le titre
 
 const elements = [];
@@ -72,7 +89,7 @@ for (const n of NOTIONS) {
       // depart / arrivee / poids / distances : tracé de la flèche, rempli par ELK (section 3)
       data: { id: p + "->" + n.id, source: p, target: n.id,
               depart: "0px 0px", arrivee: "0px 0px", poids: "0.5", distances: "0", rayons: "0",
-              coude: false },
+              coude: false, interrompue: false, tirets: "6 3" },
     });
   }
 }
@@ -92,6 +109,7 @@ const cy = cytoscape({
       selector: "node.notion",
       style: {
         shape: "round-rectangle",
+        "corner-radius": RAYON_NOTION,
         width: LARGEUR_NOEUD,
         height: HAUTEUR_NOEUD,
         "background-color": "data(couleur)",
@@ -108,7 +126,7 @@ const cy = cytoscape({
         "text-max-width": 150,
         "transition-property": "opacity, border-width",
         "transition-duration": "150ms",
-        // Ordre d'empilement : cadres (0) < flèches (1) < jonctions (2) < chemin (3) < notions (4)
+        // Ordre d'empilement : cadres (0) < flèches (1) < chemin (3) < notions (4)
         "z-index-compare": "manual",
         "z-index": 4,
       },
@@ -120,7 +138,7 @@ const cy = cytoscape({
         shape: "round-rectangle",
         width: "data(largeur)",
         height: "data(hauteur)",
-        "corner-radius": 10,
+        "corner-radius": RAYON_CADRE,
         "background-color": "data(couleur)",
         "background-opacity": 0.035,
         "border-width": 1,
@@ -170,23 +188,13 @@ const cy = cytoscape({
       },
     },
     {
-      // Point de jonction : là où une flèche se divise (comme sur un schéma électrique).
-      // Deux lignes qui se coupent SANS point sont un simple croisement.
-      selector: "node.jonction",
+      // Flèches coupées à un croisement : motif de tirets calculé le long du tracé
+      selector: "edge[?interrompue]",
       style: {
-        shape: "ellipse",
-        width: 6,
-        height: 6,
-        "background-color": "#a8a296",
-        "border-width": 0,
-        events: "no",
-        "transition-property": "opacity",
-        "transition-duration": "150ms",
-        "z-index-compare": "manual",
-        "z-index": 2,
+        "line-style": "dashed",
+        "line-dash-pattern": (e) => e.data("tirets"),
       },
     },
-    { selector: "node.jonction.chemin", style: { "background-color": "#5b6168", width: 7, height: 7 } },
     { selector: ".attenue", style: { opacity: 0.15 } },
     { selector: "node.choisi", style: { "border-width": 3.5 } },
     { selector: "node.trouve", style: { "border-width": 3.5 } },
@@ -223,36 +231,52 @@ const OPTIONS_ELK = {
 
 const elk = new ELK();
 
+// Rayon d'arrondi de chaque virage (un par point intermédiaire du tracé) : au plus
+// RAYON_COUDES, et jamais plus de la moitié des segments voisins (évite les boucles
+// sur les petits décrochements).
+function rayonsDesCoudes(points) {
+  const longueur = (p, q) => Math.hypot(q.x - p.x, q.y - p.y);
+  const rayons = [];
+  for (let i = 1; i < points.length - 1; i++) {
+    const avant = longueur(points[i - 1], points[i]);
+    const apres = longueur(points[i], points[i + 1]);
+    rayons.push(Math.max(0, Math.min(RAYON_COUDES, avant / 2, apres / 2)));
+  }
+  return rayons;
+}
+
 // Convertit le tracé ELK (points absolus) au format Cytoscape :
 // chaque coude = (position le long du segment départ→arrivée, écart perpendiculaire).
-function appliquerTrace(arete, section, centres) {
+// `trace` = { points: [départ, coudes…, arrivée], coupures: [{ debut, fin }] }.
+function appliquerTrace(arete, trace, centres) {
   const cs = centres[arete.data("source")];
   const ct = centres[arete.data("target")];
-  const D = section.startPoint;
-  const A = section.endPoint;
+  const D = trace.points[0];
+  const A = trace.points[trace.points.length - 1];
   const dx = A.x - D.x;
   const dy = A.y - D.y;
   const l2 = dx * dx + dy * dy || 1;
   const l = Math.sqrt(l2);
 
-  const coudes = section.bendPoints || [];
-  const tous = [D, ...coudes, A];
-  const longueur = (p, q) => Math.hypot(q.x - p.x, q.y - p.y);
-
   const poids = [];
   const distances = [];
-  const rayons = [];
-  coudes.forEach((p, i) => {
+  for (const p of trace.points.slice(1, -1)) {
     const vx = p.x - D.x;
     const vy = p.y - D.y;
     poids.push(((vx * dx + vy * dy) / l2).toFixed(4));
     distances.push(((-vx * dy + vy * dx) / l).toFixed(2));
-    // Rayon adapté : pas plus de la moitié des segments voisins (évite les boucles
-    // sur les petits décrochements)
-    const avant = longueur(tous[i], p);
-    const apres = longueur(p, tous[i + 2]);
-    rayons.push(Math.max(0, Math.min(RAYON_COUDES, avant / 2, apres / 2)).toFixed(2));
-  });
+  }
+  const rayons = rayonsDesCoudes(trace.points).map((r) => r.toFixed(2));
+
+  // Coupures : motif de tirets le long du tracé (trait, coupure, trait, coupure, …, trait)
+  const coupures = trace.coupures || [];
+  const motif = [];
+  let curseur = 0;
+  for (const c of coupures) {
+    motif.push(c.debut - curseur, c.fin - c.debut);
+    curseur = c.fin;
+  }
+  motif.push(100000, 0);
 
   arete.data({
     depart: `${(D.x - cs.x).toFixed(2)}px ${(D.y - cs.y).toFixed(2)}px`,
@@ -261,7 +285,101 @@ function appliquerTrace(arete, section, centres) {
     distances: distances.join(" ") || "0",
     rayons: rayons.join(" ") || "0",
     coude: poids.length > 0,
+    interrompue: coupures.length > 0,
+    tirets: motif.map((v) => v.toFixed(2)).join(" "),
   });
+}
+
+// Repère les croisements entre flèches indépendantes et y ajoute une coupure : la flèche
+// horizontale est interrompue de part et d'autre de la verticale (ou, si son segment est
+// trop court, c'est la verticale qui l'est). Les flèches qui partagent leur départ ou leur
+// arrivée forment un tronc commun : ce sont des jonctions, pas des croisements.
+// Remplit `trace.coupures` (positions le long du tracé dessiné) ; renvoie les comptes.
+function ajouterCoupures(traces) {
+  const EPS = 1;
+  const K = 2 - Math.PI / 2; // un arc de cercle est plus court de K × rayon que l'angle droit
+  const MARGE_POINTE = 16;   // la pointe de la flèche occupe la fin du dernier segment
+  const segments = [];
+  traces.forEach((t, ti) => {
+    t.coupures = [];
+    const rayons = rayonsDesCoudes(t.points);
+    let longueurCumulee = 0;
+    let arcsCumules = 0; // somme des rayons des virages déjà passés
+    for (let i = 0; i < t.points.length - 1; i++) {
+      const p = t.points[i];
+      const q = t.points[i + 1];
+      if (i >= 1) arcsCumules += rayons[i - 1];
+      const longueur = Math.hypot(q.x - p.x, q.y - p.y);
+      const horizontal = Math.abs(p.y - q.y) < 0.5 && Math.abs(p.x - q.x) > 0.5;
+      const vertical = Math.abs(p.x - q.x) < 0.5 && Math.abs(p.y - q.y) > 0.5;
+      if (horizontal || vertical) {
+        segments.push({
+          ti, h: horizontal,
+          c: horizontal ? p.y : p.x,                                   // coordonnée fixe
+          a: horizontal ? Math.min(p.x, q.x) : Math.min(p.y, q.y),     // bornes triées
+          b: horizontal ? Math.max(p.x, q.x) : Math.max(p.y, q.y),
+          origine: horizontal ? p.x : p.y,                             // où le segment commence
+          sens: (horizontal ? q.x > p.x : q.y > p.y) ? 1 : -1,
+          longueur,
+          debutDroit: i >= 1 ? rayons[i - 1] : 3,                      // partie rectiligne
+          finDroite: i + 1 <= t.points.length - 2 ? rayons[i] : MARGE_POINTE,
+          position: longueurCumulee - K * arcsCumules,                 // abscisse sur le tracé dessiné
+        });
+      }
+      longueurCumulee += longueur;
+    }
+  });
+  const horizontaux = segments.filter((s) => s.h);
+  const verticaux = segments.filter((s) => !s.h);
+
+  // Croisements : un segment horizontal d'une flèche coupe un segment vertical d'une autre
+  const croisements = [];
+  for (const h of horizontaux) {
+    const A = traces[h.ti];
+    for (const v of verticaux) {
+      if (v.ti === h.ti) continue;
+      const B = traces[v.ti];
+      if (A.source === B.source || A.cible === B.cible) continue; // tronc commun : jonction
+      if (!(v.c > h.a + EPS && v.c < h.b - EPS && h.c > v.a + EPS && h.c < v.b - EPS)) continue;
+      const surJonction = [...A.jonctions, ...B.jonctions].some((j) => Math.hypot(j.x - v.c, j.y - h.c) < 4);
+      if (!surJonction) croisements.push({ h, v });
+    }
+  }
+
+  // Pose les coupures sur les segments horizontaux (ou verticaux). Plusieurs croisements
+  // très proches partagent une seule coupure plus longue. Renvoie les croisements qui n'ont
+  // pas pu être traités faute de place sur la partie rectiligne du segment.
+  function poser(liste, surHorizontal) {
+    const parSegment = new Map();
+    for (const c of liste) {
+      const seg = surHorizontal ? c.h : c.v;
+      if (!parSegment.has(seg)) parSegment.set(seg, []);
+      parSegment.get(seg).push(c);
+    }
+    const restes = [];
+    for (const [seg, cs] of parSegment) {
+      const distance = (c) => ((surHorizontal ? c.v.c : c.h.c) - seg.origine) * seg.sens;
+      cs.sort((m, n) => distance(m) - distance(n));
+      const groupes = [];
+      for (const c of cs) {
+        const dernier = groupes[groupes.length - 1];
+        if (dernier && distance(c) - distance(dernier[dernier.length - 1]) < 2 * COUPURE_DEMI_LONGUEUR + 6) dernier.push(c);
+        else groupes.push([c]);
+      }
+      for (const g of groupes) {
+        const debut = distance(g[0]) - COUPURE_DEMI_LONGUEUR;
+        const fin = distance(g[g.length - 1]) + COUPURE_DEMI_LONGUEUR;
+        if (debut < seg.debutDroit + 1 || fin > seg.longueur - seg.finDroite - 1) { restes.push(...g); continue; }
+        traces[seg.ti].coupures.push({ debut: seg.position + debut, fin: seg.position + fin });
+      }
+    }
+    return restes;
+  }
+
+  // D'abord sur la flèche horizontale ; si elle est trop courte, sur la verticale.
+  const restes = poser(poser(croisements, true), false);
+  traces.forEach((t) => t.coupures.sort((m, n) => m.debut - n.debut));
+  return { coupes: croisements.length - restes.length, ignores: restes.length };
 }
 
 // Vue d'ouverture : la carte occupe toute la hauteur de l'écran et commence par
@@ -296,7 +414,7 @@ async function placer() {
   const aretesElk = aretes.map((e) => ({ id: e.id(), sources: [e.data("source")], targets: [e.data("target")] }));
 
   let graphe;
-  if (GROUPER_PAR_DOMAINE) {
+  if (grouperParDomaine) {
     // Chaque domaine devient un groupe ELK contenant ses notions.
     const options = { ...OPTIONS_ELK };
     delete options["elk.layered.considerModelOrder.strategy"]; // fait planter ELK 0.9.3 avec des groupes
@@ -343,36 +461,30 @@ async function placer() {
   const domaineDe = (id) => parId[id].domaine;
   function decalageArete(e) {
     const ds = domaineDe(e.sources[0]);
-    if (GROUPER_PAR_DOMAINE && ds === domaineDe(e.targets[0])) return decalageDomaine[ds];
+    if (grouperParDomaine && ds === domaineDe(e.targets[0])) return decalageDomaine[ds];
     return { x: 0, y: 0 };
   }
   const decaler = (p, d) => ({ x: p.x + d.x, y: p.y + d.y });
 
-  // Points de jonction : plusieurs flèches peuvent partager le même point.
-  const jonctions = new Map(); // "x,y" -> { position, aretes: [ids] }
+  // Tracé de chaque flèche en coordonnées de la carte : départ, coudes, arrivée.
+  const traces = [];
   for (const e of resultat.edges) {
+    if (!e.sections?.length) continue;
     const d = decalageArete(e);
-    for (const brut of e.junctionPoints || []) {
-      const p = decaler(brut, d);
-      const cle = Math.round(p.x) + "," + Math.round(p.y);
-      if (!jonctions.has(cle)) jonctions.set(cle, { position: p, aretes: [] });
-      jonctions.get(cle).aretes.push(e.id);
-    }
+    const s = e.sections[0];
+    traces.push({
+      id: e.id,
+      source: e.sources[0],
+      cible: e.targets[0],
+      points: [decaler(s.startPoint, d), ...(s.bendPoints || []).map((p) => decaler(p, d)), decaler(s.endPoint, d)],
+      jonctions: (e.junctionPoints || []).map((p) => decaler(p, d)),
+    });
   }
+  ajouterCoupures(traces);
 
   cy.batch(() => {
     for (const [id, pos] of Object.entries(centres)) cy.getElementById(id).position(pos);
-    for (const e of resultat.edges) {
-      if (!e.sections?.length) continue;
-      const d = decalageArete(e);
-      const s = e.sections[0];
-      const section = {
-        startPoint: decaler(s.startPoint, d),
-        endPoint: decaler(s.endPoint, d),
-        bendPoints: (s.bendPoints || []).map((p) => decaler(p, d)),
-      };
-      appliquerTrace(cy.getElementById(e.id), section, centres);
-    }
+    for (const t of traces) appliquerTrace(cy.getElementById(t.id), t, centres);
     cy.remove(".cadre");
     cy.add(cadres.map((c) => ({
       group: "nodes",
@@ -386,13 +498,6 @@ async function placer() {
       },
       position: { x: c.x + c.largeur / 2, y: c.y + c.hauteur / 2 },
     })));
-    cy.remove(".jonction");
-    cy.add([...jonctions].map(([cle, j]) => ({
-      group: "nodes",
-      classes: "jonction",
-      data: { id: "jonction:" + cle, aretes: j.aretes },
-      position: j.position,
-    })));
   });
   cadrerSurLaHauteur();
 
@@ -401,12 +506,14 @@ async function placer() {
   if (choisie.nonempty() && choisie.style("display") !== "none") choisir(choisie.id(), false);
 }
 
+function afficherErreurPlacement(err) {
+  const boite = document.getElementById("erreurs");
+  boite.hidden = false;
+  boite.textContent = "Erreur pendant le placement de la carte : " + err.message;
+}
+
 const placementInitial = placer()
-  .catch((err) => {
-    const boite = document.getElementById("erreurs");
-    boite.hidden = false;
-    boite.textContent = "Erreur pendant le placement de la carte : " + err.message;
-  })
+  .catch(afficherErreurPlacement)
   .finally(() => conteneur.classList.remove("en-attente"));
 
 // ---------- 4. Légende et filtres par domaine ----------
@@ -425,10 +532,20 @@ for (const [cle, d] of Object.entries(DOMAINES)) {
     cy.nodes(".notion").forEach((noeud) => {
       noeud.style("display", domainesMasques.has(noeud.data("domaine")) ? "none" : "element");
     });
-    placer(); // recalcule la carte avec les seules notions visibles
+    placer().catch(afficherErreurPlacement); // recalcule la carte avec les seules notions visibles
   });
   legende.appendChild(bouton);
 }
+
+// Bouton « Îlots par domaine » : affiche ou masque les cadres et recalcule la carte.
+const basculeIlots = document.getElementById("bascule-ilots");
+basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
+basculeIlots.addEventListener("click", () => {
+  grouperParDomaine = !grouperParDomaine;
+  memoriserPreferenceIlots(grouperParDomaine);
+  basculeIlots.setAttribute("aria-pressed", String(grouperParDomaine));
+  placer().catch(afficherErreurPlacement);
+});
 
 // ---------- 5. Sélection d'une notion ----------
 const panneau = document.getElementById("panneau");
@@ -464,12 +581,6 @@ function choisir(id, centrer) {
   amont.edges().addClass("chemin");
   aval.edges().addClass("chemin");
   noeud.addClass("choisi");
-
-  // Jonctions : visibles seulement là où au moins deux flèches du chemin se séparent
-  cy.nodes(".jonction").forEach((j) => {
-    const surChemin = j.data("aretes").filter((id) => cy.getElementById(id).hasClass("chemin"));
-    if (surChemin.length >= 2) j.removeClass("attenue").addClass("chemin");
-  });
 
   // Panneau
   const d = DOMAINES[n.domaine];

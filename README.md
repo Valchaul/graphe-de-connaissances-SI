@@ -37,10 +37,13 @@ copier un bloc existant et l'adapter :
 ```
 
 Le placement dans la carte est automatique : ELK range les notions en colonnes et trace
-les flèches à angles droits. Un petit point sur une flèche marque un embranchement
-(la flèche se divise) ; deux lignes qui se coupent sans point se croisent simplement.
+les flèches à angles droits. Quand une flèche se divise, les branches partent d'un tronc
+commun (embranchement en T). Quand deux flèches indépendantes se croisent, l'une est
+interrompue par une petite coupure : deux lignes qui se traversent sans se toucher ne sont
+pas reliées. L'arrondi des virages et la longueur des coupures se règlent en tête de `app.js`
+(`RAYON_COUDES`, `COUPURE_DEMI_LONGUEUR`).
 Les notions sont regroupées dans un cadre par domaine. Pour revenir à une carte sans cadres,
-passer `GROUPER_PAR_DOMAINE` à `false` au début de `app.js`.
+cliquer sur le bouton « Îlots par domaine » de l'en-tête (le choix est mémorisé dans le navigateur).
 Les réglages du placement sont regroupés dans `OPTIONS_ELK`, au début de `app.js` également. Si une erreur se glisse (prérequis inconnu,
 identifiant en double, boucle de prérequis), un encadré rouge l'indique en bas de la page.
 
