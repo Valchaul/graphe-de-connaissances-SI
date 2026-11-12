@@ -5,6 +5,8 @@ Chaque notion indique ses prérequis et renvoie vers des ressources existantes.
 
 [`Découvrez la carte ici`](https://valchaul.github.io/graphe-de-connaissances-SI/)
 
+![La carte : les notions regroupées par domaine, reliées par leurs prérequis](img/capture.png)
+
 ## Voir le site en local
 
 Double-cliquer sur `index.html` : il s'ouvre dans le navigateur. Aucune installation n'est nécessaire.
@@ -106,7 +108,7 @@ prérequis), un encadré rouge l'indique en bas de la page.
 | `style.css`           | Apparence de l'interface                                      |
 | `data/notions.js`     | **Le contenu** : domaines, formations et notions              |
 | `data/favicons.js`    | Liste des logos de sites (généré par `outils/favicons.js`)    |
-| `img/`                | Logos téléchargés (`favicons/`) et icône de lien générique    |
+| `img/`                | Logo, capture du README, logos de sites (`favicons/`), icône de lien |
 | `outils/favicons.js`  | Script de téléchargement des logos (à lancer à la main)       |
 | `js/verification.js`  | Détection des erreurs dans le contenu                         |
 | `js/config.js`        | Réglages du rendu : tailles, arrondis, zoom, îlots            |
